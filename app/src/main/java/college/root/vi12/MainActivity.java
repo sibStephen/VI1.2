@@ -26,37 +26,38 @@ public class MainActivity extends AppCompatActivity {
         ParseAnalytics.trackAppOpenedInBackground(getIntent());
 
         btnLogin =  (Button)findViewById(R.id.button);
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-
-            }
-        });
 
         etUser = (EditText)findViewById(R.id.etEmail);
         etPass = (EditText)findViewById(R.id.etPass);
 
-        username = etUser.getText().toString();
-        password = etPass.getText().toString();
 
-
-        ParseUser.logInInBackground(username, password, new LogInCallback() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void done(ParseUser parseUser, ParseException e) {
-                if (parseUser != null) {
-                    Toast.makeText(MainActivity.this , "Login successfull ", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(MainActivity.this , HomePageActivity.class));
-                    finish();
-                } else {
-                    Toast.makeText(MainActivity.this , "Login failed.. ", Toast.LENGTH_SHORT).show();
+            public void onClick(View view) {
+                username = etUser.getText().toString();
+                password = etPass.getText().toString();
 
-                    //Login Fail
-                    //get error by calling e.getMessage()
-                }
+                ParseUser.logInInBackground(username, password, new LogInCallback() {
+                    @Override
+                    public void done(ParseUser parseUser, ParseException e) {
+                        if (parseUser != null) {
+                            Toast.makeText(MainActivity.this , "Login successfull ", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(MainActivity.this , HomePageActivity.class));
+                            finish();
+                        } else {
+                            Toast.makeText(MainActivity.this , "Login failed.. ", Toast.LENGTH_SHORT).show();
+
+                            //Login Fail
+                            //get error by calling e.getMessage()
+                        }
+                    }
+                });
+
+
             }
         });
+
+
 
 
 
