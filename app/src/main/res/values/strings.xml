@@ -1,11 +1,13 @@
 <resources>
     <string name="app_name">VI 1.2</string>
-    <string name="parse_app_id">EwhUT53BRiSxOJ1OQFVrOOyZfnhgoyuFQ2hNOzSH</string>
-    <string name="parse_client_key">IRQVdEyPLUbrIe1lMdgwIPphZ9vQX9GVmvggYcpO</string>
+    <string name="parse_app_id">9RiTRz1reZsw6jfSP1FfV6AMPZ6PmwcdvFjavEyM</string>
+    <string name="parse_client_key">OkhkvCXnDjBALgdVe3Ttwtll7YfJET1aAcXjvFDq</string>
     <string name="menu_home">Home</string>
     <string name="menu_search">Search</string>
     <string name="profile">Profile</string>
     <string name="menu_notifications">Notify</string>
+    <string name="facebook_app_id">145074849325227</string>
+    <string name="TAG">Test</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

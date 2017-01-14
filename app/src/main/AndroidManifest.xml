@@ -17,8 +17,11 @@
     <meta-data
         android:name="com.parse.CLIENT_KEY"
         android:value="@string/parse_client_key" />
+        <activity android:name=".MainActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation">
 
-        <activity android:name=".MainActivity">
+            <meta-data android:name="com.facebook.sdk.ApplicationId"
+                android:value="@string/facebook_app_id"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +29,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".HomePageActivity" />
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".RegisterActivity">
+
+        </activity>
     </application>
 
 </manifest>

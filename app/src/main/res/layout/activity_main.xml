@@ -58,9 +58,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:id="@+id/textView3"
+        android:id="@+id/tvReg"
         android:layout_below="@+id/button"
         android:layout_alignRight="@+id/etPass"
         android:layout_alignEnd="@+id/etPass" />
+
+    <Button
+        android:text="Log In using Facebook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:id="@+id/fbButton"
+        android:layout_below="@+id/tvReg"
+        android:layout_alignRight="@+id/textView"
+        android:layout_alignEnd="@+id/textView" />
 
 </RelativeLayout>
