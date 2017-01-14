@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_register"
@@ -10,55 +12,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="college.root.vi12.RegisterActivity">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:hint="Enter your username"
-        android:layout_below="@+id/textView2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="37dp"
-        android:layout_marginStart="37dp"
-        android:layout_marginTop="44dp"
-        android:id="@+id/etUser" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:hint="Enter your password"
-        android:layout_below="@+id/etUser"
-        android:layout_alignRight="@+id/etUser"
-        android:layout_alignEnd="@+id/etUser"
-        android:layout_marginTop="49dp"
-        android:id="@+id/etPass" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:hint="Enter your email"
-        android:layout_below="@+id/etPass"
-        android:layout_alignLeft="@+id/etPass"
-        android:layout_alignStart="@+id/etPass"
-        android:layout_marginTop="34dp"
-        android:id="@+id/etEmailReg" />
-
-    <Button
-        android:text="Register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:id="@+id/btnRegister"
-        android:layout_below="@+id/etEmailReg"
-        android:layout_alignLeft="@+id/etEmailReg"
-        android:layout_alignStart="@+id/etEmailReg"
-        android:layout_marginLeft="57dp"
-        android:layout_marginStart="57dp" />
 
     <TextView
         android:text="Register here "
@@ -70,5 +23,85 @@
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/btnRegister"
         android:layout_alignStart="@+id/btnRegister" />
+
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:hint="Choose a username"
+        android:id="@+id/etUser"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:hint="Enter your password"
+        android:layout_marginTop="21dp"
+        android:id="@+id/etPass"
+        android:layout_below="@+id/etUser"
+        android:layout_alignLeft="@+id/etUser"
+        android:layout_alignStart="@+id/etUser" />
+
+    <Button
+        android:text="Register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnRegister"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:hint="Enter your email"
+        android:layout_marginTop="16dp"
+        android:id="@+id/etEmailReg"
+        android:layout_below="@+id/etPass"
+        android:layout_alignLeft="@+id/etPass"
+        android:layout_alignStart="@+id/etPass" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:hint="Enter your branch"
+        android:id="@+id/etBranch"
+        android:layout_below="@+id/etEmailReg"
+        android:layout_alignLeft="@+id/etEmailReg"
+        android:layout_alignStart="@+id/etEmailReg"
+        android:layout_marginTop="16dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:hint="Enter year"
+        android:layout_marginTop="16dp"
+        android:id="@+id/etYear"
+        android:layout_below="@+id/etBranch"
+        android:layout_alignLeft="@+id/etBranch"
+        android:layout_alignStart="@+id/etBranch" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:hint="Enter GR number"
+        android:layout_marginTop="30dp"
+        android:id="@+id/etGrNumber"
+        android:layout_below="@+id/etYear"
+        android:layout_alignLeft="@+id/etYear"
+        android:layout_alignStart="@+id/etYear" />
+
 
 </RelativeLayout>
