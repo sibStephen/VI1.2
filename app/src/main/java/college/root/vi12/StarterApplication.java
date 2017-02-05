@@ -47,8 +47,8 @@ public class StarterApplication extends Application {
         try{
 
             Parse.initialize(new Parse.Configuration.Builder(this)
-            .applicationId("@strings/parse_app_id")
-            .clientKey("@strings/parse_client_key")
+            .applicationId("mjBwOzJFhHqt2TNi4a2XbTEsn9nVLpUzZopI0XK8")
+            .clientKey("0HRT8ZEkxJ2RRNce5whyC5dwcHMEATpf1jljhtIu")
             .server("https://parseapi.back4app.com/").build()
             );
             Log.d(TAG, "onCreate: initialization done");
@@ -75,7 +75,7 @@ public class StarterApplication extends Application {
     private void getKeyHash() {
         try {
             Log.d(TAG, "getKeyHash: in getKeyHash Method");
-            PackageInfo info = getPackageManager().getPackageInfo("scm.dominwong4.back4appandroidtutorial", PackageManager.GET_SIGNATURES);
+            PackageInfo info = getPackageManager().getPackageInfo("college.root.vi12", PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());

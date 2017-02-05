@@ -11,9 +11,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
+// cz.msebera.android.httpclient.NameValuePair;
+//import cz.msebera.android.httpclient.message.BasicNameValuePair;
+//import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.Profile;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.parse.LogInCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
@@ -21,6 +29,8 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import com.parse.ParseFacebookUtils;
@@ -30,6 +40,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.realm.Realm;
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,15 +54,29 @@ public class MainActivity extends AppCompatActivity {
     ProgressDialog progress;
     Button btnFb;
     Realm realm;
-
+    LoginButton loginButton;
+    CallbackManager manager;
+    FacebookCallback<LoginResult> mCallBack;
+    Thread threadLogin;
+    Socket socket;
+   // List<NameValuePair> params;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(MainActivity.this);
+
         setContentView(R.layout.activity_main);
 
+
         ParseAnalytics.trackAppOpenedInBackground(getIntent());
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        ParseFacebookUtils.initialize(this);
+//        ParseFacebookUtils.initialize(this);
+        manager = CallbackManager.Factory.create();
+
+        ParseObject gameScore = new ParseObject("GameScore");
+        gameScore.put("score", 1337);
+        gameScore.put("playerName", "Sean Plott");
+        gameScore.put("cheatMode", false);
+        gameScore.saveInBackground();
 
         realm = Realm.getDefaultInstance();
         final List<String> permissions = Arrays.asList("public_profile", "email");
@@ -61,8 +88,10 @@ public class MainActivity extends AppCompatActivity {
         etUser = (EditText)findViewById(R.id.etEmail);
         etPass = (EditText)findViewById(R.id.etPass);
         btnFb = (Button)findViewById(R.id.fbButton);
-        tvEmail =  (TextView)findViewById(R.id.tvEmail);
-        tvUser = (TextView)findViewById(R.id.tvUser);
+       // tvEmail =  (TextView)findViewById(R.id.tvEmail);
+        //tvUser = (TextView)findViewById(R.id.tvUser);
+        loginButton = (LoginButton)findViewById(R.id.fbLoginButton);
+
 
 // link to register page .
         tvReg.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                 username = etUser.getText().toString();
                 password = etPass.getText().toString();
 
-                ParseUser.logInInBackground(username, password, new LogInCallback() {
+             /*   ParseUser.logInInBackground(username, password, new LogInCallback() {
                     @Override
                     public void done(ParseUser parseUser, ParseException e) {
                         if (parseUser != null) {
@@ -106,7 +135,16 @@ public class MainActivity extends AppCompatActivity {
                             //get error by calling e.getMessage()
                         }
                     }
-                });
+                });*/
+
+
+                if(!username.isEmpty() && !password.isEmpty()){
+                    // send data to server
+                    threadLogin.start();
+
+                }else{
+                    Toast.makeText(MainActivity.this , "Please fill out all the details ", Toast.LENGTH_SHORT).show();
+                }
 
 
             }
@@ -114,75 +152,121 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+        // login thread
+        threadLogin = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    socket = IO.socket("http://192.168.1.38:8083/");
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                    Log.d(TAG, "run: error "+e.getMessage() );
+                }
+                socket.connect();
+
+                Log.d(TAG, "run:connected.........");
+                //  socket.on()
+                // socket.connect();
+                if (!socket.connected()){
+
+                    JSONObject object = new JSONObject();
+                    try {
+                        object.put("username", username);
+                        object.put("password", password);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    socket.emit("login" , object.toString() );
+                    progress.dismiss();
+                }
+
+                socket.on("loginResult", new Emitter.Listener() {
+                    @Override
+                    public void call(Object... args) {
+                        // check if user is authenticated
+                        int isAuth = (int)args[0];
+                        Log.d(TAG, "call: value is "+isAuth);
+                        if (isAuth==1){
+
+                            startActivity(new Intent(MainActivity.this , HomePageActivity.class));
+                           // Toast.makeText(MainActivity.this , "Successfully logged in ..", Toast.LENGTH_SHORT).show();
+                        }else {
+                            //Toast.makeText(MainActivity.this , "Error logging in", Toast.LENGTH_SHORT).show();
+
+                        }
+
+
+
+                    }
+                });
+
+            }
+        });
 
         // FACEBOOK LOGIN/ SIGNUP CODE HERE ...
 
-        btnFb.setOnClickListener(new View.OnClickListener() {
+        loginButton.setReadPermissions(permissions);
+        loginButton.registerCallback(manager,mCallBack);
+
+        mCallBack = new FacebookCallback<LoginResult>() {
             @Override
-            public void onClick(View view) {
+            public void onSuccess(LoginResult loginResult) {
 
 
 
-                ParseFacebookUtils.logInWithReadPermissionsInBackground(MainActivity.this, permissions, new LogInCallback() {
-                    @Override
-                    public void done(ParseUser user, ParseException err) {
-                        if (user == null) {
-                            Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
-                        } else if (user.isNew()) {
-                            Log.d("MyApp", "User signed up and logged in through Facebook!");
-                            getUserDetailFromFB();
-                        } else {
-                            Log.d("MyApp", "User logged in through Facebook!");
-                            getUserDetailFromParse();
-                        }
-                    }
-                });
+                Profile profile = Profile.getCurrentProfile();
+                Log.d(TAG, "onSuccess: profile name is "+profile.getFirstName());
+
+                requestUserProfile(loginResult);
+
+                Toast.makeText(MainActivity.this , "Welcome "+profile.getFirstName() , Toast.LENGTH_SHORT).show();
+
             }
-        });
 
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        };
 
 
     }// end of onCreate
 
-    void getUserDetailFromFB(){
-        GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),new GraphRequest.GraphJSONObjectCallback(){
-            @Override
-            public void onCompleted(JSONObject object, GraphResponse response) {
-                try{
-                    tvUser.setText(object.getString("name"));
-                }catch(JSONException e){
-                    e.printStackTrace();
-                }
-                try{
-                    tvEmail.setText(object.getString("email"));
-                }catch(JSONException e){
-                    e.printStackTrace();
-                }
-                saveNewUser();
-            }
-        });
-        Bundle parameters = new Bundle();
-        parameters.putString("fields","name,email");
-        request.setParameters(parameters);
-        request.executeAsync();
-    }
-    void saveNewUser(){
-        ParseUser user = ParseUser.getCurrentUser();
-        user.setUsername(tvUser.getText().toString());
-        user.setEmail(tvEmail.getText().toString());
-        user.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                    Toast.makeText(MainActivity.this , "Facebook login successfull", Toast.LENGTH_SHORT).show();
-            }
-        });
+
+    public void requestUserProfile(LoginResult loginResult){
+        GraphRequest.newMeRequest(
+                loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject me, GraphResponse response) {
+                        if (response.getError() != null) {
+                            // handle error
+                        } else {
+                            try {
+                                String email = response.getJSONObject().get("email").toString();
+                                Log.e(TAG, email);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            String id = me.optString("id");
+                            // send email and id to your web server
+                            Log.e(TAG, response.getRawResponse());
+                            Log.e(TAG, me.toString());
+                        }
+                    }
+                }).executeAsync();
     }
 
-    public void getUserDetailFromParse(){
-        ParseUser user = ParseUser.getCurrentUser();
-        tvUser.setText(user.getUsername());
-        tvEmail.setText(user.getEmail());
-        Log.d(TAG, "getUserDetailFromParse: username is "+user.getUsername());
-        Log.d(TAG, "getUserDetailFromParse: Email is "+user.getEmail());
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        manager.onActivityResult(requestCode , resultCode , data);
     }
 }

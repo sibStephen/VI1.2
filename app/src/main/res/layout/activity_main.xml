@@ -73,4 +73,13 @@
         android:layout_alignRight="@+id/textView"
         android:layout_alignEnd="@+id/textView" />
 
+    <com.facebook.login.widget.LoginButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fbLoginButton"
+        android:layout_below="@+id/fbButton"
+        android:layout_alignLeft="@+id/fbButton"
+        android:layout_alignStart="@+id/fbButton"
+        android:layout_marginTop="19dp" />
+
 </RelativeLayout>
