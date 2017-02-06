@@ -2,8 +2,10 @@ package college.root.vi12;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -103,19 +105,39 @@ public class MainActivity extends AppCompatActivity {
                 progress = new ProgressDialog(MainActivity.this);
                 progress.setMessage("Please wait...");
                 progress.setCanceledOnTouchOutside(false);
-                progress.show();
-                username = etUser.getText().toString();
-                password = etPass.getText().toString();
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Confirm Registration ?");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        progress.show();
+                        username = etUser.getText().toString();
+                        password = etPass.getText().toString();
+                        if(!username.isEmpty() && !password.isEmpty()){
+                            // send data to server
+                            threadLogin.start();
+
+                        }else{
+                            Toast.makeText(MainActivity.this , "Please fill out all the details ", Toast.LENGTH_SHORT).show();
+                        }
+
+
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.show();
 
 
 
-                if(!username.isEmpty() && !password.isEmpty()){
-                    // send data to server
-                    threadLogin.start();
 
-                }else{
-                    Toast.makeText(MainActivity.this , "Please fill out all the details ", Toast.LENGTH_SHORT).show();
-                }
 
 
             }

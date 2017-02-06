@@ -34,7 +34,7 @@
         android:id="@+id/tilUser"
         android:layout_below="@+id/textView2">
 
-        <android.support.design.widget.TextInputEditText 
+        <android.support.design.widget.TextInputEditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
@@ -55,7 +55,7 @@
         android:layout_alignLeft="@+id/tilUser"
         android:layout_alignStart="@+id/tilUser" >
 
-        <android.support.design.widget.TextInputEditText 
+        <android.support.design.widget.TextInputEditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
@@ -83,7 +83,7 @@
         android:layout_alignLeft="@+id/tilPass"
         android:layout_alignStart="@+id/tilPass" >
 
-        <android.support.design.widget.TextInputEditText 
+        <android.support.design.widget.TextInputEditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
@@ -105,7 +105,7 @@
         android:layout_alignStart="@+id/tilEmailReg"
         android:layout_marginTop="16dp">
 
-        <android.support.design.widget.TextInputEditText 
+        <android.support.design.widget.TextInputEditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
@@ -127,7 +127,7 @@
         android:layout_alignStart="@+id/tilBranch"
         android:layout_marginTop="16dp">
 
-        <android.support.design.widget.TextInputEditText 
+        <android.support.design.widget.TextInputEditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
@@ -146,9 +146,9 @@
         android:layout_below="@+id/tilYear"
         android:layout_alignLeft="@+id/tilYear"
         android:layout_alignStart="@+id/tilYear"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="10dp">
 
-        <android.support.design.widget.TextInputEditText 
+        <android.support.design.widget.TextInputEditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"

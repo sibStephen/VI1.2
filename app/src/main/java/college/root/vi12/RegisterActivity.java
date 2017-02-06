@@ -1,7 +1,9 @@
 package college.root.vi12;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -61,67 +63,47 @@ public class RegisterActivity extends AppCompatActivity {
                 progress = new ProgressDialog(RegisterActivity.this);
                 progress.setMessage("Please wait...");
                 progress.setCanceledOnTouchOutside(false);
-                progress.show();
-            /*   ParseUser user = new ParseUser();
-                user.setEmail(etEmail.getText().toString());
-                user.setUsername(etUser.getText().toString());
-                user.setPassword(etPass.getText().toString());
-                user.put("Branch" , etBranch.getText().toString());
-                user.put("Year" , etYear.getText().toString());
-                user.put("GRNumber" , etGRNumber.getText().toString());
-                user.signUpInBackground(new SignUpCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e == null) {
-                            progress.dismiss();
-                            Toast.makeText(RegisterActivity.this , "Registration success", Toast.LENGTH_SHORT).show();
-                            //Register Successful
-                            //you can display sth or do sth
-                            RealmUser realmUser = new RealmUser();
-                            realmUser.setEmail(etEmail.getText().toString());
-                            realmUser.setYear(etYear.getText().toString());
-                            realmUser.setBranch(etBranch.getText().toString());
-                            realmUser.setGrNumber(Integer.parseInt(etGRNumber.getText().toString()));
-                            realm.executeTransaction(new Realm.Transaction() {
-                                @Override
-                                public void execute(Realm realm) {
 
-                                }
-                            });
-                            startActivity(new Intent(RegisterActivity.this , HomePageActivity.class));
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
+                builder.setTitle("Confirm Registration ?");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        progress.show();
+                        GrNumber = etGRNumber.getText().toString();
+                        email = etEmail.getText().toString();
+                        branch = etBranch.getText().toString();
+                        year = etYear.getText().toString();
+                        username = etUser.getText().toString();
+                        password = etPass.getText().toString();
+
+                        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(GrNumber) || TextUtils.isEmpty(password)
+                                || TextUtils.isEmpty(username) || TextUtils.isEmpty(branch) || TextUtils.isEmpty(year)) {
+                            Toast.makeText(RegisterActivity.this, "Please enter all teh details", Toast.LENGTH_SHORT).show();
 
                         } else {
-                            progress.dismiss();
-                            Log.d(TAG, "error : "+e.getMessage());
-                            Toast.makeText(RegisterActivity.this , "Registration failed", Toast.LENGTH_SHORT).show();
+                            // save user on to server
+                            Log.d(TAG, "onClick: about to start the thread");
+                            threadRegister.start();
 
-                            //Register Fail
-                            //get error by calling e.getMessage()
                         }
-                    }
-                });*/
 
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.show();
 
                 // register user
 
 
-                 GrNumber = etGRNumber.getText().toString();
-                 email = etEmail.getText().toString();
-                 branch = etBranch.getText().toString();
-                 year = etYear.getText().toString();
-                 username = etUser.getText().toString();
-                 password = etPass.getText().toString();
 
-                if (TextUtils.isEmpty(email) || TextUtils.isEmpty(GrNumber) || TextUtils.isEmpty(password)
-                        || TextUtils.isEmpty(username) || TextUtils.isEmpty(branch) || TextUtils.isEmpty(year)) {
-                    Toast.makeText(RegisterActivity.this, "Please enter all teh details", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    // save user on to server
-                    Log.d(TAG, "onClick: about to start the thread");
-                    threadRegister.start();
-
-                }
             }
         });
 
