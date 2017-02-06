@@ -39,6 +39,8 @@ import com.facebook.FacebookSdk;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import college.root.vi12.StudentProfile.Form;
+import college.root.vi12.StudentProfile.UserProfile;
 import io.realm.Realm;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -70,13 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
         ParseAnalytics.trackAppOpenedInBackground(getIntent());
 //        ParseFacebookUtils.initialize(this);
-        manager = CallbackManager.Factory.create();
-
-        ParseObject gameScore = new ParseObject("GameScore");
-        gameScore.put("score", 1337);
-        gameScore.put("playerName", "Sean Plott");
-        gameScore.put("cheatMode", false);
-        gameScore.saveInBackground();
 
         realm = Realm.getDefaultInstance();
         final List<String> permissions = Arrays.asList("public_profile", "email");
@@ -117,25 +112,6 @@ public class MainActivity extends AppCompatActivity {
                 username = etUser.getText().toString();
                 password = etPass.getText().toString();
 
-             /*   ParseUser.logInInBackground(username, password, new LogInCallback() {
-                    @Override
-                    public void done(ParseUser parseUser, ParseException e) {
-                        if (parseUser != null) {
-                            progress.dismiss();
-                            Toast.makeText(MainActivity.this , "Login successfull ", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(MainActivity.this , HomePageActivity.class));
-                            finish();
-                        } else {
-                            progress.dismiss();
-                            Log.d(TAG, "error: "+e.getMessage());
-
-                            Toast.makeText(MainActivity.this , "Login failed.. ", Toast.LENGTH_SHORT).show();
-
-                            //Login Fail
-                            //get error by calling e.getMessage()
-                        }
-                    }
-                });*/
 
 
                 if(!username.isEmpty() && !password.isEmpty()){
@@ -190,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "call: value is "+isAuth);
                         if (isAuth==1){
 
-                            startActivity(new Intent(MainActivity.this , HomePageActivity.class));
+                            startActivity(new Intent(MainActivity.this , Form.class));
                            // Toast.makeText(MainActivity.this , "Successfully logged in ..", Toast.LENGTH_SHORT).show();
                         }else {
                             //Toast.makeText(MainActivity.this , "Error logging in", Toast.LENGTH_SHORT).show();
@@ -208,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
         // FACEBOOK LOGIN/ SIGNUP CODE HERE ...
 
         loginButton.setReadPermissions(permissions);
-        loginButton.registerCallback(manager,mCallBack);
+//        loginButton.registerCallback(manager,mCallBack);
 
         mCallBack = new FacebookCallback<LoginResult>() {
             @Override
