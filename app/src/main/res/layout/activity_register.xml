@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_register"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,7 +12,6 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="college.root.vi12.RegisterActivity">
-
 
     <TextView
         android:text="Register here "
@@ -22,30 +22,47 @@
         android:id="@+id/textView2"
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/btnRegister"
-        android:layout_alignStart="@+id/btnRegister" />
+        android:layout_alignStart="@+id/btnRegister"/>
 
 
-    <EditText
+    <android.support.design.widget.TextInputLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:hint="Choose a username"
-        android:id="@+id/etUser"
-        android:layout_below="@+id/textView2"
-        android:layout_centerHorizontal="true" />
+        app:hintEnabled="true"
+        app:hintAnimationEnabled="true"
+        android:hint="Username"
+        android:id="@+id/tilUser"
+        android:layout_below="@+id/textView2">
 
-    <EditText
+        <android.support.design.widget.TextInputEditText 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/etUser"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:hint="Enter your password"
+        app:hintEnabled="true"
+        app:hintAnimationEnabled="true"
+        android:hint="Password"
+        android:id="@+id/tilPass"
         android:layout_marginTop="21dp"
-        android:id="@+id/etPass"
-        android:layout_below="@+id/etUser"
-        android:layout_alignLeft="@+id/etUser"
-        android:layout_alignStart="@+id/etUser" />
+        android:layout_below="@+id/tilUser"
+        android:layout_alignLeft="@+id/tilUser"
+        android:layout_alignStart="@+id/tilUser" >
+
+        <android.support.design.widget.TextInputEditText 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/etPass"/>
+
+    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:text="Register"
@@ -55,55 +72,90 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
-    <EditText
+    <android.support.design.widget.TextInputLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:hint="Enter your email"
-        android:layout_marginTop="16dp"
-        android:id="@+id/etEmailReg"
-        android:layout_below="@+id/etPass"
-        android:layout_alignLeft="@+id/etPass"
-        android:layout_alignStart="@+id/etPass" />
+        app:hintEnabled="true"
+        app:hintAnimationEnabled="true"
+        android:hint="Email"
+        android:id="@+id/tilEmailReg"
+        android:layout_below="@+id/tilPass"
+        android:layout_alignLeft="@+id/tilPass"
+        android:layout_alignStart="@+id/tilPass" >
 
-    <EditText
+        <android.support.design.widget.TextInputEditText 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:layout_marginTop="16dp"
+            android:id="@+id/etEmailReg"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:hint="Enter your branch"
-        android:id="@+id/etBranch"
-        android:layout_below="@+id/etEmailReg"
-        android:layout_alignLeft="@+id/etEmailReg"
-        android:layout_alignStart="@+id/etEmailReg"
-        android:layout_marginTop="16dp" />
+        app:hintEnabled="true"
+        app:hintAnimationEnabled="true"
+        android:hint="Branch"
+        android:id="@+id/tilBranch"
+        android:layout_below="@+id/tilEmailReg"
+        android:layout_alignLeft="@+id/tilEmailReg"
+        android:layout_alignStart="@+id/tilEmailReg"
+        android:layout_marginTop="16dp">
 
-    <EditText
+        <android.support.design.widget.TextInputEditText 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/etBranch"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:hint="Enter year"
-        android:layout_marginTop="16dp"
-        android:id="@+id/etYear"
-        android:layout_below="@+id/etBranch"
-        android:layout_alignLeft="@+id/etBranch"
-        android:layout_alignStart="@+id/etBranch" />
+        app:hintEnabled="true"
+        app:hintAnimationEnabled="true"
+        android:hint="Year"
+        app:hintTextAppearance="@color/colorPrimaryDark"
+        android:id="@+id/tilYear"
+        android:layout_below="@+id/tilBranch"
+        android:layout_alignLeft="@+id/tilBranch"
+        android:layout_alignStart="@+id/tilBranch"
+        android:layout_marginTop="16dp">
 
-    <EditText
+        <android.support.design.widget.TextInputEditText 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/etYear"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:hint="Enter GR number"
-        android:layout_marginTop="30dp"
-        android:id="@+id/etGrNumber"
-        android:layout_below="@+id/etYear"
-        android:layout_alignLeft="@+id/etYear"
-        android:layout_alignStart="@+id/etYear" />
+        app:hintEnabled="true"
+        app:hintAnimationEnabled="true"
+        android:hint="GR Number"
+        android:id="@+id/tilGrNumber"
+        android:layout_below="@+id/tilYear"
+        android:layout_alignLeft="@+id/tilYear"
+        android:layout_alignStart="@+id/tilYear"
+        android:layout_marginTop="30dp">
 
+        <android.support.design.widget.TextInputEditText 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/etGrNumber"/>
 
+    </android.support.design.widget.TextInputLayout>
 
 
 </RelativeLayout>
