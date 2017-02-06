@@ -19,15 +19,16 @@ import io.realm.RealmConfiguration;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link profile5.OnFragmentInteractionListener} interface
+ * {@link FragmentProfile2.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link profile5#newInstance} factory method to
+ * Use the {@link FragmentProfile2#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class profile5 extends Fragment {
+public class FragmentProfile2 extends Fragment {
+
 
     Realm realm;
-    EditText fname,mname,fprofession,fdesig,fworkplace,fmobile,femail,mprofession,mworkplace,mdesig,mmobile;
+    EditText email_pri,email_sec,religion,mother_ton,birth,sub_caste,uni_area,full_name,pref,income,aadhar,nationality,blood,mobile,mstatus,emcontact;
     Button save;
     String TAG="Test";
     Student_profile profile;
@@ -42,7 +43,7 @@ public class profile5 extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public profile5() {
+    public FragmentProfile2() {
         // Required empty public constructor
     }
 
@@ -52,11 +53,11 @@ public class profile5 extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment profile5.
+     * @return A new instance of fragment profile2.
      */
     // TODO: Rename and change types and number of parameters
-    public static profile5 newInstance(String param1, String param2) {
-        profile5 fragment = new profile5();
+    public static FragmentProfile2 newInstance(String param1, String param2) {
+        FragmentProfile2 fragment = new FragmentProfile2();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -77,44 +78,53 @@ public class profile5 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view=inflater.inflate(R.layout.fragment_profile5, container, false);
+        View view=inflater.inflate(R.layout.fragment_profile2, container, false);
         RealmConfiguration config = new RealmConfiguration.Builder(getContext()).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
         realm.setDefaultConfiguration(config);
 
 
         realm = Realm.getDefaultInstance();
-        fname=(EditText)view.findViewById(R.id.fathername);
-        mname=(EditText)view.findViewById(R.id.mothername);
-        fprofession=(EditText)view.findViewById(R.id.fprofession);
-        fdesig=(EditText)view.findViewById(R.id.designation);
-        fworkplace=(EditText)view.findViewById(R.id.workplace);
-        fmobile=(EditText)view.findViewById(R.id.fmobile);
-        femail=(EditText)view.findViewById(R.id.femail);
-        mprofession=(EditText)view.findViewById(R.id.mprofession);
-        mworkplace=(EditText)view.findViewById(R.id.mworkplace);
-        mdesig=(EditText)view.findViewById(R.id.mdesignation);
-        mmobile=(EditText)view.findViewById(R.id.mmobile);
+        email_pri=(EditText)view.findViewById(R.id.email_pri);
+        email_sec=(EditText)view.findViewById(R.id.email_sec);
+        religion=(EditText)view.findViewById(R.id.religion);
+        mother_ton=(EditText)view.findViewById(R.id.montherton);
+        birth=(EditText)view.findViewById(R.id.birth);
+        sub_caste=(EditText)view.findViewById(R.id.sub_caste);
+        uni_area=(EditText)view.findViewById(R.id.uni_area);
+        full_name=(EditText)view.findViewById(R.id.full_name);
+        pref=(EditText)view.findViewById(R.id.pref);
+        income=(EditText)view.findViewById(R.id.income);
+        aadhar=(EditText)view.findViewById(R.id.aadhar);
+        nationality=(EditText)view.findViewById(R.id.nationality);
+        blood=(EditText)view.findViewById(R.id.blood);
+        mobile=(EditText)view.findViewById(R.id.mobile);
+        mstatus=(EditText)view.findViewById(R.id.mstatus);
+        emcontact=(EditText)view.findViewById(R.id.emcontact);
 
         profile = new Student_profile();
         profile = realm.where(Student_profile.class).findFirst();
 
         if(profile!=null) {
-           fname.setText(profile.getFname());
-             mname.setText(profile.getMname());
-            fprofession.setText(profile.getFprofession());
-            fdesig.setText(profile.getFdesig());
-            fworkplace.setText(profile.getFworkplace());
-            fmobile.setText(profile.getFworkplace());
-            femail.setText(profile.getFemail());
-            mprofession.setText(profile.getMprofession());
-            mworkplace.setText(profile.getMworkplace());
-            mdesig.setText(profile.getMdesig());
-            mmobile.setText(profile.getMmobile());
-
+            email_pri.setText(profile.getEmail_pri());
+            email_sec.setText(profile.getEmail_sec());
+            religion.setText(profile.getReligion());
+            mother_ton.setText(profile.getMother_ton());
+            birth.setText(profile.getBirth_place());
+            sub_caste.setText(profile.getSub_caste());
+            uni_area.setText(profile.getUni_area());
+            full_name.setText(profile.getFull_name());
+            pref.setText(profile.getPref_no());
+            income.setText(profile.getIncome());
+            aadhar.setText(profile.getAadhar());
+            nationality.setText(profile.getNationality());
+            blood.setText(profile.getBlood());
+            mobile.setText(profile.getMobile());
+            mstatus.setText(profile.getMstatus());
+            emcontact.setText(profile.getEmcontact());
         }
 
 
-        save=(Button)view.findViewById(R.id.save_parent);
+        save=(Button)view.findViewById(R.id.save_details);
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,18 +138,22 @@ public class profile5 extends Fragment {
                     realm.beginTransaction();
                     profile = new Student_profile();
 
-                    profile.setFname(fname.getText().toString());
-                    profile.setMname(mname.getText().toString());
-                    profile.setFprofession(fprofession.getText().toString());
-                    profile.setFdesig(fdesig.getText().toString());
-                    profile.setFworkplace(fworkplace.getText().toString());
-                    profile.setFmobile(fmobile.getText().toString());
-                    profile.setFemail(femail.getText().toString());
-                    profile.setMprofession(mprofession.getText().toString());
-                    profile.setMworkplace(mworkplace.getText().toString());
-                    profile.setMdesig(mdesig.getText().toString());
-                    profile.setMmobile(mmobile.getText().toString());
-
+                    profile.setEmail_pri(email_pri.getText().toString());
+                    profile.setEmail_sec(email_sec.getText().toString());
+                    profile.setReligion(religion.getText().toString());
+                    profile.setMother_ton(mother_ton.getText().toString());
+                    profile.setBirth_place(birth.getText().toString());
+                    profile.setSub_caste(sub_caste.getText().toString());
+                    profile.setUni_area(uni_area.getText().toString());
+                    profile.setFull_name(full_name.getText().toString());
+                    profile.setPref_no(pref.getText().toString());
+                    profile.setIncome(income.getText().toString());
+                    profile.setAadhar(aadhar.getText().toString());
+                    profile.setNationality(nationality.getText().toString());
+                    profile.setBlood(blood.getText().toString());
+                    profile.setMobile(mobile.getText().toString());
+                    profile.setMstatus(mstatus.getText().toString());
+                    profile.setEmcontact(emcontact.getText().toString());
 
                     realm.commitTransaction();
 
@@ -156,18 +170,22 @@ public class profile5 extends Fragment {
                     //  oldgrno=profile.getGrno();
                     profile = realm.where(Student_profile.class).findFirst();
                     realm.beginTransaction();
-
-                    profile.setFname(fname.getText().toString());
-                    profile.setMname(mname.getText().toString());
-                    profile.setFprofession(fprofession.getText().toString());
-                    profile.setFdesig(fdesig.getText().toString());
-                    profile.setFworkplace(fworkplace.getText().toString());
-                    profile.setFmobile(fmobile.getText().toString());
-                    profile.setFemail(femail.getText().toString());
-                    profile.setMprofession(mprofession.getText().toString());
-                    profile.setMworkplace(mworkplace.getText().toString());
-                    profile.setMdesig(mdesig.getText().toString());
-                    profile.setMmobile(mmobile.getText().toString());
+                    profile.setEmail_pri(email_pri.getText().toString());
+                    profile.setEmail_sec(email_sec.getText().toString());
+                    profile.setReligion(religion.getText().toString());
+                    profile.setMother_ton(mother_ton.getText().toString());
+                    profile.setBirth_place(birth.getText().toString());
+                    profile.setSub_caste(sub_caste.getText().toString());
+                    profile.setUni_area(uni_area.getText().toString());
+                    profile.setFull_name(full_name.getText().toString());
+                    profile.setPref_no(pref.getText().toString());
+                    profile.setIncome(income.getText().toString());
+                    profile.setAadhar(aadhar.getText().toString());
+                    profile.setNationality(nationality.getText().toString());
+                    profile.setBlood(blood.getText().toString());
+                    profile.setMobile(mobile.getText().toString());
+                    profile.setMstatus(mstatus.getText().toString());
+                    profile.setEmcontact(emcontact.getText().toString());
                     realm.commitTransaction();
                     realm.executeTransaction(new Realm.Transaction() {
                         @Override
@@ -182,6 +200,7 @@ public class profile5 extends Fragment {
             }
         });
         return view;
+
 
     }
 

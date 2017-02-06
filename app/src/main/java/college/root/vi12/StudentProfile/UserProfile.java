@@ -151,7 +151,7 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
         if( id == R.id.profile) {
 
-            Intent intent = new Intent(UserProfile.this , EditProfile.class);
+            Intent intent = new Intent(UserProfile.this , EditProfileActivity.class);
             startActivity(intent);
             finish();
 

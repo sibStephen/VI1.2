@@ -8,7 +8,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="60dp"
-        tools:context="college.root.vi12.StudentProfile.profile4">
+        tools:context="college.root.vi12.StudentProfile.FragmentProfile4">
 
         <ScrollView
             android:layout_width="match_parent"

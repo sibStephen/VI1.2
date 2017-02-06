@@ -51,7 +51,7 @@ public class ServerActivity extends AppCompatActivity {
     String TAG = "Test";
     String localhost = "192.168.1.38";
     int portNumber  = 2000;
-    Thread thread , thread1 , threadSend;
+    Thread threadConnect , thread1 , threadSend;
     AutoCompleteTextView completetv;
     SocketAddress sockaddr;
     Button button , btnDissconnect , btnSend ,btnProfile, btnLogin;
@@ -105,7 +105,11 @@ public class ServerActivity extends AppCompatActivity {
                 try{
 
                     try {
-                        thread.start();
+                        ipaddress = completetv.getText().toString();
+                        Log.d(TAG, "onClick: ip address is : "+ipaddress);
+                        threadConnect.start();
+
+
 
 
                     } catch (Exception e){
@@ -197,17 +201,15 @@ public class ServerActivity extends AppCompatActivity {
 
 
 
-      thread = new Thread(new Runnable() {
+      threadConnect = new Thread(new Runnable() {
 
             @Override
             public void run() {
                 try  {
 
-                    sockaddr = new InetSocketAddress(localhost, portNumber);
 
                     Log.d(TAG, "run: ip address is "+ipaddress);
-                   // socket = new Socket(localhost , portNumber);
-                    socket = IO.socket("http://192.168.1.38:8083/");
+                      socket = IO.socket(ipaddress);
                     socket.connect();
 
                     Log.d(TAG, "run:connected.........");
@@ -287,35 +289,7 @@ public class ServerActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.connect:
-                AlertDialog.Builder b = new AlertDialog.Builder(ServerActivity.this);
-                LayoutInflater inflater=ServerActivity.this.getLayoutInflater();
-                //this is what I did to added the layout to the alert dialog
-                View layout=inflater.inflate(R.layout.layout,null);
-                b.setView(layout);
-                  et_ip = (EditText) findViewById(R.id.et_ip);
-                b.setPositiveButton("Connect", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
 
-                        ipaddress = et_ip.getText().toString().trim();
-                        Log.d(TAG, "onClick: input ip address is "+ipaddress);
-                        thread.start();
-                    }
-                });
-                b.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        dialogInterface.dismiss();
-                    }
-                });
-
-                b.show();
-                return true;
-
-           }
         return false;
 
     }

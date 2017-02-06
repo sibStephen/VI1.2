@@ -21,12 +21,12 @@ import io.realm.RealmConfiguration;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link profile1.OnFragmentInteractionListener} interface
+ * {@link FragmentProfile1.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link profile1#newInstance} factory method to
+ * Use the {@link FragmentProfile1#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class profile1 extends Fragment {
+public class FragmentProfile1 extends Fragment {
 
     Realm realm;
     EditText name,surname,year,div,branch,grno;
@@ -46,7 +46,7 @@ public class profile1 extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public profile1() {
+    public FragmentProfile1() {
         // Required empty public constructor
     }
 
@@ -59,8 +59,8 @@ public class profile1 extends Fragment {
      * @return A new instance of fragment profile1.
      */
     // TODO: Rename and change types and number of parameters
-    public static profile1 newInstance(String param1, String param2) {
-        profile1 fragment = new profile1();
+    public static FragmentProfile1 newInstance(String param1, String param2) {
+        FragmentProfile1 fragment = new FragmentProfile1();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

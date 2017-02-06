@@ -18,7 +18,7 @@ import io.realm.RealmConfiguration;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class profile4 extends Fragment {
+public class FragmentProfile4 extends Fragment {
 
     Realm realm;
     EditText ssc_maths,ssc_science,hsc_eng,hsc_phy,hsc_chem,hsc_it,ssc_total,hsc_total,hsc_maths;
@@ -26,7 +26,7 @@ public class profile4 extends Fragment {
     Button save,back;
     String TAG="Test";
     Student_profile profile;
-    public profile4() {
+    public FragmentProfile4() {
         // Required empty public constructor
     }
 

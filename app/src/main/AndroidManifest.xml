@@ -45,9 +45,9 @@
         <activity android:name=".AcademicActivity"></activity>
         <activity android:name=".ProfileActivity"></activity>
         <activity android:name=".StudentProfile.UserProfile"></activity>
-        <activity android:name=".StudentProfile.EditProfile"></activity>
+        <activity android:name=".StudentProfile.EditProfileActivity"></activity>
 
-        <activity android:name=".StudentProfile.Form"></activity>
+        <activity android:name=".StudentProfile.FormActivity"></activity>
     </application>
 
 </manifest>

@@ -23,7 +23,7 @@ import io.realm.RealmConfiguration;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class profile3 extends Fragment {
+public class FragmentProfile3 extends Fragment {
 
     Realm realm;
     EditText address,district,state,country,city,landline,pincode,area;
@@ -31,7 +31,7 @@ public class profile3 extends Fragment {
     Student_profile profile;
     String TAG = "Test";
 Spinner spinner_country;
-    public profile3() {
+    public FragmentProfile3() {
         // Required empty public constructor
     }
 

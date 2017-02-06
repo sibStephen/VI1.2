@@ -9,11 +9,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import college.root.vi12.HomePageActivity;
 import college.root.vi12.R;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
-public class Form extends AppCompatActivity {
+public class FormActivity extends AppCompatActivity {
 
     Realm realm;
     EditText name,surname,grno;
@@ -59,12 +60,13 @@ public class Form extends AppCompatActivity {
                         @Override
                         public void execute(Realm realm) {
                             realm.copyToRealmOrUpdate(profile);
+                            Intent intent=new Intent(FormActivity.this,HomePageActivity.class);
+                            startActivity(intent);
                         }
                     }, new Realm.Transaction.OnSuccess() {
                         @Override
                         public void onSuccess() {
-                            Intent intent=new Intent(Form.this,UserProfile.class);
-                            startActivity(intent);
+
                             Toast.makeText(getApplicationContext(),"Data saved successfully",Toast.LENGTH_SHORT).show();
                         }
                     });

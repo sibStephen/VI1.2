@@ -14,7 +14,7 @@ import android.widget.EditText;
 import college.root.vi12.R;
 import io.realm.Realm;
 
-public class EditProfile extends AppCompatActivity implements profile1.OnFragmentInteractionListener,profile2.OnFragmentInteractionListener,profile5.OnFragmentInteractionListener{
+public class EditProfileActivity extends AppCompatActivity implements FragmentProfile1.OnFragmentInteractionListener,FragmentProfile2.OnFragmentInteractionListener,FragmentProfile5.OnFragmentInteractionListener{
     Realm realm;
     EditText name,surname,year,div,branch,grno;
     String oldgrno;
@@ -70,15 +70,15 @@ public class EditProfile extends AppCompatActivity implements profile1.OnFragmen
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-                    return new profile1();
+                    return new FragmentProfile1();
                 case 1:
-                    return new profile2();
+                    return new FragmentProfile2();
                 case 2:
-                    return new profile3();
+                    return new FragmentProfile3();
                 case 3:
-                    return new profile4();
+                    return new FragmentProfile4();
                 case 4:
-                    return new profile5();
+                    return new FragmentProfile5();
                 default:
                     return null;
             }

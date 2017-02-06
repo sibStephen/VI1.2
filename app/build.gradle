@@ -49,15 +49,10 @@ dependencies {
     compile 'com.uphyca:stetho_realm:2.0.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
 
-    // compile 'com.github.nkzawa:socket.io-client:0.3.0'
+  
     compile ('io.socket:socket.io-client:0.8.3') {
         exclude group: 'org.json', module: 'json'
     }
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
-    compile 'io.reactivex:rxjava:1.2.0'
-    compile 'io.reactivex:rxandroid:1.2.1'
 
     testCompile 'junit:junit:4.12'
 }

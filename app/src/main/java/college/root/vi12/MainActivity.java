@@ -1,7 +1,9 @@
 package college.root.vi12;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,25 +24,18 @@ import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.parse.LogInCallback;
 import com.parse.ParseAnalytics;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import com.parse.ParseFacebookUtils;
+
 import com.facebook.FacebookSdk;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import college.root.vi12.StudentProfile.Form;
-import college.root.vi12.StudentProfile.UserProfile;
+import college.root.vi12.StudentProfile.FormActivity;
 import io.realm.Realm;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -166,7 +161,22 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "call: value is "+isAuth);
                         if (isAuth==1){
 
-                            startActivity(new Intent(MainActivity.this , Form.class));
+                            //startActivity(new Intent(MainActivity.this , FormActivity.class));
+                            SharedPreferences sharedPreferences = getSharedPreferences("ShaPreferences", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor=sharedPreferences.edit();
+
+                            boolean  firstTime=sharedPreferences.getBoolean("first", true);
+
+                            if(firstTime) {
+                                editor.putBoolean("first",false);
+                                //For commit the changes, Use either editor.commit(); or  editor.apply();.
+                                editor.commit();
+                                Intent intent = new Intent(MainActivity.this, FormActivity.class);
+                                startActivity(intent);
+                            }else {
+                                Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
+                                startActivity(intent);
+                            }
                            // Toast.makeText(MainActivity.this , "Successfully logged in ..", Toast.LENGTH_SHORT).show();
                         }else {
                             //Toast.makeText(MainActivity.this , "Error logging in", Toast.LENGTH_SHORT).show();
