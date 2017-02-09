@@ -8,12 +8,13 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class Student_profile extends RealmObject {
-
+    @PrimaryKey
+    private String grno;
     private String div;
     int uid;
     private String branch;
-    @PrimaryKey
-    private String grno;
+    public String username;
+    public String password;
     public String mname;
     public String fprofession,fdesig,fworkplace,fmobile,femail,mprofession,mworkplace,mdesig,mmobile;
     private String name;
@@ -47,7 +48,21 @@ public class Student_profile extends RealmObject {
     private String surname;
     private String year;
 
+    public String getPassword() {
+        return password;
+    }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getMname() {
         return mname;

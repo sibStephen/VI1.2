@@ -36,6 +36,7 @@ import java.net.MalformedURLException;
 import java.net.SocketAddress;
 import java.net.URISyntaxException;
 
+import io.realm.Realm;
 import io.socket.client.IO;
 //import java.net.Socket;
 import java.net.URL;
@@ -59,8 +60,10 @@ public class ServerActivity extends AppCompatActivity {
     TextView tv_messages;
     EditText et_message;
     JSONObject jobj;
-    String ipaddress = "http://192.168.1.38:8083/";
+    public String ipaddress = "";
     EditText et_ip;
+    Realm realm;
+    IPAddess ipAddess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,8 @@ public class ServerActivity extends AppCompatActivity {
         btnDissconnect = (Button)findViewById(R.id.btn_disconnect);
         btnProfile = (Button) findViewById(R.id.btnProfile);
         btnLogin = (Button)findViewById(R.id.btnLogin);
+
+        realm = Realm.getDefaultInstance();
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,8 +111,44 @@ public class ServerActivity extends AppCompatActivity {
 
                     try {
                         ipaddress = completetv.getText().toString();
-                        Log.d(TAG, "onClick: ip address is : "+ipaddress);
+
+                       /* ipAddess = new IPAddess();
+                        ipAddess = realm.where(IPAddess.class).findFirst();
+                        if (ipAddess == null){
+                            ipAddess = new IPAddess();
+                            realm.beginTransaction();
+                            ipAddess.setIpaddress(ipaddress);
+                            realm.commitTransaction();
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    Log.d(TAG, "execute: ip address saved in realm ");
+                                    realm.copyToRealmOrUpdate(ipAddess);
+                                    threadConnect.start();
+
+
+                                }
+                            });
+
+                        }else {
+                            realm.beginTransaction();
+                            ipAddess.setIpaddress(ipaddress);
+                            realm.commitTransaction();
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+
+                                    realm.copyToRealmOrUpdate(ipAddess);
+                                    threadConnect.start();
+
+
+                                }
+                            });
+
+                        }*/
+
                         threadConnect.start();
+                        Log.d(TAG, "onClick: ip address is : "+ipaddress);
 
 
 
@@ -201,15 +242,22 @@ public class ServerActivity extends AppCompatActivity {
 
 
 
+
       threadConnect = new Thread(new Runnable() {
 
             @Override
             public void run() {
                 try  {
+                    Log.d(TAG, "run: in thread connect ....");
 
 
+/*                    ipAddess = realm.where(IPAddess.class).findFirst();
+                    ipaddress = ipAddess.getIpaddress();*/
+                    if (ipAddess==null)
+                        Log.d(TAG, "run: ipAdress is null");
                     Log.d(TAG, "run: ip address is "+ipaddress);
-                      socket = IO.socket(ipaddress);
+                    Log.d(TAG, "run: ip address is "+ipaddress);
+                      socket = IO.socket("http://192.168.1.38:8083/");
                     socket.connect();
 
                     Log.d(TAG, "run:connected.........");
@@ -275,6 +323,9 @@ public class ServerActivity extends AppCompatActivity {
 
 
 
+    }
+    public String getIPAddress(){
+        return ipaddress;
     }
 
 

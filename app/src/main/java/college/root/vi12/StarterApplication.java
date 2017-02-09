@@ -44,21 +44,7 @@ public class StarterApplication extends Application {
         Realm.setDefaultConfiguration(configuration);
         Log.d(TAG , "Realm set");
 
-        try{
 
-            Parse.initialize(new Parse.Configuration.Builder(this)
-            .applicationId("mjBwOzJFhHqt2TNi4a2XbTEsn9nVLpUzZopI0XK8")
-            .clientKey("0HRT8ZEkxJ2RRNce5whyC5dwcHMEATpf1jljhtIu")
-            .server("https://parseapi.back4app.com/").build()
-            );
-            Log.d(TAG, "onCreate: initialization done");
-
-
-
-
-        }catch (Exception e){
-
-        }
 
 
 

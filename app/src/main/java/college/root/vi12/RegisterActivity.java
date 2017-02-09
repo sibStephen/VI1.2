@@ -32,13 +32,16 @@ import io.socket.emitter.Emitter;
 public class RegisterActivity extends AppCompatActivity {
 
     Button btnReg;
-    EditText etEmail, etUser, etPass, etGRNumber, etBranch, etYear;
+    EditText etEmail, etUser, etPass, etGRNumber, etBranch, etYear, etFirstName , etLastName;
     String TAG = "Test";
     ProgressDialog progress;
     Realm realm;
     Thread threadRegister;
     Socket socket;
-    String GrNumber, email, password, username , year , branch;
+    String ipaddres;
+    String GrNumber, email, password, username , year , branch, firstName , lastName;
+    String ipaddress;
+    IPAddess ipAddess;
 
 
     @Override
@@ -46,15 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        realm = Realm.getDefaultInstance();
-
-        btnReg = (Button) findViewById(R.id.btnRegister);
-        etEmail = (EditText) findViewById(R.id.etEmailReg);
-        etPass = (EditText) findViewById(R.id.etPass);
-        etUser = (EditText) findViewById(R.id.etUser);
-        etBranch = (EditText) findViewById(R.id.etBranch);
-        etGRNumber = (EditText) findViewById(R.id.etGrNumber);
-        etYear = (EditText) findViewById(R.id.etYear);
+        setViews(); // initialize views
 
 
         btnReg.setOnClickListener(new View.OnClickListener() {
@@ -78,9 +73,12 @@ public class RegisterActivity extends AppCompatActivity {
                         year = etYear.getText().toString();
                         username = etUser.getText().toString();
                         password = etPass.getText().toString();
+                        firstName = etFirstName.getText().toString();
+                        lastName = etLastName.getText().toString();
 
                         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(GrNumber) || TextUtils.isEmpty(password)
-                                || TextUtils.isEmpty(username) || TextUtils.isEmpty(branch) || TextUtils.isEmpty(year)) {
+                                || TextUtils.isEmpty(username) || TextUtils.isEmpty(branch)
+                                || TextUtils.isEmpty(firstName)|| TextUtils.isEmpty(lastName)) {
                             Toast.makeText(RegisterActivity.this, "Please enter all teh details", Toast.LENGTH_SHORT).show();
 
                         } else {
@@ -107,6 +105,9 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        ServerActivity server = new ServerActivity();
+        ipaddres = server.getIPAddress();
+
         threadRegister  = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -114,6 +115,9 @@ public class RegisterActivity extends AppCompatActivity {
 
                 try {
                     Log.d(TAG, "run: into the thread");
+                 /*   ipAddess = new IPAddess();
+                    ipAddess = realm.where(IPAddess.class).findFirst();
+                    ipaddress = ipAddess.getIpaddress();*/
                     socket = IO.socket("http://192.168.1.38:8083/");
                     socket.connect();
                 } catch (URISyntaxException e) {
@@ -130,6 +134,8 @@ public class RegisterActivity extends AppCompatActivity {
                         object.put("grNumber", GrNumber);
                         object.put("branch", branch);
                         object.put("year", year);
+                        object.put("FirstName" , firstName);
+                        object.put("LastName" , lastName);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -139,7 +145,7 @@ public class RegisterActivity extends AppCompatActivity {
                     socket.on("registerResult", new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
-                            // check if registeration is successfull
+                            // check if registration is successful
                             int authComplete = (int) args[0];
                             Log.d(TAG, "call: authComplete value is "+authComplete);
                             if (authComplete == 1){
@@ -160,13 +166,27 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                 }else{
-                    Log.d(TAG, "run: not nonnected");
+                    Log.d(TAG, "run: not connected");
                 }
                // socket.connect();
 
             }
         });
 
+    }
+
+    public  void setViews(){
+        realm = Realm.getDefaultInstance();
+
+        btnReg = (Button) findViewById(R.id.btnRegister);
+        etEmail = (EditText) findViewById(R.id.etEmailReg);
+        etPass = (EditText) findViewById(R.id.etPass);
+        etUser = (EditText) findViewById(R.id.etUser);
+        etBranch = (EditText) findViewById(R.id.etBranch);
+        etGRNumber = (EditText) findViewById(R.id.etGrNumber);
+        etYear = (EditText) findViewById(R.id.etYear);
+        etFirstName = (EditText)findViewById(R.id.etFirstName);
+        etLastName = (EditText)findViewById(R.id.etLastname);
 
     }
 }

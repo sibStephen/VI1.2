@@ -37,6 +37,7 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
     int GALLERY_REQUEST = 1;
     Uri mImageUri;
     Student_profile profile;
+    String TAG = "Test";
 
 
     @Override
@@ -73,10 +74,17 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
        // uid=userProfile.getUid();
        userProfile = realm.where(Student_profile.class).findFirst();
         // realm.beginTransaction();
-        tvname.setText(userProfile.getName());
-        tvsurname.setText(userProfile.getSurname());
-        tvyear.setText(userProfile.getYear());
-        tvdiv.setText(userProfile.getDiv());
+
+        if (userProfile == null){
+            Log.d(TAG, "onCreate: user profile is null ");
+        }else {
+            tvname.setText(userProfile.getName());
+            tvsurname.setText(userProfile.getSurname());
+            tvyear.setText(userProfile.getYear());
+            tvdiv.setText(userProfile.getDiv());
+        }
+
+
         if(flag)
         {
             imageuri=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
@@ -86,7 +94,7 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
             profilePic.setImageURI(imageuri);
 
         }
-        tvbranch.setText(userProfile.getBranch());
+//        tvbranch.setText(userProfile.getBranch());
         if(!flag) {
            Log.d("FLAG1:", String.valueOf(flag));
             profilePic.setImageURI(Uri.parse(userProfile.getImagePath()));

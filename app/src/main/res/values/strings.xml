@@ -12,6 +12,7 @@
 
     <string-array name="countries">
         <item>http://192.168.1.38:8083/</item>
+        <item>http://192.168.43.216:8083/</item>
 
 
 

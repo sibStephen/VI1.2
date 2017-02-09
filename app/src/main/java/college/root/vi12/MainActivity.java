@@ -8,9 +8,13 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,10 +38,12 @@ import java.util.List;
 
 import com.facebook.FacebookSdk;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import college.root.vi12.StudentProfile.FormActivity;
+import college.root.vi12.StudentProfile.Student_profile;
 import io.realm.Realm;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -48,17 +54,21 @@ public class MainActivity extends AppCompatActivity {
     Button btnLogin ;
     EditText etUser , etPass;
     String username , password;
-    TextView tvReg , tvHome , tvUser , tvEmail;
+    TextView tvReg , tvHome ;
     String TAG = "Test";
     ProgressDialog progress;
-    Button btnFb;
+
     Realm realm;
     LoginButton loginButton;
     CallbackManager manager;
     FacebookCallback<LoginResult> mCallBack;
     Thread threadLogin;
     Socket socket;
-   // List<NameValuePair> params;
+    String ipaddress;
+   Student_profile profile;
+    ProgressDialog dialog ;
+    CheckBox cbShowPass;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,22 +77,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        ParseAnalytics.trackAppOpenedInBackground(getIntent());
 //        ParseFacebookUtils.initialize(this);
 
+        setviews(); // initialize views
         realm = Realm.getDefaultInstance();
         final List<String> permissions = Arrays.asList("public_profile", "email");
 
 
-        btnLogin =  (Button)findViewById(R.id.button);
-        tvReg = (TextView)findViewById(R.id.tvReg);
-        tvHome = (TextView)findViewById(R.id.textView);
-        etUser = (EditText)findViewById(R.id.etEmail);
-        etPass = (EditText)findViewById(R.id.etPass);
-        btnFb = (Button)findViewById(R.id.fbButton);
-       // tvEmail =  (TextView)findViewById(R.id.tvEmail);
-        //tvUser = (TextView)findViewById(R.id.tvUser);
-        loginButton = (LoginButton)findViewById(R.id.fbLoginButton);
 
 
 // link to register page .
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Confirm Registration ?");
+                builder.setTitle("Confirm Login ?");
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -143,7 +144,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+      ServerActivity serverActivity = new ServerActivity();
+        ipaddress = serverActivity.getIPAddress();
+        Log.d(TAG, "onCreate: ipaddress recieved is "+ipaddress);
 
         // login thread
         threadLogin = new Thread(new Runnable() {
@@ -151,7 +154,10 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
 
                 try {
-                    socket = IO.socket("http://192.168.1.38:8083/");
+/*                    ipAddess = new IPAddess();
+                    ipAddess = realm.where(IPAddess.class).findFirst();
+                    ipaddress = ipAddess.getIpaddress();*/
+                    socket = IO.socket("http://192.168.1.38:8083");
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                     Log.d(TAG, "run: error "+e.getMessage() );
@@ -179,28 +185,124 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void call(Object... args) {
                         // check if user is authenticated
+//                        dialog = new ProgressDialog(MainActivity.this);
+  //                      dialog.setMessage("Please wait whiel we log you in...");
+    //                    dialog.show();
                         int isAuth = (int)args[0];
                         Log.d(TAG, "call: value is "+isAuth);
-                        if (isAuth==1){
+                        if (isAuth == 1){
+                            Log.d(TAG, "call: is Auth is 1 hence getting data from server");
+                            // recieve the json data from server
+                            socket.on("JSON", new Emitter.Listener() {
+                                @Override
+                                public void call(Object... args) {
+                                    // json array is received of which 0th element is user data
+                                    JSONArray array = (JSONArray) args[0];
+                                    Log.d(TAG, "call: array is "+array);
+                                    JSONObject userData = null;
+                                    try {
+                                        userData = array.getJSONObject(0);
+                                        Log.d(TAG, "call: object is "+userData);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    try {
+                                        String GrNumber = userData.getString("_id");
+                                        String firstName = userData.getString("firstName");
+                                        String lastName = userData.getString("lastName");
+                                        String branch = userData.getString("branch");
+                                        String year = userData.getString("year");
+                                        String username = userData.getString("username");
+                                        String password = userData.getString("password");
+                                        String email = userData.getString("email");
+
+                                        Log.d(TAG, "call: USER : ");
+                                        Log.d(TAG, "call: username  "+username);
+                                        Log.d(TAG, "call: password "+password);
+                                        Log.d(TAG, "call: name "+firstName);
+                                        Log.d(TAG, "call: last name "+lastName);
+
+                                        SharedPreferences sharedPreferences = getSharedPreferences("ShaPreferences", Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor=sharedPreferences.edit();
+
+                                        boolean  firstTime=sharedPreferences.getBoolean("first", true);
+
+                                        if(firstTime) {
+                                            editor.putBoolean("first",false);
+                                            //For commit the changes, Use either editor.commit(); or  editor.apply();.
+                                            editor.commit();
+                                            realm = Realm.getDefaultInstance();
+                                            profile = new Student_profile();
+                                            profile = realm.where(Student_profile.class).findFirst();
+                                            if(profile == null) {
+                                                Log.d(TAG, "save: profile is null");
+                                                //     profile = realm.createObject(Student_profile.class);
+                                                realm.beginTransaction();
+                                                profile = new Student_profile();
+
+                                                profile.setName(firstName);
+                                                profile.setSurname(lastName);
+                                                profile.setBranch(branch);
+                                                profile.setYear(year);
+                                                profile.setGrno(GrNumber);
+                                                profile.setUsername(username);
+                                                profile.setPassword(password);
+                                                profile.setEmail_pri(email);
+                                                //profile.setGrno(grno.getText().toString());
+
+                                                realm.commitTransaction();
+                                                realm.executeTransaction(new Realm.Transaction() {
+                                                    @Override
+                                                    public void execute(Realm realm) {
+                                                        Log.d(TAG, "execute: realm saving data .....");
+                                                        realm.copyToRealmOrUpdate(profile);
+                                                        Log.d(TAG, "execute: realm saved data .....");
+                                                        Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
+                                                        startActivity(intent);
+                                                       //threadLogin.interrupt();
+                                                    }
+                                                }) ;
+
+                                                /*realm.executeTransactionAsync(new Realm.Transaction() {
+                                                    @Override
+                                                    public void execute(Realm realm) {
+                                                        realm.copyToRealmOrUpdate(profile);
+                                                    }
+                                                }, new Realm.Transaction.OnSuccess() {
+                                                    @Override
+                                                    public void onSuccess() {
+                                                       // dialog.dismiss();
+                                                        Log.d(TAG, "onSuccess: data saved success");
+                                                        Toast.makeText(getApplicationContext(), "Data saved successfully", Toast.LENGTH_SHORT).show();
+                                                        Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
+                                                        startActivity(intent);
+                                                    }
+                                                });*/
+
+                                            }else{
+                                             //   dialog.dismiss();
+                                                Log.d(TAG, "call: there already exists a student profile information");
+                                            }
+                                            //Intent intent = new Intent(MainActivity.this, FormActivity.class);
+                                            //startActivity(intent);
+                                        }else {
+                                           // dialog.dismiss();
+                                            Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
+                                            startActivity(intent);
+                                        }
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
 
                             //startActivity(new Intent(MainActivity.this , FormActivity.class));
-                            SharedPreferences sharedPreferences = getSharedPreferences("ShaPreferences", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor=sharedPreferences.edit();
 
-                            boolean  firstTime=sharedPreferences.getBoolean("first", true);
-
-                            if(firstTime) {
-                                editor.putBoolean("first",false);
-                                //For commit the changes, Use either editor.commit(); or  editor.apply();.
-                                editor.commit();
-                                Intent intent = new Intent(MainActivity.this, FormActivity.class);
-                                startActivity(intent);
-                            }else {
-                                Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
-                                startActivity(intent);
-                            }
                            // Toast.makeText(MainActivity.this , "Successfully logged in ..", Toast.LENGTH_SHORT).show();
                         }else {
+                            Log.d(TAG, "call: error in login");
+                        //    dialog.dismiss();
                             //Toast.makeText(MainActivity.this , "Error logging in", Toast.LENGTH_SHORT).show();
 
                         }
@@ -212,6 +314,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
 
         // FACEBOOK LOGIN/ SIGNUP CODE HERE ...
 
@@ -243,7 +347,19 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
+        cbShowPass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (!isChecked) {
+                    // show password
+                    etPass.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                } else {
+                    // hide password
+                    etPass.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                }
+            }
+        });
 
     }// end of onCreate
 
@@ -277,4 +393,17 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         manager.onActivityResult(requestCode , resultCode , data);
     }
+
+    public void setviews(){
+        btnLogin =  (Button)findViewById(R.id.button);
+        tvReg = (TextView)findViewById(R.id.tvReg);
+        tvHome = (TextView)findViewById(R.id.textView);
+        etUser = (EditText)findViewById(R.id.etEmail);
+        etPass = (EditText)findViewById(R.id.etPass);
+      //  btnFb = (Button)findViewById(R.id.fbButton);
+        loginButton = (LoginButton)findViewById(R.id.fbLoginButton);
+        cbShowPass = (CheckBox)findViewById(R.id.cbShowPass);
+
+    }
+
 }
