@@ -14,7 +14,7 @@ import android.widget.EditText;
 import college.root.vi12.R;
 import io.realm.Realm;
 
-public class EditProfileActivity extends AppCompatActivity implements FragmentProfile1.OnFragmentInteractionListener,FragmentProfile2.OnFragmentInteractionListener,FragmentProfile5.OnFragmentInteractionListener{
+public class EditProfileActivity extends AppCompatActivity{
     Realm realm;
     EditText name,surname,year,div,branch,grno;
     String oldgrno;
@@ -54,10 +54,7 @@ public class EditProfileActivity extends AppCompatActivity implements FragmentPr
         });
        }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
 
-    }
 
 
     private class CustomAdapter extends FragmentPagerAdapter {

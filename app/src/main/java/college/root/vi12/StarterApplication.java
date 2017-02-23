@@ -7,14 +7,17 @@ import android.content.pm.Signature;
 import android.util.Base64;
 import android.util.Log;
 
+import com.facebook.stetho.Stetho;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.interceptors.ParseStethoInterceptor;
+import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.regex.Pattern;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -45,19 +48,26 @@ public class StarterApplication extends Application {
         Log.d(TAG , "Realm set");
 
 
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
+                        .build());
 
-
-
-
-
-
-      //  ParseUser.enableAutomaticUser();
-        ParseACL defaultACL = new ParseACL();
-        // Optionally enable public read access.
-        // defaultACL.setPublicReadAccess(true);
-        ParseACL.setDefaultACL(defaultACL, true);
-
+        RealmInspectorModulesProvider.builder(this)
+                .withFolder(getCacheDir())
+                .withMetaTables()
+                .withDescendingOrder()
+                .withLimit(1000)
+                .databaseNamePattern(Pattern.compile(".+\\.realm"))
+                .build();
     }
+
+
+
+
+
+
     private void getKeyHash() {
         try {
             Log.d(TAG, "getKeyHash: in getKeyHash Method");

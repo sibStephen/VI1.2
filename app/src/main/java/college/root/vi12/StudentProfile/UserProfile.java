@@ -19,10 +19,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.net.URISyntaxException;
+
+import college.root.vi12.NetworkUtils;
 import college.root.vi12.R;
+import college.root.vi12.Toast;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.socket.client.Socket;
 
 public class UserProfile extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -38,6 +43,9 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
     Uri mImageUri;
     Student_profile profile;
     String TAG = "Test";
+    Socket socket;
+    NetworkUtils networkUtils;
+    Toast toast;
 
 
     @Override
@@ -58,6 +66,14 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
         navigationView.setNavigationItemSelectedListener(UserProfile.this);
         boolean  flag=sharedPreferences.getBoolean("flag", true);
         Log.d("FLAG:", String.valueOf(flag));
+
+        try {
+//            socket = networkUtils.getSocketAsync();
+            networkUtils.listener("test" , UserProfile.this , getApplicationContext(), toast);
+
+        }catch (Exception e){
+
+        }
 
         RealmConfiguration config = new RealmConfiguration.Builder(this).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
        realm.setDefaultConfiguration(config);

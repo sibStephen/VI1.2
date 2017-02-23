@@ -39,6 +39,7 @@ public class HomePageActivity extends AppCompatActivity {
                        startActivity(new Intent(HomePageActivity.this , UserProfile.class));
                         break;
                     case R.id.menu_search:
+                        addFragment(new ChatFragment() , null);
                         break;
 
                 }

@@ -68,22 +68,29 @@ public class MainActivity extends AppCompatActivity {
    Student_profile profile;
     ProgressDialog dialog ;
     CheckBox cbShowPass;
+    SharedPreferences.Editor editorLogin;
+    SharedPreferences sharedPreferencesLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(MainActivity.this);
 
         setContentView(R.layout.activity_main);
+        realm = Realm.getDefaultInstance();
+
+        sharedPreferencesLogin = getSharedPreferences("login", Context.MODE_PRIVATE);
+        editorLogin = sharedPreferencesLogin.edit();
+
+        boolean isLoggedIn = sharedPreferencesLogin.getBoolean("login", false);
+        if (isLoggedIn){
+            startActivity(new Intent(MainActivity.this, HomePageActivity.class));
+            finish();
+        }
 
 
-//        ParseFacebookUtils.initialize(this);
+
 
         setviews(); // initialize views
-        realm = Realm.getDefaultInstance();
-        final List<String> permissions = Arrays.asList("public_profile", "email");
-
-
 
 
 // link to register page .
@@ -91,13 +98,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                startActivity(new Intent(MainActivity.this , RegisterActivity.class));
+                startActivity(new Intent(MainActivity.this, RegisterActivity.class));
+                finish();
 
             }
         });
 
-
-        
 
 // login code
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -113,15 +119,15 @@ public class MainActivity extends AppCompatActivity {
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        progress.show();
+                        //   progress.show();
                         username = etUser.getText().toString();
                         password = etPass.getText().toString();
-                        if(!username.isEmpty() && !password.isEmpty()){
+                        if (!username.isEmpty() && !password.isEmpty()) {
                             // send data to server
                             threadLogin.start();
 
-                        }else{
-                            Toast.makeText(MainActivity.this , "Please fill out all the details ", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Please fill out all the details ", Toast.LENGTH_SHORT).show();
                         }
 
 
@@ -137,16 +143,11 @@ public class MainActivity extends AppCompatActivity {
                 builder.show();
 
 
-
-
-
-
             }
         });
 
-      ServerActivity serverActivity = new ServerActivity();
-        ipaddress = serverActivity.getIPAddress();
-        Log.d(TAG, "onCreate: ipaddress recieved is "+ipaddress);
+
+        Log.d(TAG, "onCreate: ipaddress recieved is " + ipaddress);
 
         // login thread
         threadLogin = new Thread(new Runnable() {
@@ -157,17 +158,20 @@ public class MainActivity extends AppCompatActivity {
 /*                    ipAddess = new IPAddess();
                     ipAddess = realm.where(IPAddess.class).findFirst();
                     ipaddress = ipAddess.getIpaddress();*/
-                    socket = IO.socket("http://192.168.1.38:8083");
+                    //socket = IO.socket("http://192.168.1.38:8083");
+                    NetworkUtils networkUtils = new NetworkUtils();
+                    socket = networkUtils.get();
+                    // college.root.vi12.Toast.makeText(getBaseContext() , "Its a toast from backgrond thread ", college.root.vi12.Toast.LENGTH_SHORT).show();
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
-                    Log.d(TAG, "run: error "+e.getMessage() );
+                    Log.d(TAG, "run: error " + e.getMessage());
                 }
-                socket.connect();
+//                socket.connect();
 
-                Log.d(TAG, "run:connected.........");
+                //  Log.d(TAG, "run:connected.........");
                 //  socket.on()
                 // socket.connect();
-                if (!socket.connected()){
+                if (!socket.connected()) {
 
                     JSONObject object = new JSONObject();
                     try {
@@ -177,8 +181,10 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    socket.emit("login" , object.toString() );
-                    progress.dismiss();
+                    socket.emit("login", object.toString());
+                    //  progress.dismiss();
+                } else {
+                    Log.d(TAG, "run: not connected");
                 }
 
                 socket.on("loginResult", new Emitter.Listener() {
@@ -186,11 +192,11 @@ public class MainActivity extends AppCompatActivity {
                     public void call(Object... args) {
                         // check if user is authenticated
 //                        dialog = new ProgressDialog(MainActivity.this);
-  //                      dialog.setMessage("Please wait whiel we log you in...");
-    //                    dialog.show();
-                        int isAuth = (int)args[0];
-                        Log.d(TAG, "call: value is "+isAuth);
-                        if (isAuth == 1){
+                        //                      dialog.setMessage("Please wait whiel we log you in...");
+                        //                    dialog.show();
+                        int isAuth = (int) args[0];
+                        Log.d(TAG, "call: value is " + isAuth);
+                        if (isAuth == 1) {
                             Log.d(TAG, "call: is Auth is 1 hence getting data from server");
                             // recieve the json data from server
                             socket.on("JSON", new Emitter.Listener() {
@@ -198,17 +204,17 @@ public class MainActivity extends AppCompatActivity {
                                 public void call(Object... args) {
                                     // json array is received of which 0th element is user data
                                     JSONArray array = (JSONArray) args[0];
-                                    Log.d(TAG, "call: array is "+array);
+                                    Log.d(TAG, "call: array is " + array);
                                     JSONObject userData = null;
                                     try {
                                         userData = array.getJSONObject(0);
-                                        Log.d(TAG, "call: object is "+userData);
+                                        Log.d(TAG, "call: object is " + userData);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
                                     try {
                                         String GrNumber = userData.getString("_id");
-                                        String firstName = userData.getString("firstName");
+                                        final String firstName = userData.getString("firstName");
                                         String lastName = userData.getString("lastName");
                                         String branch = userData.getString("branch");
                                         String year = userData.getString("year");
@@ -217,24 +223,29 @@ public class MainActivity extends AppCompatActivity {
                                         String email = userData.getString("email");
 
                                         Log.d(TAG, "call: USER : ");
-                                        Log.d(TAG, "call: username  "+username);
-                                        Log.d(TAG, "call: password "+password);
-                                        Log.d(TAG, "call: name "+firstName);
-                                        Log.d(TAG, "call: last name "+lastName);
+                                        Log.d(TAG, "call: username  " + username);
+                                        Log.d(TAG, "call: password " + password);
+                                        Log.d(TAG, "call: name " + firstName);
+                                        Log.d(TAG, "call: last name " + lastName);
 
                                         SharedPreferences sharedPreferences = getSharedPreferences("ShaPreferences", Context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor=sharedPreferences.edit();
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                                        boolean  firstTime=sharedPreferences.getBoolean("first", true);
+                                        boolean firstTime = sharedPreferences.getBoolean("first", true);
 
-                                        if(firstTime) {
-                                            editor.putBoolean("first",false);
+                                        if (firstTime) {
+                                            editor.putBoolean("first", false);
                                             //For commit the changes, Use either editor.commit(); or  editor.apply();.
                                             editor.commit();
+
+
+                                            editorLogin.putBoolean("login" , true);
+                                            editorLogin.commit();
+
                                             realm = Realm.getDefaultInstance();
                                             profile = new Student_profile();
                                             profile = realm.where(Student_profile.class).findFirst();
-                                            if(profile == null) {
+                                            if (profile == null) {
                                                 Log.d(TAG, "save: profile is null");
                                                 //     profile = realm.createObject(Student_profile.class);
                                                 realm.beginTransaction();
@@ -259,9 +270,10 @@ public class MainActivity extends AppCompatActivity {
                                                         Log.d(TAG, "execute: realm saved data .....");
                                                         Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
                                                         startActivity(intent);
-                                                       //threadLogin.interrupt();
+                                                        finish();
+                                                        //threadLogin.interrupt();
                                                     }
-                                                }) ;
+                                                });
 
                                                 /*realm.executeTransactionAsync(new Realm.Transaction() {
                                                     @Override
@@ -273,22 +285,25 @@ public class MainActivity extends AppCompatActivity {
                                                     public void onSuccess() {
                                                        // dialog.dismiss();
                                                         Log.d(TAG, "onSuccess: data saved success");
-                                                        Toast.makeText(getApplicationContext(), "Data saved successfully", Toast.LENGTH_SHORT).show();
+                                                        college.root.vi12.Toast.makeText(getApplicationContext(), "Data saved successfully", college.root.vi12.Toast.LENGTH_SHORT).show();
                                                         Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
                                                         startActivity(intent);
                                                     }
                                                 });*/
 
-                                            }else{
-                                             //   dialog.dismiss();
+                                            } else {
+                                                //   dialog.dismiss();
                                                 Log.d(TAG, "call: there already exists a student profile information");
                                             }
                                             //Intent intent = new Intent(MainActivity.this, FormActivity.class);
                                             //startActivity(intent);
-                                        }else {
-                                           // dialog.dismiss();
+                                        } else {
+                                            // dialog.dismiss();
+
+
                                             Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
                                             startActivity(intent);
+                                            finish();
                                         }
 
                                     } catch (JSONException e) {
@@ -299,14 +314,14 @@ public class MainActivity extends AppCompatActivity {
 
                             //startActivity(new Intent(MainActivity.this , FormActivity.class));
 
-                           // Toast.makeText(MainActivity.this , "Successfully logged in ..", Toast.LENGTH_SHORT).show();
-                        }else {
+                            // college.root.vi12.Toast.makeText(MainActivity.this , "Successfully logged in ..", college.root.vi12.Toast.LENGTH_SHORT).show();
+                        } else {
+                            editorLogin.putBoolean("login" , false);
                             Log.d(TAG, "call: error in login");
-                        //    dialog.dismiss();
-                            //Toast.makeText(MainActivity.this , "Error logging in", Toast.LENGTH_SHORT).show();
+                            //    dialog.dismiss();
+                            //college.root.vi12.Toast.makeText(MainActivity.this , "Error logging in", college.root.vi12.Toast.LENGTH_SHORT).show();
 
                         }
-
 
 
                     }
@@ -316,82 +331,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-        // FACEBOOK LOGIN/ SIGNUP CODE HERE ...
-
-        loginButton.setReadPermissions(permissions);
-//        loginButton.registerCallback(manager,mCallBack);
-
-        mCallBack = new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-
-
-
-                Profile profile = Profile.getCurrentProfile();
-                Log.d(TAG, "onSuccess: profile name is "+profile.getFirstName());
-
-                requestUserProfile(loginResult);
-
-                Toast.makeText(MainActivity.this , "Welcome "+profile.getFirstName() , Toast.LENGTH_SHORT).show();
-
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-
-            }
-        };
-        cbShowPass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if (!isChecked) {
-                    // show password
-                    etPass.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                } else {
-                    // hide password
-                    etPass.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                }
-            }
-        });
-
-    }// end of onCreate
-
-
-    public void requestUserProfile(LoginResult loginResult){
-        GraphRequest.newMeRequest(
-                loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject me, GraphResponse response) {
-                        if (response.getError() != null) {
-                            // handle error
-                        } else {
-                            try {
-                                String email = response.getJSONObject().get("email").toString();
-                                Log.e(TAG, email);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            String id = me.optString("id");
-                            // send email and id to your web server
-                            Log.e(TAG, response.getRawResponse());
-                            Log.e(TAG, me.toString());
-                        }
-                    }
-                }).executeAsync();
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        manager.onActivityResult(requestCode , resultCode , data);
     }
 
     public void setviews(){

@@ -106,8 +106,6 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         ServerActivity server = new ServerActivity();
-        ipaddres = server.getIPAddress();
-
         threadRegister  = new Thread(new Runnable() {
             @Override
             public void run() {

@@ -11,19 +11,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+import college.root.vi12.NetworkUtils;
 import college.root.vi12.R;
+import college.root.vi12.Toast;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentProfile5.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragmentProfile5#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class FragmentProfile5 extends Fragment {
 
     Realm realm;
@@ -31,54 +32,16 @@ public class FragmentProfile5 extends Fragment {
     Button save;
     String TAG="Test";
     Student_profile profile;
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    String Mname , Fname , Fprofession , Fdesig, Fworkplace,Fmobile,Femail,Mprofession,Mworkplace,Mdesig,Mmobile;
+    NetworkUtils networkUtils;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
-
-    public FragmentProfile5() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment profile5.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FragmentProfile5 newInstance(String param1, String param2) {
-        FragmentProfile5 fragment = new FragmentProfile5();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_profile5, container, false);
-        RealmConfiguration config = new RealmConfiguration.Builder(getContext()).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
+        final RealmConfiguration config = new RealmConfiguration.Builder(getContext()).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
         realm.setDefaultConfiguration(config);
 
 
@@ -122,6 +85,21 @@ public class FragmentProfile5 extends Fragment {
 
                 profile = new Student_profile();
                 profile = realm.where(Student_profile.class).findFirst();
+
+                Fname = fname.getText().toString();
+                Mname = mname.getText().toString();
+                Fprofession = fprofession.getText().toString();
+                Mprofession = mprofession.getText().toString();
+                Fdesig = fdesig.getText().toString();
+                Fworkplace = fworkplace.getText().toString();
+                Fmobile = fmobile.getText().toString();
+                Femail = femail.getText().toString();
+                Mworkplace = mworkplace.getText().toString();
+                Mdesig = mdesig.getText().toString();
+                Mmobile = mmobile.getText().toString();
+                Log.d(TAG, "onClick:  Strings extracted ");
+
+
                 if(profile==null) {
                     Log.d(TAG, "save: profile is null");
                     //     profile = realm.createObject(Student_profile.class);
@@ -151,12 +129,14 @@ public class FragmentProfile5 extends Fragment {
                     });
 //            realm.commitTransaction();
                 }
-                else
-                {
+                else {
+                    Toast toast = new Toast();
+                    toast.showProgressDialog(getActivity(), "Saving details....");
+
                     //  oldgrno=profile.getGrno();
                     profile = realm.where(Student_profile.class).findFirst();
                     realm.beginTransaction();
-
+// TODO 1) do not write main logic in onCreateView instead write in onViewCreated
                     profile.setFname(fname.getText().toString());
                     profile.setMname(mname.getText().toString());
                     profile.setFprofession(fprofession.getText().toString());
@@ -176,51 +156,56 @@ public class FragmentProfile5 extends Fragment {
 
                         }
                     });
+
+
+                    JSONObject parentInfo = new JSONObject();
+                    try {
+                        networkUtils = new NetworkUtils();
+                        parentInfo.put("fname", Fname);
+                        parentInfo.put("mname", Mname);
+                        parentInfo.put("fprofession", Fprofession);
+                        parentInfo.put("fdesig", Fdesig);
+                        parentInfo.put("fworkplace", Fworkplace);
+                        parentInfo.put("fmobile", Fmobile);
+                        parentInfo.put("femail", Femail);
+                        parentInfo.put("mprofession", Mprofession);
+                        parentInfo.put("mworkplace", Mworkplace);
+                        parentInfo.put("mdesig", Mdesig);
+                        parentInfo.put("mmobile", Mmobile);
+
+
+                        Log.d(TAG, "onClick: GrNumber is " + profile.getGrno());
+                        String[] contents = {"fname", "mname", "fprofession", "fdesig", "fworkplace", "fmobile",
+                                "femail", "mprofession", "mworkplace", "mdesig", "mmobile"};
+
+                        StringBuilder sb = new StringBuilder();
+
+
+                        for (int i = 0; i < 11; i++) {
+                            Log.d(TAG, "onClick: " + contents[i]);
+                            sb.append(contents[i] + ",");
+                        }
+                        JSONObject finalObj = new JSONObject();
+                        finalObj.put("obj", parentInfo.toString());
+                        finalObj.put("contents", sb.toString());
+                        finalObj.put("Length", 11);
+                        finalObj.put("collectionName", "parentInfo");
+                        finalObj.put("grNumber", profile.getGrno());
+
+                        networkUtils.emitSocket("Allinfo", finalObj);
+                        networkUtils.listener("Allinfo", getActivity(), getContext(), toast); //success  listener
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                 }
-
-
             }
         });
         return view;
 
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

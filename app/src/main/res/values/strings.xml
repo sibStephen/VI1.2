@@ -7,14 +7,18 @@
     <string name="profile">Profile</string>
     <string name="menu_notifications">Notify</string>
     <string name="facebook_app_id">145074849325227</string>
-    <string name="myIP">192.168.1.39</string>
+    <string name="myIP">http://192.168.1.38:8083/</string>
     <string name="TAG">Test</string>
+    <string name="myHotSpot">http://192.168.1.103:8083/</string>
+    <string name="Reliance">http://192.168.1.103:8083/</string>
 
     <string-array name="countries">
         <item>http://192.168.1.38:8083/</item>
         <item>http://192.168.43.216:8083/</item>
 
 
-
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

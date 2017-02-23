@@ -95,14 +95,7 @@ public class ServerActivity extends AppCompatActivity {
         });
 
 
-        btnProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                startActivity(new Intent(ServerActivity.this , ProfileActivity.class));
-
-            }
-        });
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,7 +140,11 @@ public class ServerActivity extends AppCompatActivity {
 
                         }*/
 
-                        threadConnect.start();
+                        NetworkUtils networkUtils = new NetworkUtils();
+                        socket = networkUtils.getSocketAsync();
+
+
+                        //threadConnect.start();
                         Log.d(TAG, "onClick: ip address is : "+ipaddress);
 
 
@@ -156,7 +153,6 @@ public class ServerActivity extends AppCompatActivity {
                     } catch (Exception e){
 
                     }
-                  //  new Connect().execute("http://192.168.1.38:1000/");
 
                 }catch (Exception e){
                     Log.d(TAG, "onClick: error in on click "+e.getMessage() );                    
@@ -188,55 +184,7 @@ public class ServerActivity extends AppCompatActivity {
         });
 
 
-        threadSend = new Thread(new Runnable() {
-            @Override
-            public void run() {
 
-                String message = et_message.getText().toString().trim();
-                jobj = new JSONObject();
-                try {
-                    jobj.put("name", "Shubham");
-                    jobj.put("message" , message);
-
-                    socket.emit("input" ,jobj);
-
-                }catch (JSONException e){
-                    Log.d(TAG, "run: error in json string");
-                }
-
-
-            }
-        });
-
-
-        thread1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                sockaddr = new InetSocketAddress(localhost, portNumber);
-
-                try {
-                   // socket = new Socket(localhost , portNumber);
-                    socket = IO.socket(ipaddress);
-                    socket.close();
-                   // socket.emit("connection" , null);
-                    if (socket.connected()){
-                        Log.d(TAG, "run: Socket not closed....");
-                    }else {
-                        Log.d(TAG, "run: socket  closed...");
-                    }
-
-
-
-
-                }
-                 catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-        });
 
 
 
@@ -324,86 +272,11 @@ public class ServerActivity extends AppCompatActivity {
 
 
     }
-    public String getIPAddress(){
-        return ipaddress;
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
-        // Handle item selection
-
-        return false;
-
-    }
 
 
 
 
-        public class Connect extends AsyncTask<String , Void , String>{
 
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected String doInBackground(String... strings) {
-
-                try {
-                    Log.d(TAG, "doInBackground: strings[0] contains "+strings[0]);
-                    URL url = new URL(strings[0]);
-                    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                    urlConnection.setReadTimeout(10000); // miliseconds
-                    urlConnection.setConnectTimeout(10000);
-                    urlConnection.setRequestMethod("GET");
-                    urlConnection.setRequestProperty("Content-Type " , "application/json");
-                    urlConnection.connect();
-                    Log.d(TAG, "doInBackground: connected......");
-
-
-
-
-                    /*InputStream input = urlConnection.getInputStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                    String line;
-                    result = new StringBuilder();
-                    while( (line = reader.readLine()) != null  ){
-                        Log.d(TAG, "doInBackground: in loop");
-                        result.append(line).append("\n");
-
-                    }*/
-
-
-
-                } catch (MalformedURLException e) {
-                    Log.d(TAG, "doInBackground: error"+e.getMessage());
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    Log.d(TAG, "doInBackground: error"+e.getMessage());
-                    e.printStackTrace();
-                }
-
-
-                return result.toString() ;
-            }
-
-            @Override
-            protected void onPostExecute(String result) {
-                super.onPostExecute(result);
-                tv_messages.setText(result);
-
-
-            }
-        }
 
 }

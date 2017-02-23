@@ -1,79 +1,194 @@
 package college.root.vi12;
 
+import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Scanner;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 /**
  * Created by root on 2/2/17.
  */
 
 public class NetworkUtils {
+    // this class will create a socket get connected to the ip address and return d socket
 
 
-    final static String GITHUB_BASE_URL =
-            "https://192.168.1.39:8080";
+    public Socket socket;
+    public Thread threadConnect , threadListen;
+    public  String TAG = "Test";
+    public  String collectionName;
+    public  JSONObject object;
+    public String ipaddress = "http://192.168.1.38:8083/";
+    Toast toast;
 
-    final static String PARAM_QUERY = "q";
 
-    /*
-     * The sort field. One of stars, forks, or updated.
-     * Default: results are sorted by best match if no field is specified.
-     */
-    final static String PARAM_SORT = "sort";
-    final static String sortBy = "stars";
 
-    /**
-     * Builds the URL used to query GitHub.
-     *
-     * @param githubSearchQuery The keyword that will be queried for.
-     * @return The URL to use to query the GitHub.
-     */
-    public static URL buildUrl(String githubSearchQuery) {
-        Uri builtUri = Uri.parse(GITHUB_BASE_URL).buildUpon()
-                .appendQueryParameter(PARAM_QUERY, githubSearchQuery)
-                .appendQueryParameter(PARAM_SORT, sortBy)
-                .build();
 
-        URL url = null;
-        try {
-            url = new URL(builtUri.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+    public  Socket getSocketAsync() throws URISyntaxException {
+        threadConnect = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    socket = IO.socket(ipaddress);
+                    Log.d(TAG, "run: socket created successfully");
+                    socket.connect();
+                    Log.d(TAG, "run: socket connected successfully");
 
-        return url;
-    }
+                    if (socket.connected()){
+                        Log.d(TAG, "run: socket is connected ");
+                    }else {
+                        Log.d(TAG, "run: socket is not connected..");
+                    }
 
-    /**
-     * This method returns the entire result from the HTTP response.
-     *
-     * @param url The URL to fetch the HTTP response from.
-     * @return The contents of the HTTP response.
-     * @throws IOException Related to network and stream reading
-     */
-    public static String getResponseFromHttpUrl(URL url) throws IOException {
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        try {
-            InputStream in = urlConnection.getInputStream();
+                } catch (URISyntaxException e) {
+                    Log.d(TAG, "run: Error "+e.getMessage());
+                }
 
-            Scanner scanner = new Scanner(in);
-            scanner.useDelimiter("\\A");
 
-            boolean hasInput = scanner.hasNext();
-            if (hasInput) {
-                return scanner.next();
-            } else {
-                return null;
             }
-        } finally {
-            urlConnection.disconnect();
-        }
+        });
+        threadConnect.start();
+        return  socket;
     }
+
+    public Socket get() throws URISyntaxException {
+        socket = IO.socket(ipaddress);
+        Log.d(TAG, "run: socket created successfully");
+       if (!socket.connected()){
+           socket.connect();
+
+       }
+        return socket;
+
+    }
+
+
+    public  Socket initializeSocketAsync() throws URISyntaxException {
+        threadConnect = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    socket = IO.socket(ipaddress);
+                    Log.d(TAG, "run: socket created successfully");
+                    Log.d(TAG, "run: socket connected successfully");
+
+                    if (socket.connected()){
+                        Log.d(TAG, "run: socket is connected ");
+                    }else {
+                        Log.d(TAG, "run: socket is not connected..");
+                    }
+
+                } catch (URISyntaxException e) {
+                    Log.d(TAG, "run: Error "+e.getMessage());
+                }
+
+
+            }
+        });
+        threadConnect.start();
+        return  socket;
+    }
+
+public void emitSocket(final String collectionName , final JSONObject object){
+
+    this.collectionName = collectionName;
+    this.object = object;
+    
+   Thread thread = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            try {
+                socket = IO.socket(ipaddress);
+
+               if (socket.connected()){
+
+               }else {
+                   socket.connect();
+
+               }
+                socket.emit(collectionName , object.toString());
+                Log.d(TAG, "run: data sent");
+            } catch (URISyntaxException e) {
+                Log.d(TAG, "run: error "+e.getMessage());
+                e.printStackTrace();
+            }
+
+        }
+    });
+
+    thread.start();
+}
+
+
+public  void listener(final String name  , final Activity activity , final Context context , final Toast toast1) {
+
+    Log.d(TAG, "listener: Listener was called ");
+
+
+    threadListen = new Thread(new Runnable() {
+        @Override
+        public void run() {
+
+            try {
+                socket=  get();
+
+                socket.on(name, new Emitter.Listener() {
+                    @Override
+                    public void call(Object... args) {
+
+
+                        int result = (int)args[0];
+                        Log.d(TAG, "call: in listener thread");
+                        Log.d(TAG, "call: value retured is "+result);
+                        if (result == 1){
+
+                            toast = new college.root.vi12.Toast();
+                            toast1.dismissProgressDialog(activity);
+                            toast.showToast(activity , "Details saved successfully ");
+
+
+                            Log.d(TAG, "call: results saved successfully on to server");
+                        }else {
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    android.widget.Toast.makeText(context, "Error in saving data .. ", android.widget.Toast.LENGTH_SHORT).show();
+
+
+                                }
+                            });
+                            Log.d(TAG, "call: Error saving details on server");
+                        }
+                    }
+                });
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+                Log.d(TAG, "run: error "+e.getMessage());
+            }
+
+
+
+        }
+    });
+
+    threadListen.start();
+
+}
+
+
 
 }

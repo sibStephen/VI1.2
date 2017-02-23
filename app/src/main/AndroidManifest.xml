@@ -28,26 +28,29 @@
             <meta-data
                 android:name="com.facebook.sdk.ApplicationId"
                 android:value="@string/facebook_app_id" />
-        </activity>
-        <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
-        <activity android:name=".HomePageActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".ServerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AcademicActivity"></activity>
-        <activity android:name=".ProfileActivity"></activity>
-        <activity android:name=".StudentProfile.UserProfile"></activity>
-        <activity android:name=".StudentProfile.EditProfileActivity"></activity>
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+        <activity android:name=".HomePageActivity"
+            android:theme="@style/Theme.Design.Light.NoActionBar"/>
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".ServerActivity">
 
-        <activity android:name=".StudentProfile.FormActivity"></activity>
+        </activity>
+        <activity android:name=".StudentProfile.UserProfile" />
+        <activity android:name=".StudentProfile.EditProfileActivity" />
+        <activity android:name=".StudentProfile.FormActivity" />
+        <activity android:name=".CollapsingToolbar">
+
+
+        </activity>
     </application>
 
 </manifest>

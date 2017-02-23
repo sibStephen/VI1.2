@@ -2,30 +2,33 @@ package college.root.vi12.StudentProfile;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
+
+import college.root.vi12.NetworkUtils;
 import college.root.vi12.R;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentProfile1.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragmentProfile1#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FragmentProfile1 extends Fragment {
 
     Realm realm;
@@ -35,47 +38,20 @@ public class FragmentProfile1 extends Fragment {
     Student_profile profile;
     Uri imageuri;
     String TAG = "Test";
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    String myname , mysurname , myyear, mydiv, mybranch, mygrno;
+    Socket socket;
+    Thread threadListen;
+    college.root.vi12.Toast toast;
+    NetworkUtils networkUtils = new NetworkUtils() ;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
 
     public FragmentProfile1() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment profile1.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FragmentProfile1 newInstance(String param1, String param2) {
-        FragmentProfile1 fragment = new FragmentProfile1();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,7 +59,7 @@ public class FragmentProfile1 extends Fragment {
         // Inflate the layout for this fragment
 
         View view=inflater.inflate(R.layout.fragment_profile1, container, false);
-        RealmConfiguration config = new RealmConfiguration.Builder(getContext()).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
+        final RealmConfiguration config = new RealmConfiguration.Builder(getContext()).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
         realm.setDefaultConfiguration(config);
 
 
@@ -114,51 +90,128 @@ public class FragmentProfile1 extends Fragment {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                profile = new Student_profile();
-                profile = realm.where(Student_profile.class).findFirst();
-                if(profile==null) {
-                    Log.d(TAG, "save: profile is null");
-                    //     profile = realm.createObject(Student_profile.class);
-                    realm.beginTransaction();
-                    profile = new Student_profile();
-                    profile.setUid(0);
-                    profile.setName(name.getText().toString());
-                    profile.setSurname(surname.getText().toString());
-                    profile.setYear(year.getText().toString());
-                    profile.setDiv(div.getText().toString());
-                    profile.setBranch(branch.getText().toString());
-                    profile.setImagePath(String.valueOf(imageuri));
-                    realm.commitTransaction();
 
-                    realm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            realm.copyToRealmOrUpdate(profile);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Save data ?");
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        profile = new Student_profile();
+                        profile = realm.where(Student_profile.class).findFirst();
+                        if(profile==null) {
+                            Log.d(TAG, "save: profile is null");
+                            //     profile = realm.createObject(Student_profile.class);
+                            realm.beginTransaction();
+                            profile = new Student_profile();
+                            profile.setUid(0);
+                            profile.setName(name.getText().toString());
+                            profile.setSurname(surname.getText().toString());
+                            profile.setYear(year.getText().toString());
+                            profile.setDiv(div.getText().toString());
+                            profile.setBranch(branch.getText().toString());
+                            profile.setImagePath(String.valueOf(imageuri));
+                            realm.commitTransaction();
+
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    realm.copyToRealmOrUpdate(profile);
+                                }
+                            });
                         }
-                    });
-//            realm.commitTransaction();
-                }
-                else
-                {
-                    //  oldgrno=profile.getGrno();
-                    profile = realm.where(Student_profile.class).findFirst();
-                    realm.beginTransaction();
-                    profile.setName(name.getText().toString());
-                    profile.setSurname(surname.getText().toString());
-                    profile.setYear(year.getText().toString());
-                    profile.setDiv(div.getText().toString());
-                    profile.setBranch(branch.getText().toString());
-                    realm.commitTransaction();
-                    realm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            realm.copyToRealmOrUpdate(profile);
+                        else
+                        {
+                            college.root.vi12.Toast toast = new college.root.vi12.Toast();
+                            toast.showProgressDialog(getActivity() , "Saving details...");
+                            profile = realm.where(Student_profile.class).findFirst();
+                            realm.beginTransaction();
+                            mygrno = profile.getGrno(); // get GR number as its the primary key
+                            mybranch = branch.getText().toString();
+                            mydiv = div.getText().toString();
+                            myname = name.getText().toString();
+                            mysurname = surname.getText().toString();
+                            myyear = year.getText().toString();
+
+
+                            profile.setName(name.getText().toString());
+                            profile.setSurname(surname.getText().toString());
+                            profile.setYear(year.getText().toString());
+                            profile.setDiv(div.getText().toString());
+                            profile.setBranch(branch.getText().toString());
+                            realm.commitTransaction();
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    realm.copyToRealmOrUpdate(profile);
+
+                                }
+                            });
+                            // send data to d server
+                            Log.d(TAG, "onClick: name is "+myname);
+                            Log.d(TAG, "onClick: gr number  is "+mygrno);
+                            Log.d(TAG, "onClick: branch is "+mybranch);
+                            Log.d(TAG, "onClick: year is "+myyear);
+                            Log.d(TAG, "onClick: div is "+mydiv);
+                            Log.d(TAG, "onClick: surname  is "+mysurname);
+
+
+                            try {
+                                socket = networkUtils.initializeSocketAsync();
+                                JSONObject basicUserDetails = new JSONObject();
+                                basicUserDetails.put("my_name" , myname);
+                                basicUserDetails.put("surname" , mysurname);
+                                basicUserDetails.put("branch" , mybranch);
+                                basicUserDetails.put("year" , myyear);
+                                basicUserDetails.put("GRNumber" , mygrno);
+                                basicUserDetails.put("div" , mydiv);
+                                String[] contents = {"my_name" , "surname" , "branch", "year"
+                                                        , "div"};
+                                StringBuilder sb = new StringBuilder();
+                                for (int j=0 ; j<contents.length; j++){
+                                    Log.d(TAG, "onClick: "+contents[j]);
+                                    sb.append(contents[j]+",");
+                                }
+                                JSONObject finalObj = new JSONObject();
+                                finalObj.put("obj" , basicUserDetails.toString());
+                                finalObj.put("contents" , sb.toString());
+                                finalObj.put("Length" , 5);
+                                finalObj.put("collectionName" , "basicUserDetails");
+                                finalObj.put("grNumber" , profile.getGrno());
+
+                                networkUtils.emitSocket("Allinfo",finalObj);
+                                networkUtils.listener("Allinfo" , getActivity() , getContext(), toast); //success  listener
+
+
+
+
+
+
+
+                            }  catch (JSONException e) {
+                                Log.d(TAG, "onClick: json error "+e.getMessage());
+                            } catch (URISyntaxException e) {
+                                e.printStackTrace();
+                            }
 
                         }
-                    });
-                }
+                    }
+                });
+                builder.show();
+
+
             }
         });
+
 
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -169,45 +222,6 @@ public class FragmentProfile1 extends Fragment {
             }
         });
         return view;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
 

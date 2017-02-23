@@ -11,19 +11,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
+
+import college.root.vi12.NetworkUtils;
 import college.root.vi12.R;
+import college.root.vi12.Toast;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.socket.client.Socket;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentProfile2.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragmentProfile2#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FragmentProfile2 extends Fragment {
 
 
@@ -32,47 +32,13 @@ public class FragmentProfile2 extends Fragment {
     Button save;
     String TAG="Test";
     Student_profile profile;
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
-
+    NetworkUtils networkUtils;
+    Socket socket;
+    String semail_pri,semail_sec,sreligion,smother_ton,sbirth,ssub_caste,suni_area,sfull_name,spref,sincome,saadhar,snationality,sblood,smobile,smstatus,semcontact;
     public FragmentProfile2() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment profile2.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FragmentProfile2 newInstance(String param1, String param2) {
-        FragmentProfile2 fragment = new FragmentProfile2();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -167,6 +133,9 @@ public class FragmentProfile2 extends Fragment {
                 }
                 else
                 {
+
+                    Toast toast = new Toast();
+                    toast.showProgressDialog(getActivity() , "Saving details....");
                     //  oldgrno=profile.getGrno();
                     profile = realm.where(Student_profile.class).findFirst();
                     realm.beginTransaction();
@@ -194,6 +163,80 @@ public class FragmentProfile2 extends Fragment {
 
                         }
                     });
+
+
+                    semcontact= emcontact.getText().toString();
+                    semail_pri= email_pri.getText().toString();
+                    semail_sec= email_sec.getText().toString();
+                    saadhar= aadhar.getText().toString();
+                    sbirth= birth.getText().toString();
+                    sfull_name= full_name.getText().toString();
+                    sincome= income.getText().toString();
+                    smobile= mobile.getText().toString();
+                    smother_ton= mother_ton.getText().toString();
+                    smstatus= mstatus.getText().toString();
+                    snationality= nationality.getText().toString();
+                    ssub_caste= sub_caste.getText().toString();
+                    sreligion= religion.getText().toString();
+                    sblood= blood.getText().toString();
+                    spref= pref.getText().toString();
+                    suni_area = uni_area.getText().toString();
+
+                    try {
+                        networkUtils = new NetworkUtils();
+                        socket = networkUtils.initializeSocketAsync();
+                        JSONObject basicUserDetails = new JSONObject();
+                        basicUserDetails.put("semcontact" , semcontact);
+                        basicUserDetails.put("semail_pri" , semail_pri);
+                        basicUserDetails.put("semail_sec" , semail_sec);
+                        basicUserDetails.put("saadhar" , saadhar);
+                        basicUserDetails.put("sbirth" , sbirth);
+                        basicUserDetails.put("sfull_name" , sfull_name);
+                        basicUserDetails.put("sincome" , sincome);
+                        basicUserDetails.put("smobile" , smobile);
+                        basicUserDetails.put("smother_ton" , smother_ton);
+                        basicUserDetails.put("smstatus" , smstatus);
+                        basicUserDetails.put("snationality" , snationality);
+                        basicUserDetails.put("ssub_caste" , ssub_caste);
+                        basicUserDetails.put("sreligion" , sreligion);
+                        basicUserDetails.put("sblood" , sblood);
+                        basicUserDetails.put("spref" , spref);
+                        basicUserDetails.put("suni_area" , suni_area);
+
+
+
+
+
+                        String[] contents = {"semcontact" , "semail_pri" , "semail_sec", "saadhar"
+                                , "sfull_name" , "sincome" , "sfull_name" , "smobile"
+                                , "smother_ton" , "smstatus" , "snationality"
+                                , "sreligion", "sreligion", "sblood", "spref", "suni_area"};
+                        StringBuilder sb = new StringBuilder();
+                        for (int j=0 ; j<contents.length; j++){
+                            Log.d(TAG, "onClick: "+contents[j]);
+                            sb.append(contents[j]+",");
+                        }
+                        JSONObject finalObj = new JSONObject();
+                        finalObj.put("obj" , basicUserDetails.toString());
+                        finalObj.put("contents" , sb.toString());
+                        finalObj.put("Length" , contents.length);
+                        finalObj.put("collectionName" , "personalDetails");
+                        finalObj.put("grNumber" , profile.getGrno());
+
+                        networkUtils.emitSocket("Allinfo",finalObj);
+                        networkUtils.listener("Allinfo" , getActivity() , getContext(), toast); //success  listener
+
+
+
+
+
+
+
+                    }  catch (JSONException e) {
+                        Log.d(TAG, "onClick: json error " + e.getMessage());
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
                 }
 
 
@@ -204,42 +247,5 @@ public class FragmentProfile2 extends Fragment {
 
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }
