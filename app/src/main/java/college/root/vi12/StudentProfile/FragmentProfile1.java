@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
+import college.root.vi12.CheckNetwork;
 import college.root.vi12.NetworkUtils;
 import college.root.vi12.R;
 import io.realm.Realm;
@@ -28,19 +30,19 @@ import io.realm.RealmConfiguration;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
+import static android.content.Context.CONNECTIVITY_SERVICE;
+
 
 public class FragmentProfile1 extends Fragment {
 
     Realm realm;
     EditText name,surname,year,div,branch,grno;
-    String oldgrno;
     Button save,back;
     Student_profile profile;
     Uri imageuri;
     String TAG = "Test";
     String myname , mysurname , myyear, mydiv, mybranch, mygrno;
     Socket socket;
-    Thread threadListen;
     college.root.vi12.Toast toast;
     NetworkUtils networkUtils = new NetworkUtils() ;
 
@@ -62,6 +64,13 @@ public class FragmentProfile1 extends Fragment {
         final RealmConfiguration config = new RealmConfiguration.Builder(getContext()).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
         realm.setDefaultConfiguration(config);
 
+
+
+        CheckNetwork checkNetwork = new CheckNetwork();
+        boolean isNetWorkAvailable = checkNetwork.isNetWorkAvailable(getActivity());
+        if (!isNetWorkAvailable){
+            toast.showToast(getActivity() , "No internet connection");
+        }
 
         realm = Realm.getDefaultInstance();
         name=(EditText)view.findViewById(R.id.etname);
@@ -223,7 +232,6 @@ public class FragmentProfile1 extends Fragment {
         });
         return view;
     }
-
 
 
 

@@ -28,14 +28,63 @@ public class NetworkUtils {
 
 
     public Socket socket;
-    public Thread threadConnect , threadListen;
+
+    public Thread threadConnect , threadListen, threadDisconnect;
     public  String TAG = "Test";
     public  String collectionName;
     public  JSONObject object;
-    public String ipaddress = "http://192.168.1.38:8083/";
+    public String ipaddress = "http://192.168.1.103:8083/";
     Toast toast;
 
 
+
+    public Socket createSocketNameSpace(String nameSpace) throws URISyntaxException {
+
+        socket = IO.socket(ipaddress+nameSpace);
+        socket.connect();
+        if (socket.connected()){
+            Log.d(TAG, "createSocketNameSpace: socket connected");
+        }else {
+            socket.connect();
+        }
+        return  socket;
+
+    }
+
+
+    public void disconnectSocket() throws URISyntaxException {
+
+        socket = get();
+        socket.disconnect();
+        if (socket.connected()){
+            Log.d(TAG, "run: socket still connected");
+        }else {
+            Log.d(TAG, "disconnectSocket: socket disconnected");
+        }
+
+    }
+
+    public void disconnectSocketAsync(){
+        threadDisconnect = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    socket = get();
+                    socket.disconnect();
+                    if (socket.connected()){
+
+                        Log.d(TAG, "run: socket still connected");
+                    }else {
+                        Log.d(TAG, "disconnectSocket: socket disconnected");
+                    }
+                } catch (URISyntaxException e) {
+                    Log.d(TAG, "run: error "+e.getMessage());
+                }
+
+
+            }
+        });
+    }
 
 
     public  Socket getSocketAsync() throws URISyntaxException {
@@ -122,6 +171,7 @@ public void emitSocket(final String collectionName , final JSONObject object){
                }
                 socket.emit(collectionName , object.toString());
                 Log.d(TAG, "run: data sent");
+               // disconnectSocket();
             } catch (URISyntaxException e) {
                 Log.d(TAG, "run: error "+e.getMessage());
                 e.printStackTrace();
@@ -153,7 +203,7 @@ public  void listener(final String name  , final Activity activity , final Conte
 
                         int result = (int)args[0];
                         Log.d(TAG, "call: in listener thread");
-                        Log.d(TAG, "call: value retured is "+result);
+                        Log.d(TAG, "call: value returned is "+result);
                         if (result == 1){
 
                             toast = new college.root.vi12.Toast();
@@ -188,6 +238,8 @@ public  void listener(final String name  , final Activity activity , final Conte
     threadListen.start();
 
 }
+
+
 
 
 

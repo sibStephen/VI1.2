@@ -11,14 +11,48 @@
     <string name="TAG">Test</string>
     <string name="myHotSpot">http://192.168.1.103:8083/</string>
     <string name="Reliance">http://192.168.1.103:8083/</string>
-
+    <string name="action_settings">Settings</string>
+    <string name="send">SEND</string>
+    <string name="action_send">Send</string>
+    <string name="prompt_message">Message</string>
+    <string name="action_attach">ATTACH</string>
+    <string name="action_capture">CAPTURE IMAGE</string>
     <string-array name="countries">
         <item>http://192.168.1.38:8083/</item>
         <item>http://192.168.43.216:8083/</item>
+    </string-array>
+
+
+    <string-array name="religion">
+
+        <item>Hindu</item>
+        <item>Muslim</item>
+        <item>Christian</item>
+        <item>Buddhist</item>
+        <item>Jain</item>
+        <item>Jew</item>
+        <item>Zorastrian</item>
+    </string-array>
+
+    <string-array name="maritial">
+        <item>Married</item>
+        <item>Single</item>
 
 
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="gender">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
+    <string-array name="Department">
+        <item>Computer</item>
+        <item>Mechanical</item>
+        <item>E And TC</item>
+        <item>IT</item>
+        <item>Civil</item>
+
+    </string-array>
+
 </resources>

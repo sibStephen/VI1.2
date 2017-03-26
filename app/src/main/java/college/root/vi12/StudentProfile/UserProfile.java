@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.EmbossMaskFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -19,15 +20,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.simple.JSONArray;
+
 import java.net.URISyntaxException;
 
 import college.root.vi12.NetworkUtils;
 import college.root.vi12.R;
+import college.root.vi12.Subjects;
 import college.root.vi12.Toast;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.socket.client.Ack;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class UserProfile extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -37,7 +45,7 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
     String realPath;
     Student_profile userProfile;
     int uid ;
-    TextView tvname,tvsurname,tvyear,tvdiv,tvbranch,tvgrno;
+    TextView tvname,tvsurname,tvyear,tvdiv,tvbranch,tvgrno , tvAttendance;
     CircleImageView profilePic;
     int GALLERY_REQUEST = 1;
     Uri mImageUri;
@@ -46,6 +54,8 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
     Socket socket;
     NetworkUtils networkUtils;
     Toast toast;
+    Subjects subjects;
+
 
 
     @Override
@@ -66,26 +76,38 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
         navigationView.setNavigationItemSelectedListener(UserProfile.this);
         boolean  flag=sharedPreferences.getBoolean("flag", true);
         Log.d("FLAG:", String.valueOf(flag));
+        networkUtils = new NetworkUtils();
+        toast = new Toast();
+        subjects = new Subjects();
+
+        RealmConfiguration config = new RealmConfiguration.Builder(this).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
+        realm.setDefaultConfiguration(config);
+
+        realm = Realm.getDefaultInstance();
+
+        subjects = realm.where(Subjects.class).findFirst();
+
 
         try {
-//            socket = networkUtils.getSocketAsync();
-            networkUtils.listener("test" , UserProfile.this , getApplicationContext(), toast);
+            socket = networkUtils.get();
+            //  socket = networkUtils.getSocketAsync();
+          //  networkUtils.listener("test" , UserProfile.this , getApplicationContext(), toast);
 
         }catch (Exception e){
 
         }
 
-        RealmConfiguration config = new RealmConfiguration.Builder(this).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
-       realm.setDefaultConfiguration(config);
+        socket.on("AttendanceResult" , AttendanceHandler);
+//
 
-        realm = Realm.getDefaultInstance();
-        profilePic = (CircleImageView)findViewById(R.id.profilepic);
+      profilePic = (CircleImageView)findViewById(R.id.profilepic);
         tvname=(TextView)findViewById(R.id.name);
         tvsurname=(TextView)findViewById(R.id.surname);
         tvyear=(TextView)findViewById(R.id.year);
         tvdiv=(TextView)findViewById(R.id.div);
         tvbranch=(TextView)findViewById(R.id.branch);
         tvgrno=(TextView)findViewById(R.id.grno);
+        tvAttendance = (TextView)findViewById(R.id.tvAtten);
 
        // uid=userProfile.getUid();
        userProfile = realm.where(Student_profile.class).findFirst();
@@ -118,11 +140,43 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
         tvgrno.setText(userProfile.getGrno());
         profile =new Student_profile();
+        tvAttendance.setText(subjects.getMyTotalAtendance());
+
+
+
+        try {
+           // socket = networkUtils.get();
+            JSONObject o = new JSONObject();
+            o.put("GrNumber" , userProfile.getGrno());
+            socket.emit("AttendanceReq", o.toString(), new Ack() {
+                @Override
+                public void call(Object... args) {
+
+                    boolean ack= (boolean)args[0];
+                    if (ack){
+                        toast.showToast(UserProfile.this , "Ack received");
+
+                    }
+
+                }
+            });
 
 
 
 
-       //realm.commitTransaction();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        //realm.commitTransaction();
+
+
+
+
+
+
     }
 
     public void editPicture(View view){
@@ -184,4 +238,90 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private Emitter.Listener AttendanceHandler = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.d(TAG, "call: In Attendance listener ");
+
+            org.json.JSONArray array =(org.json.JSONArray) args[0];
+            try {
+                final JSONObject object = array.getJSONObject(0);
+                Log.d(TAG, "call: result obtained is "+object);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            realm = Realm.getDefaultInstance();
+
+
+                            realm.beginTransaction();
+                            subjects.setSubj1Att((String) object.get(subjects.getSubj1Name()));
+                            subjects.setSubj2Att((String) object.get(subjects.getSubj2Name()));
+                        subjects.setSubj3Att((String) object.get(subjects.getSubj3Name()));
+                        subjects.setSubj4Att((String) object.get(subjects.getSubj4Name()));
+                        subjects.setSubj5Att((String) object.get(subjects.getSubj5Name()));
+
+                        subjects.setSubj1Total(object.getString(subjects.getSubj1Name()+"_Total"));
+                        subjects.setSubj2Total(object.getString(subjects.getSubj2Name()+"_Total"));
+                        subjects.setSubj3Total(object.getString(subjects.getSubj3Name()+"_Total"));
+                        subjects.setSubj4Total(object.getString(subjects.getSubj4Name()+"_Total"));
+                        subjects.setSubj5Total(object.getString(subjects.getSubj5Name()+"_Total"));
+                            realm.commitTransaction();
+
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    realm.copyToRealmOrUpdate(subjects);
+                                    Log.d(TAG, "execute: Data updated successfully !!");
+                                }
+                            });
+
+                          } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        int totalAtt = Integer.parseInt(subjects.getSubj1Total()) +
+                                Integer.parseInt(subjects.getSubj2Total()) +
+                                Integer.parseInt(subjects.getSubj3Total()) +
+                                Integer.parseInt(subjects.getSubj4Total()) +
+                                Integer.parseInt(subjects.getSubj5Total()) ;
+
+                        int currentAtt = Integer.parseInt(subjects.getSubj1Att())+
+                                Integer.parseInt(subjects.getSubj2Att())+
+                                Integer.parseInt(subjects.getSubj3Att())+
+                                Integer.parseInt(subjects.getSubj4Att())+
+                                Integer.parseInt(subjects.getSubj5Att());
+
+                        float attendPercentage =((float) currentAtt*100)/(float)totalAtt;
+                        float remainder = (currentAtt*100)%totalAtt;
+                        float finalAtt = attendPercentage+remainder;
+                        Log.d(TAG, "run: Curent attendance is "+currentAtt);
+                        Log.d(TAG, "run: Total att is "+totalAtt);
+                        Log.d(TAG, "run: aviad" + currentAtt/totalAtt);
+                        Log.d(TAG, "call: Attendance % is "+ finalAtt + "%");
+                        realm.beginTransaction();
+                        subjects.setMyTotalAtendance(String.valueOf(attendPercentage));
+                        realm.commitTransaction();
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                realm.copyToRealmOrUpdate(subjects);
+                            }
+                        });
+
+                        tvAttendance.setText(String.valueOf(attendPercentage));
+
+
+                    }
+                });
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
+
 }

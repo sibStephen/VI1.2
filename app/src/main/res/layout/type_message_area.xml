@@ -13,7 +13,7 @@
         android:textColorHint="#CFD8DC"
         android:textColor="#CFD8DC"
         android:id="@+id/etmessage"
-        android:hint="Write a message" />
+        android:hint="Add a room name .." />
 
     <ImageView
         android:layout_width="match_parent"

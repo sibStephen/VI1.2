@@ -36,7 +36,7 @@
             android:text="RELIGION"
             android:id="@+id/tv_religion"
             android:layout_below="@+id/email_sec"/>
-        <EditText
+        <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/religion"
@@ -48,6 +48,7 @@
             android:text="MOTHER TONGUE"
             android:id="@+id/tv_motherton"
             android:layout_below="@+id/religion"/>
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

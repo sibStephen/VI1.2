@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
     Realm realm;
     LoginButton loginButton;
     CallbackManager manager;
-    FacebookCallback<LoginResult> mCallBack;
     Thread threadLogin;
     Socket socket;
     String ipaddress;
@@ -146,8 +145,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        Log.d(TAG, "onCreate: ipaddress recieved is " + ipaddress);
 
         // login thread
         threadLogin = new Thread(new Runnable() {
@@ -275,30 +272,15 @@ public class MainActivity extends AppCompatActivity {
                                                     }
                                                 });
 
-                                                /*realm.executeTransactionAsync(new Realm.Transaction() {
-                                                    @Override
-                                                    public void execute(Realm realm) {
-                                                        realm.copyToRealmOrUpdate(profile);
-                                                    }
-                                                }, new Realm.Transaction.OnSuccess() {
-                                                    @Override
-                                                    public void onSuccess() {
-                                                       // dialog.dismiss();
-                                                        Log.d(TAG, "onSuccess: data saved success");
-                                                        college.root.vi12.Toast.makeText(getApplicationContext(), "Data saved successfully", college.root.vi12.Toast.LENGTH_SHORT).show();
-                                                        Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
-                                                        startActivity(intent);
-                                                    }
-                                                });*/
+
 
                                             } else {
                                                 //   dialog.dismiss();
                                                 Log.d(TAG, "call: there already exists a student profile information");
                                             }
-                                            //Intent intent = new Intent(MainActivity.this, FormActivity.class);
-                                            //startActivity(intent);
+
                                         } else {
-                                            // dialog.dismiss();
+
 
 
                                             Intent intent = new Intent(MainActivity.this, HomePageActivity.class);

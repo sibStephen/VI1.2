@@ -8,8 +8,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,12 +31,15 @@ public class FragmentProfile2 extends Fragment {
 
 
     Realm realm;
-    EditText email_pri,email_sec,religion,mother_ton,birth,sub_caste,uni_area,full_name,pref,income,aadhar,nationality,blood,mobile,mstatus,emcontact;
+    EditText email_pri,email_sec,mother_ton,birth,sub_caste,uni_area,full_name,
+            pref,income,aadhar,nationality,blood,mobile,mstatus,emcontact;
     Button save;
     String TAG="Test";
     Student_profile profile;
     NetworkUtils networkUtils;
+    Spinner spReligion;
     Socket socket;
+    int religion;
     String semail_pri,semail_sec,sreligion,smother_ton,sbirth,ssub_caste,suni_area,sfull_name,spref,sincome,saadhar,snationality,sblood,smobile,smstatus,semcontact;
     public FragmentProfile2() {
         // Required empty public constructor
@@ -47,12 +53,26 @@ public class FragmentProfile2 extends Fragment {
         View view=inflater.inflate(R.layout.fragment_profile2, container, false);
         RealmConfiguration config = new RealmConfiguration.Builder(getContext()).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
         realm.setDefaultConfiguration(config);
+        spReligion = (Spinner)view.findViewById(R.id.religion);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext() ,R.array.religion, android.R.layout.simple_dropdown_item_1line );
+        spReligion.setAdapter(adapter);
+        spReligion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                religion = adapterView.getSelectedItemPosition();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
 
         realm = Realm.getDefaultInstance();
         email_pri=(EditText)view.findViewById(R.id.email_pri);
         email_sec=(EditText)view.findViewById(R.id.email_sec);
-        religion=(EditText)view.findViewById(R.id.religion);
+        spReligion=(Spinner)view.findViewById(R.id.religion);
         mother_ton=(EditText)view.findViewById(R.id.montherton);
         birth=(EditText)view.findViewById(R.id.birth);
         sub_caste=(EditText)view.findViewById(R.id.sub_caste);
@@ -73,7 +93,6 @@ public class FragmentProfile2 extends Fragment {
         if(profile!=null) {
             email_pri.setText(profile.getEmail_pri());
             email_sec.setText(profile.getEmail_sec());
-            religion.setText(profile.getReligion());
             mother_ton.setText(profile.getMother_ton());
             birth.setText(profile.getBirth_place());
             sub_caste.setText(profile.getSub_caste());
@@ -106,7 +125,6 @@ public class FragmentProfile2 extends Fragment {
 
                     profile.setEmail_pri(email_pri.getText().toString());
                     profile.setEmail_sec(email_sec.getText().toString());
-                    profile.setReligion(religion.getText().toString());
                     profile.setMother_ton(mother_ton.getText().toString());
                     profile.setBirth_place(birth.getText().toString());
                     profile.setSub_caste(sub_caste.getText().toString());
@@ -141,7 +159,7 @@ public class FragmentProfile2 extends Fragment {
                     realm.beginTransaction();
                     profile.setEmail_pri(email_pri.getText().toString());
                     profile.setEmail_sec(email_sec.getText().toString());
-                    profile.setReligion(religion.getText().toString());
+
                     profile.setMother_ton(mother_ton.getText().toString());
                     profile.setBirth_place(birth.getText().toString());
                     profile.setSub_caste(sub_caste.getText().toString());
@@ -177,7 +195,7 @@ public class FragmentProfile2 extends Fragment {
                     smstatus= mstatus.getText().toString();
                     snationality= nationality.getText().toString();
                     ssub_caste= sub_caste.getText().toString();
-                    sreligion= religion.getText().toString();
+
                     sblood= blood.getText().toString();
                     spref= pref.getText().toString();
                     suni_area = uni_area.getText().toString();

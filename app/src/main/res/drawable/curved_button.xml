@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <item android:state_pressed="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <shape android:shape="rectangle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <corners android:radius="3dip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <stroke android:width="1dip" android:color="#1976d2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <gradient android:angle="-90" android:startColor="#1976d2"
+                android:endColor="#689a92"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </shape>
+    </item>
+    <item android:state_focused="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <shape android:shape="rectangle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <corners android:radius="3dip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <stroke android:width="1dip" android:color="#1976d2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <solid android:color="#58857e"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </shape>
+    </item>
+    <item android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <shape android:shape="rectangle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <corners android:radius="3dip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <stroke android:width="1dip"
+                android:color="#1976d2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <gradient android:angle="90"
+                android:startColor="#1e88e5"
+                android:endColor="#1565c0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </shape>
+    </item>
+</selector>

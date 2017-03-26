@@ -33,13 +33,16 @@ public class HomePageActivity extends AppCompatActivity {
                 switch (item.getItemId()){
 
                     case R.id.menu_home:
-
+                        addFragment(new AttendanceFragment() , null);
                         break;
+
                     case R.id.menu_profile:
                        startActivity(new Intent(HomePageActivity.this , UserProfile.class));
                         break;
                     case R.id.menu_search:
-                        addFragment(new ChatFragment() , null);
+                        startActivity(new Intent(HomePageActivity.this , UploadSubjectActivity.class));
+                        finish();
+                        //addFragment(new TestFragment() , null);
                         break;
 
                 }
