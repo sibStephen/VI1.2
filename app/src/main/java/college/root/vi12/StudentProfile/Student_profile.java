@@ -47,6 +47,15 @@ public class Student_profile extends RealmObject {
     public String fname;
     private String surname;
     private String year;
+    String semester;
+
+    public String getSemester() {
+        return semester;
+    }
+
+    public void setSemester(String semester) {
+        this.semester = semester;
+    }
 
     public String getPassword() {
         return password;

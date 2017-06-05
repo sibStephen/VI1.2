@@ -13,17 +13,6 @@
         android:hint="Subject Name"
         android:layout_alignParentLeft="true" />
 
-    <AutoCompleteTextView
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/actvnewCode"
-        android:hint="Enter code.."
-        android:inputType="text"
-        
-        android:layout_toRightOf="@id/textin"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,4 +23,15 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <AutoCompleteTextView
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/actvnewCode"
+        android:hint="Enter code.."
+        android:inputType="text"
+
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/imgBtnremove"
+        android:layout_toStartOf="@+id/imgBtnremove" />
 </RelativeLayout>

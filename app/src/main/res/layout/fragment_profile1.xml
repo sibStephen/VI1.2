@@ -108,26 +108,36 @@
         android:ems="10"
         android:layout_below="@+id/gender_txt"
         android:id="@+id/etgender" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etgender"
+        android:id="@+id/tvSem"
+        android:text=" Semester"/>
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etgender"
+        android:layout_marginLeft="100dp"
+        android:id="@+id/etSem"/>
     <Button
         android:text="save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etgender"
+        android:layout_below="@+id/tvSem"
         android:id="@+id/save"
+        android:layout_marginTop="15dp"
         />
 
     <Button
         android:text="back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/back"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/save"
-        android:layout_toEndOf="@+id/save"
-        android:layout_marginLeft="17dp"
-        android:layout_marginStart="17dp"
-        android:id="@+id/back"
-        />
+        android:layout_toEndOf="@+id/save" />
 </RelativeLayout>
 
 </ScrollView>

@@ -40,8 +40,8 @@ public class HomePageActivity extends AppCompatActivity {
                        startActivity(new Intent(HomePageActivity.this , UserProfile.class));
                         break;
                     case R.id.menu_search:
-                        startActivity(new Intent(HomePageActivity.this , UploadSubjectActivity.class));
-                        finish();
+                        startActivity(new Intent(HomePageActivity.this , TestActivity.class));
+
                         //addFragment(new TestFragment() , null);
                         break;
 

@@ -14,7 +14,7 @@ public class MyReciever extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        android.widget.Toast.makeText(context , "Airplane mode on ", Toast.LENGTH_SHORT).show();
+        //android.widget.Toast.makeText(context , "Airplane mode on ", Toast.LENGTH_SHORT).show();
 
     }
 }

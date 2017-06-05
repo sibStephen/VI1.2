@@ -17,10 +17,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.Iterator;
 
 import college.root.vi12.CheckNetwork;
 import college.root.vi12.NetworkUtils;
@@ -36,15 +38,15 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
 public class FragmentProfile1 extends Fragment {
 
     Realm realm;
-    EditText name,surname,year,div,branch,grno;
+    EditText name,surname,year,div,branch,grno , etSem;
     Button save,back;
     Student_profile profile;
     Uri imageuri;
     String TAG = "Test";
-    String myname , mysurname , myyear, mydiv, mybranch, mygrno;
+    String myname , mysurname , myyear, mydiv, mybranch, mygrno , sem;
     Socket socket;
     college.root.vi12.Toast toast;
-    NetworkUtils networkUtils = new NetworkUtils() ;
+    NetworkUtils networkUtils;
 
 
     public FragmentProfile1() {
@@ -64,6 +66,15 @@ public class FragmentProfile1 extends Fragment {
         final RealmConfiguration config = new RealmConfiguration.Builder(getContext()).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
         realm.setDefaultConfiguration(config);
 
+        networkUtils = new NetworkUtils() ;
+
+        try {
+            socket = networkUtils.get();
+
+            Log.d(TAG, "onCreateView: listener called");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
 
 
         CheckNetwork checkNetwork = new CheckNetwork();
@@ -78,6 +89,7 @@ public class FragmentProfile1 extends Fragment {
         year=(EditText)view.findViewById(R.id.etyear);
         div=(EditText)view.findViewById(R.id.etdiv);
         branch=(EditText)view.findViewById(R.id.etbranch);
+        etSem = (EditText)view.findViewById(R.id.etSem);
 
         save=(Button)view.findViewById(R.id.save);
         back=(Button)view.findViewById(R.id.back);
@@ -89,11 +101,18 @@ public class FragmentProfile1 extends Fragment {
         year.setText(profile.getYear());
         div.setText(profile.getDiv());
         branch.setText(profile.getBranch());
+        etSem.setText(profile.getSemester());
 
 
         imageuri=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
                 "://" + getResources().getResourcePackageName(R.drawable.profile_def)
                 + '/' + getResources().getResourceTypeName(R.drawable.profile_def) + '/' + getResources().getResourceEntryName(R.drawable.profile_def) );
+
+
+
+
+
+
 
 
         save.setOnClickListener(new View.OnClickListener() {
@@ -129,6 +148,7 @@ public class FragmentProfile1 extends Fragment {
                             profile.setDiv(div.getText().toString());
                             profile.setBranch(branch.getText().toString());
                             profile.setImagePath(String.valueOf(imageuri));
+                            profile.setSemester(etSem.getText().toString());
                             realm.commitTransaction();
 
                             realm.executeTransaction(new Realm.Transaction() {
@@ -150,13 +170,14 @@ public class FragmentProfile1 extends Fragment {
                             myname = name.getText().toString();
                             mysurname = surname.getText().toString();
                             myyear = year.getText().toString();
-
+                            sem = etSem.getText().toString();
 
                             profile.setName(name.getText().toString());
                             profile.setSurname(surname.getText().toString());
                             profile.setYear(year.getText().toString());
                             profile.setDiv(div.getText().toString());
                             profile.setBranch(branch.getText().toString());
+                            profile.setSemester(etSem.getText().toString());
                             realm.commitTransaction();
                             realm.executeTransaction(new Realm.Transaction() {
                                 @Override
@@ -183,8 +204,10 @@ public class FragmentProfile1 extends Fragment {
                                 basicUserDetails.put("year" , myyear);
                                 basicUserDetails.put("GRNumber" , mygrno);
                                 basicUserDetails.put("div" , mydiv);
+                                basicUserDetails.put("sem" , sem);
+
                                 String[] contents = {"my_name" , "surname" , "branch", "year"
-                                                        , "div"};
+                                                        , "div","sem" };
                                 StringBuilder sb = new StringBuilder();
                                 for (int j=0 ; j<contents.length; j++){
                                     Log.d(TAG, "onClick: "+contents[j]);
@@ -193,7 +216,7 @@ public class FragmentProfile1 extends Fragment {
                                 JSONObject finalObj = new JSONObject();
                                 finalObj.put("obj" , basicUserDetails.toString());
                                 finalObj.put("contents" , sb.toString());
-                                finalObj.put("Length" , 5);
+                                finalObj.put("Length" , sb.length());
                                 finalObj.put("collectionName" , "basicUserDetails");
                                 finalObj.put("grNumber" , profile.getGrno());
 
@@ -231,7 +254,12 @@ public class FragmentProfile1 extends Fragment {
             }
         });
         return view;
+
+
+
+
     }
+
 
 
 

@@ -211,8 +211,8 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                     try {
                                         String GrNumber = userData.getString("_id");
-                                        final String firstName = userData.getString("firstName");
-                                        String lastName = userData.getString("lastName");
+                                     //   final String firstName = userData.getString("firstName");
+                                       // String lastName = userData.getString("lastName");
                                         String branch = userData.getString("branch");
                                         String year = userData.getString("year");
                                         String username = userData.getString("username");
@@ -222,8 +222,8 @@ public class MainActivity extends AppCompatActivity {
                                         Log.d(TAG, "call: USER : ");
                                         Log.d(TAG, "call: username  " + username);
                                         Log.d(TAG, "call: password " + password);
-                                        Log.d(TAG, "call: name " + firstName);
-                                        Log.d(TAG, "call: last name " + lastName);
+                                   //     Log.d(TAG, "call: name " + firstName);
+                                     //   Log.d(TAG, "call: last name " + lastName);
 
                                         SharedPreferences sharedPreferences = getSharedPreferences("ShaPreferences", Context.MODE_PRIVATE);
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -248,8 +248,8 @@ public class MainActivity extends AppCompatActivity {
                                                 realm.beginTransaction();
                                                 profile = new Student_profile();
 
-                                                profile.setName(firstName);
-                                                profile.setSurname(lastName);
+                                              //  profile.setName(firstName);
+                                                //profile.setSurname(lastName);
                                                 profile.setBranch(branch);
                                                 profile.setYear(year);
                                                 profile.setGrno(GrNumber);
