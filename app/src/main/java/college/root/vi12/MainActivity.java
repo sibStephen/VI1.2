@@ -8,13 +8,10 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,29 +20,17 @@ import android.widget.Toast;
 //import cz.msebera.android.httpclient.message.BasicNameValuePair;
 //import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.Profile;
-import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.parse.ParseAnalytics;
 
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.List;
-
-import com.facebook.FacebookSdk;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import college.root.vi12.StudentProfile.FormActivity;
+import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.StudentProfile.Student_profile;
 import io.realm.Realm;
-import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 

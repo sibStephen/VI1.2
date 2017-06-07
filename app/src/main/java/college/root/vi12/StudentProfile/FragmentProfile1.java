@@ -1,10 +1,8 @@
 package college.root.vi12.StudentProfile;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,24 +13,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
-import java.util.Iterator;
 
-import college.root.vi12.CheckNetwork;
-import college.root.vi12.NetworkUtils;
+import college.root.vi12.NetworkTasks.CheckNetwork;
+import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
-
-import static android.content.Context.CONNECTIVITY_SERVICE;
 
 
 public class FragmentProfile1 extends Fragment {

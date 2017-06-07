@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import college.root.vi12.MySubjects.TestActivity;
 import college.root.vi12.StudentProfile.UserProfile;
 
 public class HomePageActivity extends AppCompatActivity {
@@ -24,7 +25,6 @@ public class HomePageActivity extends AppCompatActivity {
 
     mbottomnav = (BottomNavigationView)findViewById(R.id.bottomnav);
 
-        addFragment(new AttendanceFragment() , null);
 
         mbottomnav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -33,7 +33,6 @@ public class HomePageActivity extends AppCompatActivity {
                 switch (item.getItemId()){
 
                     case R.id.menu_home:
-                        addFragment(new AttendanceFragment() , null);
                         break;
 
                     case R.id.menu_profile:

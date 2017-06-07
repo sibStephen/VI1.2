@@ -1,4 +1,4 @@
-package college.root.vi12;
+package college.root.vi12.NetworkTasks;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +15,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Scanner;
 
+import college.root.vi12.Toast;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;

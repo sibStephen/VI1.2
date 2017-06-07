@@ -105,7 +105,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        ServerActivity server = new ServerActivity();
         threadRegister  = new Thread(new Runnable() {
             @Override
             public void run() {

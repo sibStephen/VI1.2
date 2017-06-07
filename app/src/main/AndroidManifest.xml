@@ -45,14 +45,10 @@
             android:name=".HomePageActivity"
             android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".ServerActivity" />
         <activity android:name=".StudentProfile.UserProfile" />
         <activity android:name=".StudentProfile.EditProfileActivity" />
         <activity android:name=".StudentProfile.FormActivity" />
         <activity android:name=".CollapsingToolbar" />
-        <activity
-            android:name=".ChatActivity"
-            android:theme="@style/Theme.Design.Light.NoActionBar" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -68,8 +64,8 @@
         </receiver>
 
         <activity android:name=".DecidingActivity" />
-        <activity android:name=".UploadSubjectActivity" />
-        <activity android:name=".TestActivity"></activity>
+        <activity android:name=".MySubjects.TestActivity" />
+        <activity android:name=".MySubjects.MySubjectsActivity"></activity>
     </application>
 
 </manifest>

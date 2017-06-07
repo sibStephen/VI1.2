@@ -1,7 +1,5 @@
 package college.root.vi12.StudentProfile;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,7 +17,7 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
-import college.root.vi12.NetworkUtils;
+import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
 import college.root.vi12.Toast;
 import io.realm.Realm;

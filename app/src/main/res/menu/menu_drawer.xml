@@ -5,4 +5,10 @@
         android:checked="false"
         android:icon="@drawable/profile_def"
         android:title="Profile"/>
+    <item
+        android:id="@+id/subjects"
+        android:checked="false"
+        android:icon="@drawable/profile_def"
+        android:title="My Subjects"/>
+
 </menu>

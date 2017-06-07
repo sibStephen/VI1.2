@@ -1,4 +1,4 @@
-package college.root.vi12;
+package college.root.vi12.NetworkTasks;
 
 import android.app.Activity;
 import android.net.ConnectivityManager;

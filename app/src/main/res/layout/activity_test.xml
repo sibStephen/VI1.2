@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:padding="16dp"
     android:background="@color/greyColor"
-    tools:context=".TestActivity">
+    tools:context=".MySubjects.TestActivity">
 
 
     <LinearLayout

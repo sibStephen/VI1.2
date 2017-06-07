@@ -4,7 +4,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.EmbossMaskFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,23 +21,18 @@ import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.JSONArray;
 
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.Iterator;
-
-import college.root.vi12.NetworkUtils;
+import college.root.vi12.MySubjects.MySubjects;
+import college.root.vi12.MySubjects.MySubjectsActivity;
+import college.root.vi12.MySubjects.SubjectList;
+import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
-import college.root.vi12.Subjects;
 import college.root.vi12.Toast;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
-import io.socket.client.Ack;
 import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 public class UserProfile extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -57,7 +51,6 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
     Socket socket;
     NetworkUtils networkUtils;
     Toast toast;
-    Subjects subjects;
     MySubjects mysubjects ;
     SubjectList subjectList ;
 
@@ -87,14 +80,12 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
         Log.d("FLAG:", String.valueOf(flag));
         networkUtils = new NetworkUtils();
         toast = new Toast();
-        subjects = new Subjects();
 
         RealmConfiguration config = new RealmConfiguration.Builder(this).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
         realm.setDefaultConfiguration(config);
 
         realm = Realm.getDefaultInstance();
 
-        subjects = realm.where(Subjects.class).findFirst();
 
 
         try {
@@ -152,7 +143,6 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
         tvgrno.setText(userProfile.getGrno());
         profile =new Student_profile();
-        tvAttendance.setText(subjects.getMyTotalAtendance());
 
 
 
@@ -160,18 +150,7 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
            // socket = networkUtils.get();
             JSONObject o = new JSONObject();
             o.put("GrNumber" , userProfile.getGrno());
-         /*   socket.emit("AttendanceReq", o.toString(), new Ack() {
-                @Override
-                public void call(Object... args) {
 
-                    boolean ack= (boolean)args[0];
-                    if (ack){
-                        toast.showToast(UserProfile.this , "Ack received");
-
-                    }
-
-                }
-            });*/
 
 
 
@@ -183,25 +162,6 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
 
         //realm.commitTransaction();
-
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("GrNumber" , userProfile.getYear()+""+userProfile.getBranch()+""+userProfile.getSemester());
-            jsonObject.put("collectionName" , "Subjects");
-
-            Log.d(TAG, "onCreateView: object emitted  is "+jsonObject);
-
-            socket.emit("getAllData", jsonObject.toString());
-            socket.on("Result" ,SubjectsListener);
-
-
-
-            // networkUtils.emitSocket("getAllData" , jsonObject);
-            //networkUtils.listener("getAllData" , UserProfile.this , UserProfile.this , toast);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
 
 
@@ -260,233 +220,26 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
             Intent intent = new Intent(UserProfile.this , EditProfileActivity.class);
             startActivity(intent);
-            finish();
+            //finish();
 
         }
 
-        drawer.closeDrawer(GravityCompat.START);
+        if( id == R.id.subjects) {
+
+            startActivity(new Intent(this , MySubjectsActivity.class));
+
+
+        }
+
+            drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    private Emitter.Listener AttendanceHandler = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            Log.d(TAG, "call: In Attendance listener ");
-
-            org.json.JSONArray array =(org.json.JSONArray) args[0];
-            try {
-                final JSONObject object = array.getJSONObject(0);
-                Log.d(TAG, "call: result obtained is "+object);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            realm = Realm.getDefaultInstance();
-
-
-                            realm.beginTransaction();
-                            subjects.setSubj1Att((String) object.get(subjects.getSubj1Name()));
-                            subjects.setSubj2Att((String) object.get(subjects.getSubj2Name()));
-                        subjects.setSubj3Att((String) object.get(subjects.getSubj3Name()));
-                        subjects.setSubj4Att((String) object.get(subjects.getSubj4Name()));
-                        subjects.setSubj5Att((String) object.get(subjects.getSubj5Name()));
-
-                        subjects.setSubj1Total(object.getString(subjects.getSubj1Name()+"_Total"));
-                        subjects.setSubj2Total(object.getString(subjects.getSubj2Name()+"_Total"));
-                        subjects.setSubj3Total(object.getString(subjects.getSubj3Name()+"_Total"));
-                        subjects.setSubj4Total(object.getString(subjects.getSubj4Name()+"_Total"));
-                        subjects.setSubj5Total(object.getString(subjects.getSubj5Name()+"_Total"));
-                            realm.commitTransaction();
-
-                            realm.executeTransaction(new Realm.Transaction() {
-                                @Override
-                                public void execute(Realm realm) {
-                                    realm.copyToRealmOrUpdate(subjects);
-                                    Log.d(TAG, "execute: Data updated successfully !!");
-                                }
-                            });
-
-                          } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        int totalAtt = Integer.parseInt(subjects.getSubj1Total()) +
-                                Integer.parseInt(subjects.getSubj2Total()) +
-                                Integer.parseInt(subjects.getSubj3Total()) +
-                                Integer.parseInt(subjects.getSubj4Total()) +
-                                Integer.parseInt(subjects.getSubj5Total()) ;
-
-                        int currentAtt = Integer.parseInt(subjects.getSubj1Att())+
-                                Integer.parseInt(subjects.getSubj2Att())+
-                                Integer.parseInt(subjects.getSubj3Att())+
-                                Integer.parseInt(subjects.getSubj4Att())+
-                                Integer.parseInt(subjects.getSubj5Att());
-
-                        float attendPercentage =((float) currentAtt*100)/(float)totalAtt;
-                        float remainder = (currentAtt*100)%totalAtt;
-                        float finalAtt = attendPercentage+remainder;
-                        Log.d(TAG, "run: Curent attendance is "+currentAtt);
-                        Log.d(TAG, "run: Total att is "+totalAtt);
-                        Log.d(TAG, "run: aviad" + currentAtt/totalAtt);
-                        Log.d(TAG, "call: Attendance % is "+ finalAtt + "%");
-                        realm.beginTransaction();
-                        subjects.setMyTotalAtendance(String.valueOf(attendPercentage));
-                        realm.commitTransaction();
-                        realm.executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                realm.copyToRealmOrUpdate(subjects);
-                            }
-                        });
-
-                        tvAttendance.setText(String.valueOf(attendPercentage));
-
-
-                    }
-                });
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-    };
 
 
 
 
 
-  private  Emitter.Listener SubjectsListener = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-
-
-          subjectsRealmList = new RealmList<>();
-
-            Log.d(TAG, "call: inside getResult listener");
-
-            final org.json.JSONArray[] array = {(org.json.JSONArray) args[0]};
-            Log.d(TAG, "call: array is "+array);
-
-            try {
-                final JSONObject obj = (JSONObject) array[0].get(0);
-                Log.d(TAG, "call: obj is "+obj);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-
-
-                            realm = Realm.getDefaultInstance();
-                            int i=0;
-                           // count[0] = obj.getString("SubjectCount");
-                            count = obj.getString("SubjectCount");
-                            Log.d(TAG, "run: count is "+obj.getString("SubjectCount"));
-                            Log.d(TAG, "run: count variavle is "+count);
-                            String[] name = new String[Integer.parseInt(count)];
-
-                            String[] codes = new String[Integer.parseInt(count)];
-                            Log.d(TAG, "run: String array of name declared with count "+count);
-
-
-                            Iterator<?> keys = obj.keys();
-                            Log.d(TAG, "run: kes are "+keys);
-
-                            while( keys.hasNext() ) {
-                                String key = (String) keys.next();
-                                Log.d(TAG, "run: key is "+key);
-                                Log.d(TAG, "run: and value of key is "+obj.getString(key));
-
-                                if (key.equals("_id") || key.equals("SubjectCount")){
-                                    // do not store it in name array
-                                }else {
-                                    mysubjects = new MySubjects();
-
-                                    realm.beginTransaction();
-                                    mysubjects.setSubjectName(key);
-                                    mysubjects.setSubjectCode(obj.getString(key));
-                                    realm.commitTransaction();
-                                    realm.executeTransaction(new Realm.Transaction() {
-                                        @Override
-                                        public void execute(Realm realm) {
-                                            realm.copyToRealmOrUpdate(mysubjects);
-                                            Log.d(TAG, "execute: new Subject added...");
-                                        }
-                                    });
-
-                                    subjectsRealmList.add(mysubjects);
-                                    Log.d(TAG, "run: object added in realm list "+subjectsRealmList);
-
-                                    name[i] = key;  // store the subject names in string array
-                                    codes[i] = obj.getString(key);
-                                    i++;
-
-                                }
-                            }// end of while loop
-
-
-                            Log.d(TAG, "run: names are "+ Arrays.toString(name));
-                            Log.d(TAG, "run: codes are "+Arrays.toString(codes));
-                            Log.d(TAG, "run: outside the loop ... realm list contains "+subjectsRealmList);
-
-                            subjectList = new SubjectList();
-                            subjectList = realm.where(SubjectList.class).findFirst();
-
-                            if (subjectList == null){
-
-                                Log.d(TAG, "run: list is empty");
-                                // list is empty
-                                subjectList = new SubjectList();
-                                realm.beginTransaction();
-
-                                subjectList.setCount(count);
-                                subjectList.setGrNumber(userProfile.getGrno());
-                                subjectList.setSubjectsRealmList(subjectsRealmList);
-
-                                realm.commitTransaction();
-
-                                realm.executeTransaction(new Realm.Transaction() {
-                                    @Override
-                                    public void execute(Realm realm) {
-                                        realm.copyToRealmOrUpdate(subjectList);
-                                        Log.d(TAG, "execute: Subject List stored successfully ");
-                                    }
-                                });
-
-                            }else {
-                                Log.d(TAG, "run: list isnt empty");
-
-                            }
-
-
-                            subjectsRealmList = subjectList.getSubjectsRealmList();
-                            for ( i=0 ;i<subjectsRealmList.size() ; i++){
-                                Log.d(TAG, "run: Subject list is "+subjectsRealmList.get(i));
-                            }
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-
-
-
-
-
-                    }
-                });
-
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-    };
 
 
 
