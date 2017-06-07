@@ -177,6 +177,15 @@
                 android:layout_alignStart="@+id/area_txt"
                 android:id="@+id/area_in" />
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/area_in"
+                android:background="@color/blue_pressed"
+                android:textColor="@color/white"
+                android:id="@+id/btnNation"
+                android:text="Submit"/>
+
         </RelativeLayout>
     </LinearLayout>
 </ScrollView>

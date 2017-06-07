@@ -10,9 +10,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
+
+import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
+import college.root.vi12.Toast;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.socket.client.Socket;
 
 
 /**
@@ -26,6 +34,9 @@ public class FragmentProfile4 extends Fragment {
     Button save,back;
     String TAG="Test";
     Student_profile profile;
+    NetworkUtils networkUtils;
+    Socket socket;
+    Toast toast;
     public FragmentProfile4() {
         // Required empty public constructor
     }
@@ -121,8 +132,54 @@ public class FragmentProfile4 extends Fragment {
                 }
 
 
+
+                try {
+                    socket = networkUtils.initializeSocketAsync();
+                    JSONObject basicUserDetails = new JSONObject();
+                    basicUserDetails.put("ssc_maths" , ssc_maths.getText().toString());
+                    basicUserDetails.put("ssc_science" , ssc_science.getText().toString());
+                    basicUserDetails.put("ssc_total" , ssc_total.getText().toString());
+                    basicUserDetails.put("hsc_chem" , hsc_chem.getText().toString());
+                    basicUserDetails.put("hsc_eng" , hsc_eng.getText().toString());
+                    basicUserDetails.put("hsc_it" , hsc_it.getText().toString());
+                    basicUserDetails.put("hsc_phy" , hsc_phy.getText().toString());
+                    basicUserDetails.put("hsc_maths" , hsc_maths.getText().toString());
+
+                    String[] contents = {"ssc_maths" , "ssc_science" , "ssc_total", "hsc_chem"
+                            , "hsc_eng","hsc_it","hsc_phy","hsc_maths" };
+                    StringBuilder sb = new StringBuilder();
+                    for (int j=0 ; j<contents.length; j++){
+                        Log.d(TAG, "onClick: "+contents[j]);
+                        sb.append(contents[j]+",");
+                    }
+                    JSONObject finalObj = new JSONObject();
+                    finalObj.put("obj" , basicUserDetails.toString());
+                    finalObj.put("contents" , sb.toString());
+                    finalObj.put("Length" , sb.length());
+                    finalObj.put("collectionName" , "academicDetails");
+                    finalObj.put("grNumber" , profile.getGrno());
+
+                    networkUtils.emitSocket("Allinfo",finalObj);
+                    toast = new Toast();
+                    networkUtils.listener("Allinfo" , getActivity() , getContext(), toast); //success  listener
+
+
+
+
+
+
+
+                }  catch (JSONException e) {
+                    Log.d(TAG, "onClick: json error "+e.getMessage());
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+
+
             }
         });
+
+
         return view;
     }
 

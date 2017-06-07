@@ -48,7 +48,6 @@
         <activity android:name=".StudentProfile.UserProfile" />
         <activity android:name=".StudentProfile.EditProfileActivity" />
         <activity android:name=".StudentProfile.FormActivity" />
-        <activity android:name=".CollapsingToolbar" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -59,7 +58,7 @@
 
         <receiver android:name=".MyReciever">
             <intent-filter>
-                <action android:name="android.net.wifi.STATE_CHANGE" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 

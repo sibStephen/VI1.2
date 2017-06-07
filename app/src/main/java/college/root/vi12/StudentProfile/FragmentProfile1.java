@@ -22,6 +22,7 @@ import java.net.URISyntaxException;
 import college.root.vi12.NetworkTasks.CheckNetwork;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
+import college.root.vi12.Toast;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.socket.client.Socket;
@@ -72,6 +73,7 @@ public class FragmentProfile1 extends Fragment {
         CheckNetwork checkNetwork = new CheckNetwork();
         boolean isNetWorkAvailable = checkNetwork.isNetWorkAvailable(getActivity());
         if (!isNetWorkAvailable){
+            toast = new Toast();
             toast.showToast(getActivity() , "No internet connection");
         }
 

@@ -58,7 +58,7 @@ public class EditProfileActivity extends AppCompatActivity{
 
 
     private class CustomAdapter extends FragmentPagerAdapter {
-        private String fragments []={"MY INFO","DETAILS","RESIDENTIAL INFO","ACADEMIC DETAILS","PARENT INFO"};
+        private String fragments []={"MY INFO","DETAILS","RESIDENTIAL INFO","ACADEMIC DETAILS","PARENT INFO", "Certificates"};
         public CustomAdapter(FragmentManager supportFragmentManager, Context applicationContext) {
             super(supportFragmentManager);
         }
@@ -76,6 +76,9 @@ public class EditProfileActivity extends AppCompatActivity{
                     return new FragmentProfile4();
                 case 4:
                     return new FragmentProfile5();
+                case 5:
+                    return new FragmentCertificates();
+
                 default:
                     return null;
             }
