@@ -2,7 +2,6 @@ package college.root.vi12.StudentProfile;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,7 @@ import org.json.JSONObject;
 
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
-import college.root.vi12.Toast;
+import college.root.vi12.Miscleneous.Toast;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 

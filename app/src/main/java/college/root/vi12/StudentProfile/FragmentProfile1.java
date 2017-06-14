@@ -2,7 +2,6 @@ package college.root.vi12.StudentProfile;
 
 import android.content.ContentResolver;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,7 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,15 +23,13 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import college.root.vi12.Miscleneous.Toast;
 import college.root.vi12.NetworkTasks.CheckNetwork;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
-import college.root.vi12.Toast;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.socket.client.Socket;
-
-import static college.root.vi12.R.id.spinner2;
 
 
 public class FragmentProfile1 extends Fragment {
@@ -46,7 +42,7 @@ public class FragmentProfile1 extends Fragment {
     String TAG = "Test";
     String myname , mysurname , myyear, mydiv, mybranch, mygrno , sem;
     Socket socket;
-    college.root.vi12.Toast toast;
+    Toast toast;
     NetworkUtils networkUtils;
     Spinner spGender , spBranch, spSem, spYear , spDiv;
     ArrayAdapter<String>   yearAdapter;
@@ -215,7 +211,7 @@ public class FragmentProfile1 extends Fragment {
                         }
                         else
                         {
-                            college.root.vi12.Toast toast = new college.root.vi12.Toast();
+                            Toast toast = new Toast();
                             toast.showProgressDialog(getActivity() , "Saving details...");
                             profile = realm.where(Student_profile.class).findFirst();
                             realm.beginTransaction();

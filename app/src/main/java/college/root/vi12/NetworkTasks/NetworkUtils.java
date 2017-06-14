@@ -2,20 +2,13 @@ package college.root.vi12.NetworkTasks;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Scanner;
 
-import college.root.vi12.Toast;
+import college.root.vi12.Miscleneous.Toast;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -206,7 +199,7 @@ public  void listener(final String name  , final Activity activity , final Conte
                         Log.d(TAG, "call: value returned is "+result);
                         if (result == 1){
 
-                            toast = new college.root.vi12.Toast();
+                            toast = new Toast();
 //                            toast1.dismissProgressDialog(activity);
                             toast.showToast(activity , "Details saved successfully ");
 

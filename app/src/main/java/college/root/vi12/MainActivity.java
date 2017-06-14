@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                     //socket = IO.socket("http://192.168.1.38:8083");
                     NetworkUtils networkUtils = new NetworkUtils();
                     socket = networkUtils.get();
-                    // college.root.vi12.Toast.makeText(getBaseContext() , "Its a toast from backgrond thread ", college.root.vi12.Toast.LENGTH_SHORT).show();
+                    // college.root.vi12.Miscleneous.Toast.makeText(getBaseContext() , "Its a toast from backgrond thread ", college.root.vi12.Miscleneous.Toast.LENGTH_SHORT).show();
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                     Log.d(TAG, "run: error " + e.getMessage());
@@ -303,12 +303,12 @@ public class MainActivity extends AppCompatActivity {
 
                             //startActivity(new Intent(MainActivity.this , FormActivity.class));
 
-                            // college.root.vi12.Toast.makeText(MainActivity.this , "Successfully logged in ..", college.root.vi12.Toast.LENGTH_SHORT).show();
+                            // college.root.vi12.Miscleneous.Toast.makeText(MainActivity.this , "Successfully logged in ..", college.root.vi12.Miscleneous.Toast.LENGTH_SHORT).show();
                         } else {
                             editorLogin.putBoolean("login" , false);
                             Log.d(TAG, "call: error in login");
                             //    dialog.dismiss();
-                            //college.root.vi12.Toast.makeText(MainActivity.this , "Error logging in", college.root.vi12.Toast.LENGTH_SHORT).show();
+                            //college.root.vi12.Miscleneous.Toast.makeText(MainActivity.this , "Error logging in", college.root.vi12.Miscleneous.Toast.LENGTH_SHORT).show();
 
                         }
 

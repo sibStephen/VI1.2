@@ -28,7 +28,7 @@ import java.util.List;
 
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
-import college.root.vi12.Toast;
+import college.root.vi12.Miscleneous.Toast;
 
 public class UploadSubjectsActivity extends AppCompatActivity {
 

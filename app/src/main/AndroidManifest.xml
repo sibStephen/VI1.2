@@ -57,7 +57,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <receiver android:name=".MyReciever">
+        <receiver android:name=".Miscleneous.MyReciever">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
@@ -69,7 +69,6 @@
         <activity
             android:name=".TestActivity"
             android:theme="@style/Theme.Design.Light.NoActionBar" />
-        <activity android:name=".SampleActivity" />
         <activity android:name=".AdminActivities.FacultyLoadActivity" />
         <activity android:name=".AdminActivities.AdminActivity" />
         <activity android:name=".AdminActivities.LocationEntry"

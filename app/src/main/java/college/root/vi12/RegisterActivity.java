@@ -13,17 +13,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.parse.Parse;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.SignUpCallback;
-import com.parse.interceptors.ParseStethoInterceptor;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
+import college.root.vi12.Miscleneous.IPAddess;
 import io.realm.Realm;
 import io.socket.client.IO;
 import io.socket.client.Socket;

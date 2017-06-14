@@ -22,16 +22,13 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import college.root.vi12.MySubjects.MySubjects;
 import college.root.vi12.MySubjects.MySubjectsActivity;
-import college.root.vi12.MySubjects.SubjectList;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
-import college.root.vi12.Toast;
+import college.root.vi12.Miscleneous.Toast;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmList;
 import io.socket.client.Socket;
 
 public class UserProfile extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {

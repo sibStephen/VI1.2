@@ -1,7 +1,6 @@
 package college.root.vi12.StudentProfile;
 
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,9 +25,8 @@ import java.util.Locale;
 import college.root.vi12.NetworkTasks.CheckNetwork;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
-import college.root.vi12.Toast;
+import college.root.vi12.Miscleneous.Toast;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.socket.client.Socket;
 
 

@@ -2,7 +2,6 @@ package college.root.vi12.MySubjects;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ButtonBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,7 +18,7 @@ import java.util.Iterator;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
 import college.root.vi12.StudentProfile.Student_profile;
-import college.root.vi12.Toast;
+import college.root.vi12.Miscleneous.Toast;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.socket.client.Socket;
