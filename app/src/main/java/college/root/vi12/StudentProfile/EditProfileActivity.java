@@ -1,5 +1,6 @@
 package college.root.vi12.StudentProfile;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,23 +9,26 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
 import android.widget.EditText;
 
 import college.root.vi12.R;
 import io.realm.Realm;
 
 public class EditProfileActivity extends AppCompatActivity{
-    Realm realm;
-    EditText name,surname,year,div,branch,grno;
-    String oldgrno;
-    Student_profile profile;
-    Uri imageuri;
-    String TAG = "Test";
+
     TabLayout tabLayout;
     ViewPager viewPager;
+
+
+    public void setActionBarTitle(String title) {
+        getSupportActionBar().setTitle(title);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 

@@ -46,6 +46,8 @@ public class FragmentProfile4 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_profile4, container, false);
+        ((EditProfileActivity)getActivity()).setActionBarTitle("Academic Details");
+
         RealmConfiguration config = new RealmConfiguration.Builder(getContext()).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
         realm.setDefaultConfiguration(config);
 
@@ -134,6 +136,9 @@ public class FragmentProfile4 extends Fragment {
 
 
                 try {
+
+                    networkUtils = new NetworkUtils();
+
                     socket = networkUtils.initializeSocketAsync();
                     JSONObject basicUserDetails = new JSONObject();
                     basicUserDetails.put("ssc_maths" , ssc_maths.getText().toString());
@@ -160,6 +165,8 @@ public class FragmentProfile4 extends Fragment {
                     finalObj.put("grNumber" , profile.getGrno());
 
                     networkUtils.emitSocket("Allinfo",finalObj);
+
+                    networkUtils.disconnectSocketAsync();
                     toast = new Toast();
                     networkUtils.listener("Allinfo" , getActivity() , getContext(), toast); //success  listener
 

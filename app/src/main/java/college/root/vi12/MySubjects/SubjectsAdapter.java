@@ -2,6 +2,7 @@ package college.root.vi12.MySubjects;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Subjec
 
     Context context;
     ArrayList<MySubjects> list;
+    String TAG = "Test";
 
 
     public  SubjectsAdapter(ArrayList<MySubjects> list ,Context context){
@@ -36,6 +38,10 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Subjec
     }
 
 
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
 
     @Override
     public void onBindViewHolder(SubjectsHolder holder, int position) {
@@ -46,6 +52,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Subjec
 
 
 
+
     }
 
     @Override
@@ -53,6 +60,8 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Subjec
         if(list == null){
             return  0;
         }else{
+
+            Log.d(TAG, "getItemCount: item count is "+list.size());
             return  list.size() ;
         }
     }
@@ -63,17 +72,27 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Subjec
         private CheckBox cbSubjects;
         private TextView tvSubjCode;
 
-        public SubjectsHolder(Context context, View itemView) {
+        public SubjectsHolder(final Context context, View itemView) {
             super(itemView);
 
             cbSubjects = (CheckBox) itemView.findViewById(R.id.cbSubjects);
             tvSubjCode = (TextView) itemView.findViewById(R.id.tvSubjCode);
 
-            if (cbSubjects.isChecked() ){
-                String code = tvSubjCode.getText().toString();
+
+            cbSubjects.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
 
-            }
+
+                    if (cbSubjects.isChecked() ){
+                        String code = tvSubjCode.getText().toString();
+                        ((MySubjectsActivity)context).codes.add(code);
+                        Log.d(TAG, "SubjectsHolder: Code "+code + " added ......");
+                    }
+                }
+            });
+
 
         }
 

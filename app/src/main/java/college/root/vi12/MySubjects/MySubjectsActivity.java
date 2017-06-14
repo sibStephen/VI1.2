@@ -35,6 +35,7 @@ public class MySubjectsActivity extends AppCompatActivity {
     Realm realm;
     NetworkUtils networkUtils;
     Toast toast;
+    Student_profile profile;
 
     RealmList<MySubjects> subjectsRealmList;
     String TAG = "Test";
@@ -43,6 +44,7 @@ public class MySubjectsActivity extends AppCompatActivity {
     String count = "";
     ArrayList<MySubjects> list ;
 
+   public ArrayList<String> codes;
     Button btnSubmitSubjects;
 
     private  void initializeViews(){
@@ -58,6 +60,7 @@ public class MySubjectsActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
 
         btnSubmitSubjects = (Button) findViewById(R.id.btnSubmitSubjects);
+        codes = new ArrayList<>();
 
 
     }
@@ -122,6 +125,45 @@ public class MySubjectsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // send a socket to server containing the registered subject info
+
+
+                Log.d(TAG, "onClick: Submit button clicked .... ");
+                Log.d(TAG, "onClick: Contents of Codes array list are ");
+
+                for (  int i = 0; i<list.size(); i++){
+                    Log.i("Code is : ", ""+ codes.get(i));
+                }
+
+                JSONObject obj = new JSONObject();
+                try {
+
+                    realm = Realm.getDefaultInstance();
+
+                    profile = realm.where(Student_profile.class).findFirst();
+
+
+                    if (profile == null){
+                        Log.d(TAG, "onClick: profile is n null");
+                    }else{
+
+                        obj.put("Array",codes.toString());
+                        obj.put("grNumber" , profile.getGrno());
+
+                        networkUtils = new NetworkUtils();
+                        networkUtils.emitSocket("RegisterStudent",obj);
+                        networkUtils.disconnectSocketAsync();
+                        networkUtils.listener("RegisterStudent" , MySubjectsActivity.this , MySubjectsActivity.this, toast); //success  listener
+
+
+                    }
+
+
+
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
 
             }
@@ -199,7 +241,11 @@ public class MySubjectsActivity extends AppCompatActivity {
                                     }
                                 }// end of while loop
 
-                                SubjectsAdapter adapter = new SubjectsAdapter(list , getApplicationContext());
+                                for ( i = 0; i<list.size(); i++){
+                                    Log.i("Member name: ", ""+ list.get(i));
+                                }
+                               // Log.d(TAG, "run:  Array list here contains : "+list);
+                                SubjectsAdapter adapter = new SubjectsAdapter(list , MySubjectsActivity.this);
                                 mrecyclerView.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
 

@@ -1,6 +1,7 @@
-<ScrollView android:layout_height="match_parent"
+<ScrollView
+    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:paddingTop="100dp"
+    android:paddingTop="20dp"
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <RelativeLayout
@@ -10,34 +11,49 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_margin="4dp"
             android:text="FATHER'S NAME"
             android:id="@+id/tv_fathername"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:layout_margin="2dp"
+            android:background="@drawable/custo_et"
             android:id="@+id/fathername"
             android:layout_below="@+id/tv_fathername"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_margin="4dp"
             android:text="MOTHER'S NAME"
             android:id="@+id/tv_mothername"
             android:layout_below="@+id/fathername"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:layout_margin="2dp"
+            android:background="@drawable/custo_et"
             android:id="@+id/mothername"
             android:layout_below="@+id/tv_mothername"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_margin="4dp"
             android:text="FATHER'S PROFESSION"
             android:id="@+id/tv_fprofession"
             android:layout_below="@+id/mothername"/>
         <EditText
             android:layout_width="match_parent"
+            android:padding="4dp"
+            android:layout_margin="2dp"
+            android:background="@drawable/custo_et"
             android:layout_height="wrap_content"
             android:id="@+id/fprofession"
             android:layout_below="@+id/tv_fprofession"/>
@@ -45,29 +61,41 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_margin="4dp"
             android:text="DESIGNATION"
             android:id="@+id/tv_designation"
             android:layout_below="@+id/fprofession"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:layout_margin="2dp"
+            android:background="@drawable/custo_et"
             android:id="@+id/designation"
             android:layout_below="@+id/tv_designation"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_margin="4dp"
             android:text="WORKPLACE"
             android:id="@+id/tv_workplace"
             android:layout_below="@+id/designation"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:layout_margin="2dp"
+            android:background="@drawable/custo_et"
             android:id="@+id/workplace"
             android:layout_below="@+id/tv_workplace"/>
 
         <TextView
             android:layout_width="match_parent"
+            android:textStyle="bold"
+            android:layout_margin="4dp"
             android:layout_height="wrap_content"
             android:text="MOBILE NUMBER"
             android:id="@+id/tv_fmobile"
@@ -76,11 +104,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/fmobile"
+            android:padding="4dp"
+            android:layout_margin="2dp"
+            android:background="@drawable/custo_et"
             android:layout_below="@+id/tv_fmobile"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_margin="4dp"
             android:text="EMAIL"
             android:id="@+id/tv_femail"
             android:layout_below="@+id/fmobile"/>
@@ -88,34 +121,49 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/femail"
+            android:padding="4dp"
+            android:layout_margin="2dp"
+            android:background="@drawable/custo_et"
             android:layout_below="@+id/tv_femail"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_margin="4dp"
             android:text="MOTHER'S PROFESSION"
             android:id="@+id/tv_mprofession"
             android:layout_below="@+id/femail"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:layout_margin="2dp"
+            android:background="@drawable/custo_et"
             android:id="@+id/mprofession"
             android:layout_below="@+id/tv_mprofession"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_margin="4dp"
             android:text="WORKPLACE"
             android:id="@+id/tv_mworkplace"
             android:layout_below="@+id/mprofession"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:layout_margin="2dp"
+            android:background="@drawable/custo_et"
             android:id="@+id/mworkplace"
             android:layout_below="@+id/tv_mworkplace"/>
 
         <TextView
             android:layout_width="match_parent"
+            android:textStyle="bold"
+            android:layout_margin="4dp"
             android:layout_height="wrap_content"
             android:text="DESIGNATION"
             android:id="@+id/tv_mdesignation"
@@ -124,17 +172,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/mdesignation"
+            android:padding="4dp"
+            android:layout_margin="2dp"
+            android:background="@drawable/custo_et"
             android:layout_below="@+id/tv_mdesignation"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="MOBILE NUMBER"
+            android:textStyle="bold"
+            android:layout_margin="4dp"
             android:id="@+id/tv_mmobile"
             android:layout_below="@+id/mdesignation"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:layout_margin="2dp"
+            android:background="@drawable/custo_et"
             android:id="@+id/mmobile"
             android:layout_below="@+id/tv_mmobile"/>
 
@@ -143,6 +199,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="SAVE"
+            android:background="@color/blue_pressed"
+            android:textColor="@color/white"
             android:layout_below="@+id/mmobile"
             android:id="@+id/save_parent"/>
     </RelativeLayout>

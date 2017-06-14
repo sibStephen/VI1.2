@@ -34,7 +34,7 @@ public class NetworkUtils {
     public  String TAG = "Test";
     public  String collectionName;
     public  JSONObject object;
-    public String ipaddress = "http://192.168.1.35:8083/";
+    public String ipaddress = "http://192.168.1.103:8083/";
     Toast toast;
 
 
@@ -70,7 +70,6 @@ public class NetworkUtils {
             @Override
             public void run() {
                 try {
-                    socket = get();
                     socket.disconnect();
                     if (socket.connected()){
 
@@ -78,8 +77,8 @@ public class NetworkUtils {
                     }else {
                         Log.d(TAG, "disconnectSocket: socket disconnected");
                     }
-                } catch (URISyntaxException e) {
-                    Log.d(TAG, "run: error "+e.getMessage());
+                }catch (Exception e){
+
                 }
 
 
@@ -208,7 +207,7 @@ public  void listener(final String name  , final Activity activity , final Conte
                         if (result == 1){
 
                             toast = new college.root.vi12.Toast();
-                            toast1.dismissProgressDialog(activity);
+//                            toast1.dismissProgressDialog(activity);
                             toast.showToast(activity , "Details saved successfully ");
 
 

@@ -1,6 +1,7 @@
 package college.root.vi12.StudentProfile;
 
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -62,6 +63,10 @@ public class FragmentProfile3 extends Fragment  implements AdapterView.OnItemSel
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        ((EditProfileActivity)getActivity()).setActionBarTitle("Residential Details");
+
+
 
         realm = Realm.getDefaultInstance();
 
@@ -222,6 +227,8 @@ public class FragmentProfile3 extends Fragment  implements AdapterView.OnItemSel
                     finalObj.put("grNumber" , profile.getGrno());
 
                     networkUtils.emitSocket("Allinfo",finalObj);
+
+                    networkUtils.disconnectSocketAsync();
                     networkUtils.listener("Allinfo" , getActivity() , getContext(), toast); //success  listener
 
 

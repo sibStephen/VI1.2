@@ -39,9 +39,7 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
     DrawerLayout drawer;
     Uri imageuri;
     Realm realm;
-    String realPath;
     Student_profile userProfile;
-    int uid ;
     TextView tvname,tvsurname,tvyear,tvdiv,tvbranch,tvgrno , tvAttendance;
     CircleImageView profilePic;
     int GALLERY_REQUEST = 1;
@@ -51,11 +49,6 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
     Socket socket;
     NetworkUtils networkUtils;
     Toast toast;
-    MySubjects mysubjects ;
-    SubjectList subjectList ;
-
-    RealmList<MySubjects> subjectsRealmList;
-    String count = "";
 
 
 
@@ -90,18 +83,12 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
         try {
             socket = networkUtils.get();
-            //  socket = networkUtils.getSocketAsync();
-          //  networkUtils.listener("test" , UserProfile.this , getApplicationContext(), toast);
 
         }catch (Exception e){
             e.printStackTrace();
             Log.d(TAG, "onCreate: cannot initialize socket !!");
 
         }
-
-       // socket.on("AttendanceResult" , AttendanceHandler);
-
-//
 
       profilePic = (CircleImageView)findViewById(R.id.profilepic);
         tvname=(TextView)findViewById(R.id.name);

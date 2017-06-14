@@ -10,7 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import college.root.vi12.MySubjects.TestActivity;
+import college.root.vi12.AdminActivities.AdminActivity;
+import college.root.vi12.MySubjects.UploadSubjectsActivity;
 import college.root.vi12.StudentProfile.UserProfile;
 
 public class HomePageActivity extends AppCompatActivity {
@@ -33,13 +34,15 @@ public class HomePageActivity extends AppCompatActivity {
                 switch (item.getItemId()){
 
                     case R.id.menu_home:
+                        startActivity(new Intent(HomePageActivity.this , AdminActivity.class));
+
                         break;
 
                     case R.id.menu_profile:
                        startActivity(new Intent(HomePageActivity.this , UserProfile.class));
                         break;
                     case R.id.menu_search:
-                        startActivity(new Intent(HomePageActivity.this , TestActivity.class));
+                        startActivity(new Intent(HomePageActivity.this , UploadSubjectsActivity.class));
 
                         //addFragment(new TestFragment() , null);
                         break;

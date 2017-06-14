@@ -8,10 +8,12 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +25,8 @@ import com.facebook.CallbackManager;
 import com.facebook.login.widget.LoginButton;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.logging.StreamHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -71,10 +75,25 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-
-
-
         setviews(); // initialize views
+
+        cbShowPass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(!isChecked){
+                    // show password
+                    etPass.setTransformationMethod(new PasswordTransformationMethod());
+                }else{
+                    etPass.setTransformationMethod(null);
+                }
+
+
+            }
+        });
+
+
+
 
 
 // link to register page .
@@ -203,6 +222,9 @@ public class MainActivity extends AppCompatActivity {
                                         String username = userData.getString("username");
                                         String password = userData.getString("password");
                                         String email = userData.getString("email");
+
+                                        //ArrayList<String> arrayList = (ArrayList<String>) userData.get("Contents");
+
 
                                         Log.d(TAG, "call: USER : ");
                                         Log.d(TAG, "call: username  " + username);

@@ -112,10 +112,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                 try {
                     Log.d(TAG, "run: into the thread");
-                 /*   ipAddess = new IPAddess();
-                    ipAddess = realm.where(IPAddess.class).findFirst();
-                    ipaddress = ipAddess.getIpaddress();*/
-                    socket = IO.socket("http://192.168.1.38:8083/");
+
+                    socket = IO.socket("http://192.168.1.103:8083/");
                     socket.connect();
                 } catch (URISyntaxException e) {
                     e.printStackTrace();

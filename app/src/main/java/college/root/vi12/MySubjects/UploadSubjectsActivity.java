@@ -30,7 +30,7 @@ import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
 import college.root.vi12.Toast;
 
-public class TestActivity extends AppCompatActivity {
+public class UploadSubjectsActivity extends AppCompatActivity {
 
 
     AutoCompleteTextView textIn;
@@ -56,7 +56,7 @@ public class TestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.activity_upload_subjects);
 
         adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_dropdown_item_1line, NUMBER);
@@ -79,7 +79,7 @@ public class TestActivity extends AppCompatActivity {
             public void onClick(View view) {
 
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(TestActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(UploadSubjectsActivity.this);
                 builder.setTitle("Save Subject group?");
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -221,7 +221,7 @@ public class TestActivity extends AppCompatActivity {
 
 
         networkUtils.emitSocket("Allinfo",finalObj);
-        networkUtils.listener("Allinfo" , TestActivity.this ,getApplicationContext()
+        networkUtils.listener("Allinfo" , UploadSubjectsActivity.this ,getApplicationContext()
                 , toast); //success  listener
 
 

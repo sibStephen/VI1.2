@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/loadSubjects"
+        android:checked="false"
+        android:icon="@drawable/profile_def"
+        android:title="Load Subjects"/>
+    <item
+        android:id="@+id/loadFaculty"
+        android:checked="false"
+        android:icon="@drawable/profile_def"
+        android:title="Load Faculty"/>
+    <item
+        android:id="@+id/loadTimeTable"
+        android:checked="false"
+        android:icon="@drawable/profile_def"
+        android:title="Load Time Table"/>
+    <item
+        android:id="@+id/roomAllocation"
+        android:checked="false"
+        android:icon="@drawable/profile_def"
+        android:title="Room allocation"/>
+
+</menu>

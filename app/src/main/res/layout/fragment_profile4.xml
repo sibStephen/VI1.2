@@ -4,16 +4,12 @@
         android:id="@+id/activity_academic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="60dp"
+        android:paddingTop="20dp"
         tools:context="college.root.vi12.StudentProfile.FragmentProfile4">
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-           >
+            android:layout_height="match_parent">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -28,7 +24,7 @@
                         android:padding="10dp"
                         android:textSize="18dp"
                         />
-                    <TableRow>
+                    <TableRow android:layout_margin="8dp">
                         <TextView
                             android:text="Subject       "
                             android:textStyle="bold"/>
@@ -38,34 +34,34 @@
                         <TextView
                             android:text="Total Marks"
                             android:textStyle="bold"/>
-                    </TableRow>
-                    <TableRow>
+                    </TableRow >
+                    <TableRow android:layout_margin="8dp">
                         <TextView android:text="Maths   "/>
-                        <EditText android:hint="Enter..."
+                        <EditText
                             android:id="@+id/ssc_maths"/>
                         <TextView android:text="100   "/>
 
                     </TableRow>
-                    <TableRow>
+                    <TableRow android:layout_margin="8dp">
                         <TextView android:text="Science   "/>
-                        <EditText android:hint="Enter..."
+                        <EditText
                             android:id="@+id/ssc_science"/>
                         <TextView android:text="100   "/>
 
                     </TableRow>
 
 
-                    <TableRow>
+                    <TableRow android:layout_margin="8dp">
                         <TextView android:text="Grand Total   "
                             android:textStyle="bold"/>
-                        <EditText android:hint="Enter..."
+                        <EditText
                             android:id="@+id/ssc_total"/>
                         <TextView android:text="300   "/>
 
                     </TableRow>
 
 
-                </TableLayout>
+                </TableLayout >
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -80,7 +76,7 @@
                         android:padding="10dp"
                         android:textSize="18dp"
                         />
-                    <TableRow>
+                    <TableRow android:layout_margin="8dp">
                         <TextView
                             android:text="Subject       "
                             android:textStyle="bold"/>
@@ -91,36 +87,36 @@
                             android:text="Total Marks"
                             android:textStyle="bold"/>
                     </TableRow>
-                    <TableRow>
+                    <TableRow android:layout_margin="8dp">
                         <TextView android:text="Physics   "/>
-                        <EditText android:hint="Enter..."
+                        <EditText
                             android:id="@+id/hsc_phy"/>
                         <TextView android:text="100   "/>
 
                     </TableRow>
-                    <TableRow>
+                    <TableRow android:layout_margin="8dp">
                         <TextView android:text="Chemistry   "/>
-                        <EditText android:hint="Enter..."
+                        <EditText
                             android:id="@+id/hsc_chem"/>
                         <TextView android:text="100   "/>
 
                     </TableRow>
-                    <TableRow>
+                    <TableRow android:layout_margin="8dp">
                         <TextView android:text="Maths   "/>
-                        <EditText android:hint="Enter..."
+                        <EditText
                             android:id="@+id/hsc_maths"/>
                         <TextView android:text="100   "/>
 
                     </TableRow>
-                    <TableRow>
+                    <TableRow android:layout_margin="8dp">
                         <TextView android:text="English   "/>
-                        <EditText android:hint="Enter..."
+                        <EditText
                             android:id="@+id/hsc_eng"/>
                         <TextView android:text="100   "/>
 
                     </TableRow>
 
-                    <TableRow>
+                    <TableRow android:layout_margin="8dp">
                         <TextView android:text="CS/IT/Elec   "/>
                         <EditText android:hint="Enter..."
                             android:id="@+id/hsc_it"/>
@@ -128,7 +124,7 @@
 
                     </TableRow>
 
-                    <TableRow>
+                    <TableRow android:layout_margin="8dp">
                         <TextView android:text="Grand Total   "
                             android:textStyle="bold"/>
                         <EditText android:hint="Enter..."
@@ -150,7 +146,7 @@
                     android:text="Save Details"
 
                     android:id="@+id/save_academic"
-                    android:background="#2196F3"
+                    android:background="@color/blue_pressed"
                     android:textColor="#ffffff"/>
 
             </LinearLayout>

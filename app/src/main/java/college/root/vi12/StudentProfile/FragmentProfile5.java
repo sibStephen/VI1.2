@@ -2,6 +2,7 @@ package college.root.vi12.StudentProfile;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,10 @@ public class FragmentProfile5 extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_profile5, container, false);
+
+
+        ((EditProfileActivity)getActivity()).setActionBarTitle("Parent Details");
+
         final RealmConfiguration config = new RealmConfiguration.Builder(getContext()).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
         realm.setDefaultConfiguration(config);
 
@@ -188,6 +193,8 @@ public class FragmentProfile5 extends Fragment {
                         finalObj.put("grNumber", profile.getGrno());
 
                         networkUtils.emitSocket("Allinfo", finalObj);
+
+                        networkUtils.disconnectSocketAsync();
                         networkUtils.listener("Allinfo", getActivity(), getContext(), toast); //success  listener
 
 

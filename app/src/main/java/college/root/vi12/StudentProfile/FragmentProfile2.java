@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -29,7 +30,7 @@ public class FragmentProfile2 extends Fragment {
 
 
     Realm realm;
-    EditText email_pri,email_sec,mother_ton,birth,sub_caste,uni_area,full_name,
+    EditText email_pri,email_sec,birth,sub_caste,uni_area,full_name,
             pref,income,aadhar,nationality,blood,mobile,mstatus,emcontact;
     Button save;
     String TAG="Test";
@@ -38,6 +39,10 @@ public class FragmentProfile2 extends Fragment {
     Spinner spReligion;
     Socket socket;
     int religion;
+    AutoCompleteTextView mother_ton;
+    String[] language ={"Marathi" , "English" , "Hindi"};
+
+
     String semail_pri,semail_sec,sreligion,smother_ton,sbirth,ssub_caste,suni_area,sfull_name,spref,sincome,saadhar,snationality,sblood,smobile,smstatus,semcontact;
     public FragmentProfile2() {
         // Required empty public constructor
@@ -49,6 +54,11 @@ public class FragmentProfile2 extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_profile2, container, false);
+        ((EditProfileActivity)getActivity()).setActionBarTitle("All Details");
+
+
+
+
         RealmConfiguration config = new RealmConfiguration.Builder(getContext()).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
         realm.setDefaultConfiguration(config);
         spReligion = (Spinner)view.findViewById(R.id.religion);
@@ -71,7 +81,7 @@ public class FragmentProfile2 extends Fragment {
         email_pri=(EditText)view.findViewById(R.id.email_pri);
         email_sec=(EditText)view.findViewById(R.id.email_sec);
         spReligion=(Spinner)view.findViewById(R.id.religion);
-        mother_ton=(EditText)view.findViewById(R.id.montherton);
+        mother_ton=(AutoCompleteTextView)view.findViewById(R.id.actvMotherTongue);
         birth=(EditText)view.findViewById(R.id.birth);
         sub_caste=(EditText)view.findViewById(R.id.sub_caste);
         uni_area=(EditText)view.findViewById(R.id.uni_area);
@@ -84,6 +94,16 @@ public class FragmentProfile2 extends Fragment {
         mobile=(EditText)view.findViewById(R.id.mobile);
         mstatus=(EditText)view.findViewById(R.id.mstatus);
         emcontact=(EditText)view.findViewById(R.id.emcontact);
+
+
+
+
+
+        ArrayAdapter<String> languageAdapter = new ArrayAdapter<String>
+                (getContext(),android.R.layout.select_dialog_item,language);
+
+        mother_ton.setThreshold(1);
+        mother_ton.setAdapter(languageAdapter);
 
         profile = new Student_profile();
         profile = realm.where(Student_profile.class).findFirst();
@@ -240,6 +260,8 @@ public class FragmentProfile2 extends Fragment {
                         finalObj.put("grNumber" , profile.getGrno());
 
                         networkUtils.emitSocket("Allinfo",finalObj);
+
+                        networkUtils.disconnectSocketAsync();
                         networkUtils.listener("Allinfo" , getActivity() , getContext(), toast); //success  listener
 
 

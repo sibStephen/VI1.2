@@ -1,118 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:padding="16dp"
-    android:background="@color/greyColor"
-    tools:context=".MySubjects.TestActivity">
+    tools:context="college.root.vi12.TestActivity">
 
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
+<ImageView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/imgBackground"
+    android:src="@drawable/vilogo"
+    android:adjustViewBounds="true"
+    android:layout_weight="1"
 
-        <RelativeLayout
-            android:layout_width="363dp"
-            android:layout_height="wrap_content">
+    android:layout_gravity="top|center_horizontal"
+    android:scaleType="fitXY"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentStart="true" />
 
-            <Spinner
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="43dp"
-                android:id="@+id/spDept"
-                android:layout_below="@+id/textView6"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="53dp"
+        android:ems="10"
+        android:padding="10dp"
+        android:background="@drawable/shape"
+        android:textColor="@color/white"
+        android:hint="Enter username"
+        android:textColorHint="@color/white"
+        android:inputType="textEmailAddress"
+        android:layout_below="@+id/textView9"
+        android:layout_alignStart="@+id/textView15" />
 
-            <TextView
-                android:text="Choose department"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textView6"
-                android:layout_alignRight="@+id/textView6"
-                android:layout_alignEnd="@+id/textView6"
-                android:layout_marginTop="19dp"
-                android:id="@+id/textView7"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/editText"
+        android:layout_below="@+id/editText"
+        android:layout_marginTop="45dp"
+        android:hint="Enter Password"
+        android:padding="10dp"
+        android:textColorHint="@color/white"
+        android:background="@drawable/shape"
+        android:textColor="@color/white"
+        android:ems="10"
+        android:inputType="textPassword" />
 
-            <TextView
-                android:text="Upload subjects !"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:layout_marginLeft="150dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView6"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" />
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="40sp"
+        android:text="Welcome "
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp" />
 
-            <TextView
-                android:text="Choose Year"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/spDept"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="24dp"
-                android:id="@+id/textView8" />
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="47dp"
+        android:text="Login"
+        android:background="@drawable/shape"
+        android:textColor="@color/white"
+        android:layout_below="@+id/editText2"
+        android:layout_alignStart="@+id/textView9"
+        android:layout_marginStart="17dp" />
 
-            <Spinner
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="22dp"
-                android:id="@+id/spYear"
-                android:layout_below="@+id/textView8"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-            <TextView
-                android:text="Choose Semester"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/textView7"
-
-                android:id="@+id/textView4"
-                android:layout_alignLeft="@+id/textView7"
-                android:layout_marginLeft="40dp"
-                android:layout_alignStart="@+id/textView6" />
-
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/spDept"
-                android:layout_marginLeft="160dp"
-                android:layout_centerVertical="true"
-                android:id="@+id/spSem" />
-        </RelativeLayout>
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:text="Not yet Registered? Click here"
+        android:layout_below="@+id/button4"
+        android:layout_alignEnd="@+id/textView9" />
 
 
-        <LinearLayout
-            android:id="@+id/container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"></LinearLayout>
-
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            android:background="@color/blue_normal"
-            android:textColor="@color/white"
-            android:id="@+id/btnSaveSubjs"
-            android:layout_marginTop="15dp"
-            />
-
-    </LinearLayout>
-
-
-</LinearLayout>
+</RelativeLayout>
