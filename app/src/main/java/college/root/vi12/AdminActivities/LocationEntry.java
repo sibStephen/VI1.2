@@ -16,7 +16,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
@@ -35,6 +37,7 @@ public class LocationEntry extends AppCompatActivity implements AdapterView.OnIt
     ArrayList<JSONObject> allLocations;
     Button btnSendToServer;
     NetworkUtils networkUtils;
+    JSONObject finalObj ;
 
     //branch,year,sem,location: build.no,floor,room
     @Override
@@ -44,7 +47,7 @@ public class LocationEntry extends AppCompatActivity implements AdapterView.OnIt
         locations = new ArrayList<>();
         allLocations = new ArrayList<>();
         networkUtils = new NetworkUtils();
-
+        finalObj =  new JSONObject();
 
         spinner_branch = (Spinner) findViewById(R.id.spinner_branch);
         branch= new String[] {"branch","Computer", "E&TC", "Civil", "IT" , "Mechanical", "E&AS"};
@@ -131,7 +134,7 @@ public class LocationEntry extends AppCompatActivity implements AdapterView.OnIt
     public void save(View view){
 
         Log.d(TAG, "save: save method called ");
-        JSONObject finalObj = new JSONObject();
+
         try {
             finalObj.put(item[0] , locations);
         } catch (JSONException e) {
@@ -139,7 +142,7 @@ public class LocationEntry extends AppCompatActivity implements AdapterView.OnIt
         }
 
         Log.d(TAG, "save:  final obj is "+finalObj);
-        allLocations.add(finalObj);
+       // allLocations.add(finalObj);
         Log.d(TAG, "save: allLocations now contains "+allLocations);
         locations = new ArrayList<>();
 
@@ -156,20 +159,33 @@ public class LocationEntry extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
+                Log.d(TAG, "onClick: final obj contains "+finalObj);
+
+
                 JSONObject sendObj = new JSONObject();
                 try {
-                    sendObj.put("departments", allLocations  );
-                    networkUtils.emitSocket("RoomAllocated" , sendObj);
+                    //sendObj.put("departments", allLocations  );
+
+                    String[] contents = {"Computer" , "E&TC" , "Civil" , "Mechanical", "E&AS" , "IT"};
+                    StringBuilder sb = new StringBuilder();
+                    for (int j=0 ; j<contents.length; j++){
+                        Log.d(TAG, "onClick: "+contents[j]);
+                        sb.append(contents[j]+",");
+                    }
+                    JSONObject Obj = new JSONObject();
+                    Obj.put("obj" , finalObj.toString());
+                    Obj.put("contents" , sb.toString());
+                    Obj.put("Length" , contents.length);
+                    Obj.put("collectionName" , "RoomAllocation");
+                    Obj.put("grNumber" ,new SimpleDateFormat("yyyy").format(Calendar.getInstance().getTime()) );
+
+                   networkUtils.emitSocket("Allinfo" , Obj);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }finally {
                     {
-                        try {
-                            networkUtils.disconnectSocket();
-                        } catch (URISyntaxException e) {
-                            e.printStackTrace();
-                        }
+
                     }
                 }
 

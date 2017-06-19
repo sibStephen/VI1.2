@@ -57,8 +57,10 @@ public class AdminActivity extends AppCompatActivity  implements NavigationView.
                 break;
 
             case R.id.loadTimeTable:
-
+                startActivity(new Intent(AdminActivity.this , PreTimeTableSetup.class));
                 break;
+
+
             case R.id.roomAllocation:
                 startActivity(new Intent(AdminActivity.this , LocationEntry.class));
 

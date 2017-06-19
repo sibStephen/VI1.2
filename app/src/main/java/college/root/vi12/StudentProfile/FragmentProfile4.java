@@ -160,7 +160,7 @@ public class FragmentProfile4 extends Fragment {
                     JSONObject finalObj = new JSONObject();
                     finalObj.put("obj" , basicUserDetails.toString());
                     finalObj.put("contents" , sb.toString());
-                    finalObj.put("Length" , sb.length());
+                    finalObj.put("Length" , contents.length);
                     finalObj.put("collectionName" , "academicDetails");
                     finalObj.put("grNumber" , profile.getGrno());
 

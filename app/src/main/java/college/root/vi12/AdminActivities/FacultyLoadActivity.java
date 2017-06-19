@@ -175,7 +175,8 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
                         })
 
 
-                        .setNegativeButton( "cancel ", new DialogInterface.OnClickListener()
+                        .setNegativeButton( "cancel" +
+                                " ", new DialogInterface.OnClickListener()
                         {
                             public void onClick(DialogInterface dialog, int id)
                             {

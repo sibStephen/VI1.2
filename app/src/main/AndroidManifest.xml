@@ -47,7 +47,7 @@
         <activity android:name=".RegisterActivity" />
         <activity
             android:name=".StudentProfile.UserProfile"
-            android:theme="@style/Theme.Design.Light.NoActionBar" />
+             />
         <activity android:name=".StudentProfile.EditProfileActivity" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -73,6 +73,9 @@
         <activity android:name=".AdminActivities.AdminActivity" />
         <activity android:name=".AdminActivities.LocationEntry"
             android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".AdminActivities.PreTimeTableSetup"/>
+        <activity android:name=".AdminActivities.TimeTableSetup"/>
+        <activity android:name=".AdminActivities.TimeTableDisplayActivity"/>
 
 
     </application>

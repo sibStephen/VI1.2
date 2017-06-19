@@ -12,47 +12,37 @@
     tools:context="college.root.vi12.DecidingActivity">
 
     <Button
-        android:text="I am a Student"
+        android:text="Login as Faculty"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:id="@+id/button2"
+        android:id="@+id/btnTeacher"
         android:textColor="@color/white"
-        android:background="@drawable/curved_button"
-        android:layout_marginBottom="183dp"
-        android:layout_above="@+id/button3"
-        android:layout_centerHorizontal="true" />
+        android:background="@color/blue_pressed"
+        android:layout_marginBottom="100dp"
+        android:layout_alignBottom="@+id/btnStudent"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="62dp" />
 
     <Button
-        android:text="I am a Teacher"
+        android:id="@+id/btnStudent"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/curved_button"
+        android:text="Login as Student"
+        android:background="@color/blue_pressed"
+        android:layout_centerVertical="true"
         android:textColor="@color/white"
-        android:id="@+id/button3"
-        android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/button2"
-        android:layout_alignStart="@+id/button2"
-        android:layout_marginTop="34dp" />
+        android:layout_alignStart="@+id/btnTeacher" />
 
     <Button
-        android:text="Add"
-        android:layout_width="wrap_content"
+        android:id="@+id/btnAdmin"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/button3"
-        android:layout_alignLeft="@+id/button3"
-        android:layout_alignStart="@+id/button3"
-        android:layout_marginLeft="38dp"
-        android:layout_marginStart="38dp"
-        android:layout_marginTop="31dp"
-        android:id="@+id/btnadd" />
+        android:text="Login as Admin"
+        android:textColor="@color/white"
+        android:background="@color/blue_pressed"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/btnStudent"
+        android:layout_marginBottom="94dp" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/btnadd"
-        android:id="@+id/relativeLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp">
 
-    </RelativeLayout>
 </RelativeLayout>

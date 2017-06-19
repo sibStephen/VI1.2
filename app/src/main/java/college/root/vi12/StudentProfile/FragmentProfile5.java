@@ -180,14 +180,14 @@ public class FragmentProfile5 extends Fragment {
                         StringBuilder sb = new StringBuilder();
 
 
-                        for (int i = 0; i < 11; i++) {
+                        for (int i = 0; i < contents.length; i++) {
                             Log.d(TAG, "onClick: " + contents[i]);
                             sb.append(contents[i] + ",");
                         }
                         JSONObject finalObj = new JSONObject();
                         finalObj.put("obj", parentInfo.toString());
                         finalObj.put("contents", sb.toString());
-                        finalObj.put("Length", 11);
+                        finalObj.put("Length", contents.length);
                         finalObj.put("collectionName", "parentInfo");
                         finalObj.put("grNumber", profile.getGrno());
 

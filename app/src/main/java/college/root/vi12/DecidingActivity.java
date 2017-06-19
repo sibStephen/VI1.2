@@ -10,24 +10,17 @@ import android.widget.RelativeLayout;
 
 public class DecidingActivity extends AppCompatActivity {
 
-    Button btnAdd;
+    Button btnTeacher , btnStudent , btnAdmin;
     RelativeLayout root;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deciding);
 
-         root = (RelativeLayout)findViewById(R.id.relativeLayout);
-       btnAdd = (Button)findViewById(R.id.btnadd);
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnAdmin = (Button)findViewById(R.id.btnAdmin);
+        btnTeacher = (Button)findViewById(R.id.btnTeacher);
+        btnStudent = (Button)findViewById(R.id.btnStudent);
 
-                EditText t = new EditText(getApplicationContext());
-                t.setLayoutParams(new ActionBar.LayoutParams(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
-                root.addView(t);
-            }
-        });
 
     }
 }

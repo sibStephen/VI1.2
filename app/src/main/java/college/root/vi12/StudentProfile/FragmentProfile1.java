@@ -45,7 +45,7 @@ public class FragmentProfile1 extends Fragment {
     Toast toast;
     NetworkUtils networkUtils;
     Spinner spGender , spBranch, spSem, spYear , spDiv;
-    ArrayAdapter<String>   yearAdapter;
+   ArrayAdapter<String> yearAdapter;
     ArrayAdapter<String> SemAdapter;
     ArrayAdapter<String> dataAdapter,divAdapter,branchAdapter;
 
@@ -92,7 +92,7 @@ public class FragmentProfile1 extends Fragment {
         spGender = (Spinner)view.findViewById(R.id.spgender);
         spSem = (Spinner)view.findViewById(R.id.spSem);
         spDiv = (Spinner)view.findViewById(R.id.spDiv);
-        spYear = (Spinner)view.findViewById(R.id.spYear);
+        spYear = (Spinner)view.findViewById(R.id.epYear);
         List<String> list = new ArrayList<String>();
         list.add("Male");
         list.add("Female");
@@ -130,10 +130,6 @@ public class FragmentProfile1 extends Fragment {
         lstOfYear.add("ME");
 
 
-        yearAdapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item,lstOfYear);
-        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-     //   spYear.setAdapter(yearAdapter);
 
 
         List<String> listOfDiv = new ArrayList<String>();
@@ -145,6 +141,19 @@ public class FragmentProfile1 extends Fragment {
                 android.R.layout.simple_spinner_item,listOfDiv);
         divAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spDiv.setAdapter(divAdapter);
+
+        List<String> listOfYear = new ArrayList<>();
+        listOfYear.add("FE");
+        listOfYear.add("SE");
+        listOfYear.add("TE");
+        listOfYear.add("BE");
+        listOfYear.add("ME");
+
+        yearAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item,listOfYear);
+        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spYear.setAdapter(yearAdapter);
+
 
 
         save=(Button)view.findViewById(R.id.save);
@@ -267,7 +276,7 @@ public class FragmentProfile1 extends Fragment {
                                 JSONObject finalObj = new JSONObject();
                                 finalObj.put("obj" , basicUserDetails.toString());
                                 finalObj.put("contents" , sb.toString());
-                                finalObj.put("Length" , sb.length());
+                                finalObj.put("Length" , contents.length);
                                 finalObj.put("collectionName" , "basicUserDetails");
                                 finalObj.put("grNumber" , profile.getGrno());
 
@@ -304,20 +313,8 @@ public class FragmentProfile1 extends Fragment {
         // Inflate the layout for this fragment
         ((EditProfileActivity)getActivity()).setActionBarTitle("Personal Details");
         View view=inflater.inflate(R.layout.fragment_profile1, container, false);
-
-
-
-
-
-
         return view;
 
-
-
-
     }
-
-
-
 
 }

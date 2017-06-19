@@ -26,8 +26,8 @@ public class TestActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_test);
 
-//        bitmapOriginal = BitmapFactory.decodeResource(getResources(),
-  //              R.drawable.vilogo);
+        bitmapOriginal = BitmapFactory.decodeResource(getResources(),
+                R.drawable.i2);
         imgBack = (ImageView)findViewById(R.id.imgBackground);
         imgBack.setImageBitmap(createBitmap_ScriptIntrinsicBlur(bitmapOriginal , 20.0f));
 
