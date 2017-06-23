@@ -166,7 +166,9 @@ public class LocationEntry extends AppCompatActivity implements AdapterView.OnIt
                 try {
                     //sendObj.put("departments", allLocations  );
 
-                    String[] contents = {"Computer" , "E&TC" , "Civil" , "Mechanical", "E&AS" , "IT"};
+                    finalObj.put("Timestamp",networkUtils.getLocalIpAddress()+" "+ new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime() ));
+
+                    String[] contents = {"Computer" , "E&TC" , "Civil" , "Mechanical", "E&AS" , "IT", "Timestamp"};
                     StringBuilder sb = new StringBuilder();
                     for (int j=0 ; j<contents.length; j++){
                         Log.d(TAG, "onClick: "+contents[j]);
@@ -178,6 +180,7 @@ public class LocationEntry extends AppCompatActivity implements AdapterView.OnIt
                     Obj.put("Length" , contents.length);
                     Obj.put("collectionName" , "RoomAllocation");
                     Obj.put("grNumber" ,new SimpleDateFormat("yyyy").format(Calendar.getInstance().getTime()) );
+
 
                    networkUtils.emitSocket("Allinfo" , Obj);
 

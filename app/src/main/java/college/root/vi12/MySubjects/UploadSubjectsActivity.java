@@ -22,7 +22,9 @@ import android.widget.Spinner;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -171,6 +173,8 @@ public class UploadSubjectsActivity extends AppCompatActivity {
 
         try {
             subjectGroup.put("SubjectCount" , String.valueOf(childCount));
+            subjectGroup.put("Timestamp",networkUtils.getLocalIpAddress()+" "+ new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime() ));
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

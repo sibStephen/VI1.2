@@ -18,7 +18,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Locale;
 
@@ -205,13 +207,14 @@ public class FragmentProfile3 extends Fragment  implements AdapterView.OnItemSel
                     basicUserDetails.put("pincode" , pincode.getText().toString());
                     basicUserDetails.put("Country" , Country);
                     basicUserDetails.put("district" , district.getText().toString());
+                    basicUserDetails.put("Timestamp",networkUtils.getLocalIpAddress()+" "+ new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime() ));
 
 
 
 
 
                     String[] contents = {"landline" , "address" , "state", "city"
-                            , "pincode" , "Country" , "Country" , "district"};
+                            , "pincode" , "Country" , "Country" , "district","Timestamp"};
                     StringBuilder sb = new StringBuilder();
                     for (int j=0 ; j<contents.length; j++){
                         Log.d(TAG, "onClick: "+contents[j]);

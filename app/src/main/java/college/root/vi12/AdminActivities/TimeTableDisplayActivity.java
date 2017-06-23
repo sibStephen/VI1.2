@@ -27,7 +27,7 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
     private static String LOG_TAG = "CardViewActivity";
     JSONObject obj ;
     private Socket socket;
-    private String IPAddr = "http://192.168.1.103:8083/";
+    private String IPAddr = "http://192.168.1.35:8083/";
     String id;
     String TAG = "logging";
     ArrayList<JSONObject> j1;

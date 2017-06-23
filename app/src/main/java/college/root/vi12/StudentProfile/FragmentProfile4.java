@@ -14,6 +14,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
@@ -149,9 +151,11 @@ public class FragmentProfile4 extends Fragment {
                     basicUserDetails.put("hsc_it" , hsc_it.getText().toString());
                     basicUserDetails.put("hsc_phy" , hsc_phy.getText().toString());
                     basicUserDetails.put("hsc_maths" , hsc_maths.getText().toString());
+                    basicUserDetails.put("Timestamp",networkUtils.getLocalIpAddress()+" "+ new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime() ));
+
 
                     String[] contents = {"ssc_maths" , "ssc_science" , "ssc_total", "hsc_chem"
-                            , "hsc_eng","hsc_it","hsc_phy","hsc_maths" };
+                            , "hsc_eng","hsc_it","hsc_phy","hsc_maths","Timestamp" };
                     StringBuilder sb = new StringBuilder();
                     for (int j=0 ; j<contents.length; j++){
                         Log.d(TAG, "onClick: "+contents[j]);

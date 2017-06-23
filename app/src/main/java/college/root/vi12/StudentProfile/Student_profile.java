@@ -49,6 +49,26 @@ public class Student_profile extends RealmObject {
     private String year;
     String semester;
     String address, landlineNumber, area, pincode,state,city, district;
+    String certificate10th, certificate12th;
+
+    public Student_profile() {
+    }
+
+    public String getCertificate10th() {
+        return certificate10th;
+    }
+
+    public void setCertificate10th(String certificate10th) {
+        this.certificate10th = certificate10th;
+    }
+
+    public String getCertificate12th() {
+        return certificate12th;
+    }
+
+    public void setCertificate12th(String certificate12th) {
+        this.certificate12th = certificate12th;
+    }
 
     public String getDistrict() {
         return district;

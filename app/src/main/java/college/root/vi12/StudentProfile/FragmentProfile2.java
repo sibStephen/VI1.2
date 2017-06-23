@@ -17,7 +17,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
+import college.root.vi12.NetworkTasks.CheckNetwork;
+import college.root.vi12.NetworkTasks.JsontoSend;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
 import college.root.vi12.Miscleneous.Toast;
@@ -238,6 +243,7 @@ public class FragmentProfile2 extends Fragment {
                         basicUserDetails.put("sblood" , sblood);
                         basicUserDetails.put("spref" , spref);
                         basicUserDetails.put("suni_area" , suni_area);
+                        basicUserDetails.put("Timestamp",networkUtils.getLocalIpAddress()+" "+ new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime() ));
 
 
 
@@ -246,7 +252,7 @@ public class FragmentProfile2 extends Fragment {
                         String[] contents = {"semcontact" , "semail_pri" , "semail_sec", "saadhar"
                                 , "sfull_name" , "sincome" , "sfull_name" , "smobile"
                                 , "smother_ton" , "smstatus" , "snationality"
-                                , "sreligion", "sreligion", "sblood", "spref", "suni_area"};
+                                , "sreligion", "sreligion", "sblood", "spref", "suni_area","Timestamp"};
                         StringBuilder sb = new StringBuilder();
                         for (int j=0 ; j<contents.length; j++){
                             Log.d(TAG, "onClick: "+contents[j]);
@@ -258,6 +264,30 @@ public class FragmentProfile2 extends Fragment {
                         finalObj.put("Length" , contents.length);
                         finalObj.put("collectionName" , "personalDetails");
                         finalObj.put("grNumber" , profile.getGrno());
+
+                        CheckNetwork network = new CheckNetwork();
+                        if (!network.isNetWorkAvailable(getActivity())){
+
+                            Log.d(TAG, "onClick: No internet ");
+                            final JsontoSend jsontoSend= new JsontoSend();
+                            jsontoSend.setCollection("Allinfo");
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+                            String currentDateandTime = sdf.format(new Date());
+                            jsontoSend.setId(currentDateandTime);
+                            jsontoSend.setJson(finalObj.toString());
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+
+                                    realm.copyToRealmOrUpdate(jsontoSend);
+                                    Log.d(TAG, "execute: json saved in realm");
+
+                                }
+                            });
+
+
+                        }
+
 
                         networkUtils.emitSocket("Allinfo",finalObj);
 

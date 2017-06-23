@@ -1,10 +1,12 @@
 package college.root.vi12.StudentProfile;
 
+import android.app.ActionBar;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -14,7 +16,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.Formatter;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -22,13 +27,19 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URISyntaxException;
+
 import college.root.vi12.MySubjects.MySubjectsActivity;
+import college.root.vi12.NetworkTasks.CheckNetwork;
+import college.root.vi12.NetworkTasks.JsontoSend;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
 import college.root.vi12.Miscleneous.Toast;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
+import io.socket.client.Ack;
 import io.socket.client.Socket;
 
 public class UserProfile extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -51,10 +62,110 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.user_profile, menu);
+        return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+
+        switch (item.getItemId()) {
+            case R.id.sync_server:
+
+
+                CheckNetwork checkNetwork = new CheckNetwork();
+                if (!checkNetwork.isNetWorkAvailable(UserProfile.this)){
+
+                    android.widget.Toast.makeText(UserProfile.this , "No Network available", android.widget.Toast.LENGTH_SHORT).show();
+
+                }else {
+
+
+                    NetworkUtils networkUtils = new NetworkUtils();
+
+                    try {
+                        socket = networkUtils.get();
+                        socket.emit("Ping", "Ping message", new Ack() {
+                            @Override
+                            public void call(Object... args) {
+
+                                if (args[0]=="1"){
+                                    // Sync now !!
+                                    RealmResults<JsontoSend> realmResults = realm.where(JsontoSend.class).findAll();
+
+                                    if (realmResults.isEmpty()){
+
+                                        android.widget.Toast.makeText(UserProfile.this, "No data to sync", android.widget.Toast.LENGTH_SHORT).show();
+
+                                    }else {
+
+                                        for (int i=0; i<realmResults.size() ; i++){
+                                            // send data to server
+
+                                            NetworkUtils utils = new NetworkUtils();
+                                            JsontoSend jsontoSend = realmResults.get(i);
+                                            try {
+                                                Log.d(TAG, "onOptionsItemSelected: Collection name is" +jsontoSend.getCollection());
+                                                Log.d(TAG, "onOptionsItemSelected: JsonObject is "+new JSONObject(jsontoSend.getJson()));
+                                                utils.emitSocket(jsontoSend.getCollection(), new JSONObject(jsontoSend.getJson()));
+                                                utils.listener("Allinfo" , UserProfile.this, UserProfile.this, new Toast());
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+
+
+                                        }
+
+                                    }
+
+
+
+                                }
+
+                            }
+                        });
+
+
+
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
+
+
+
+
+
+                }
+
+
+
+
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
+
+
+    }
+
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_user_profile);
+        try {
+
+            ActionBar bar = getActionBar();
+
+            bar.setTitle("Profile");
+        }catch (NullPointerException e){
+            Log.d(TAG, "onCreate: "+e.getMessage());
+        }
         SharedPreferences sharedPreferences = getSharedPreferences("flag", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor=sharedPreferences.edit();
         drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -122,6 +233,8 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 //        tvbranch.setText(userProfile.getBranch());
         if(!flag) {
            Log.d("FLAG1:", String.valueOf(flag));
+
+            if (userProfile.getImagePath() != null)
             profilePic.setImageURI(Uri.parse(userProfile.getImagePath()));
         }
 
@@ -147,8 +260,7 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
         //realm.commitTransaction();
 
-
-
+            
 
     }
 
@@ -174,7 +286,7 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
             profile = realm.where(Student_profile.class).findFirst();
             realm.beginTransaction();
             profile.setImagePath(String.valueOf(mImageUri));
-           editor.putBoolean("flag",false);
+            editor.putBoolean("flag",false);
             editor.apply();
             editor.commit();
             realm.commitTransaction();
@@ -185,7 +297,6 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
                 }
             });
-
 
            // realPath = getRealPathFromURI(this, data.getData());
 

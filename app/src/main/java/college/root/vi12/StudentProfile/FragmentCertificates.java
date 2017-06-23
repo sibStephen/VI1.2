@@ -4,11 +4,14 @@ package college.root.vi12.StudentProfile;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.support.v4.app.Fragment;
+import android.text.format.Formatter;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,7 +24,14 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Enumeration;
 
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
@@ -30,6 +40,7 @@ import io.realm.Realm;
 import io.socket.client.Socket;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.WIFI_SERVICE;
 
 public class FragmentCertificates extends Fragment {
 
@@ -43,7 +54,7 @@ public class FragmentCertificates extends Fragment {
     Socket socket;
     Student_profile profile;
     Realm realm;
-
+    int[] image;
     public FragmentCertificates() {
         // Required empty public constructor
     }
@@ -67,16 +78,44 @@ public class FragmentCertificates extends Fragment {
         imgBtn12 = (ImageButton)view.findViewById(R.id.imgbtn12th);
 
 
+
         realm = Realm.getDefaultInstance();
+        image = new int[5];
+        for (int i=0; i<5 ; i++)
+            image[i] =0;
+
+        profile = realm.where(Student_profile.class).findFirst();
+
+
+        if (profile.getCertificate12th()!=null)
+        imgBtn12.setImageURI(Uri.parse(profile.getCertificate12th()));
+        if (profile.getCertificate10th()!=null)
+        imgBtn10th.setImageURI(Uri.parse(profile.getCertificate10th()));
 
         imgBtn10th.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                image[0] = 1;
                 Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, GALLERY_REQUEST);
 
             }
         });
+
+
+        imgBtn12.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                image[1] = 1;
+                Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, GALLERY_REQUEST);
+
+
+            }
+        });
+
     }
 
 
@@ -89,22 +128,85 @@ public class FragmentCertificates extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+
         if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK) {
 
             mimageUri = data.getData();
-            imgBtn10th.setImageURI(mimageUri);
             try {
-                 bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), mimageUri);
+                bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), mimageUri);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            UploadImage upload = new UploadImage(bitmap, "profilepic");
+
+
+            UploadImage upload = null;
+            if(image[0]== 1){
+                imgBtn10th.setImageURI(mimageUri);
+                image[0] =1;
+                 upload = new UploadImage(bitmap, "10thCertificate");
+                profile = realm.where(Student_profile.class).findFirst();
+                if (profile!=null){
+
+                    realm.beginTransaction();
+
+                    profile.setCertificate10th(String.valueOf(mimageUri));
+
+                    realm.commitTransaction();
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+
+                            realm.copyToRealmOrUpdate(profile);
+
+                        }
+                    });
+
+                }else {
+                    Log.d(TAG, "onActivityResult: profile is null");
+                }
+
+
+
+            }else if (image[1]== 1){
+
+
+                Log.d(TAG, "onActivityResult: into 12th image btn");
+                imgBtn12.setImageURI(mimageUri);
+                image[1] =0;
+
+                profile = realm.where(Student_profile.class).findFirst();
+                if (profile!=null){
+
+                    realm.beginTransaction();
+
+                    profile.setCertificate12th(String.valueOf(mimageUri));
+
+                    realm.commitTransaction();
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+
+                            realm.copyToRealmOrUpdate(profile);
+
+                        }
+                    });
+
+                }else {
+                    Log.d(TAG, "onActivityResult: profile is null");
+                }
+                 upload = new UploadImage(bitmap, "12thCertificate");
+
+            }
+
+
             upload.execute();
 
 
 
 
-            }
+
+
+        }
         }
 
 
@@ -125,7 +227,7 @@ public class FragmentCertificates extends Fragment {
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 image.compress(Bitmap.CompressFormat.JPEG , 40 , byteArrayOutputStream);
                 final String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray() , Base64.DEFAULT);
-                Log.d(TAG, "doInBackground: Encoded image is "+encodedImage );
+               // Log.d(TAG, "doInBackground: Encoded image is "+encodedImage );
 
 
                 networkUtils = new NetworkUtils();
@@ -143,12 +245,15 @@ public class FragmentCertificates extends Fragment {
 
 
                         try {
+
                             socket = networkUtils.initializeSocketAsync();
                             JSONObject basicUserDetails = new JSONObject();
-                            basicUserDetails.put("10thCertificate" , encodedImage);
+                            basicUserDetails.put(name , encodedImage);
+                            basicUserDetails.put("Timestamp",networkUtils.getLocalIpAddress()+" "+ new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime() ));
 
 
-                            String[] contents = {"10thCertificate"};
+
+                            String[] contents = {name , "Timestamp"};
                             StringBuilder sb = new StringBuilder();
                             for (int j=0 ; j<contents.length; j++){
                                 Log.d(TAG, "onClick: "+contents[j]);
@@ -157,9 +262,10 @@ public class FragmentCertificates extends Fragment {
                             JSONObject finalObj = new JSONObject();
                             finalObj.put("obj" , basicUserDetails.toString());
                             finalObj.put("contents" , sb.toString());
-                            finalObj.put("Length" , sb.length());
+                            finalObj.put("Length" , contents.length);
                             finalObj.put("collectionName" , "Certificates");
                             finalObj.put("grNumber" , profile.getGrno());
+
 
                             networkUtils.emitSocket("Allinfo",finalObj);
                             networkUtils.listener("Allinfo" , getActivity() , getContext(), toast); //success  listener
@@ -195,6 +301,8 @@ public class FragmentCertificates extends Fragment {
                 super.onPostExecute(aVoid);
             }
         }
+
+
 
 
 }

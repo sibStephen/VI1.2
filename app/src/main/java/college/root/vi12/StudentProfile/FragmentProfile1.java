@@ -20,7 +20,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import college.root.vi12.Miscleneous.Toast;
@@ -29,6 +31,7 @@ import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 import io.socket.client.Socket;
 
 
@@ -265,9 +268,14 @@ public class FragmentProfile1 extends Fragment {
                                 basicUserDetails.put("GRNumber" , mygrno);
                                 basicUserDetails.put("div" , mydiv);
                                 basicUserDetails.put("sem" , sem);
+                                basicUserDetails.put("Timestamp",networkUtils.getLocalIpAddress()+" "+ new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime() ));
+
+
+
+
 
                                 String[] contents = {"my_name" , "surname" , "branch", "year"
-                                        , "div","sem" };
+                                        , "div","sem","Timestamp" };
                                 StringBuilder sb = new StringBuilder();
                                 for (int j=0 ; j<contents.length; j++){
                                     Log.d(TAG, "onClick: "+contents[j]);

@@ -8,71 +8,73 @@
     tools:context=".StudentProfile.FragmentCertificates">
 <ScrollView
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentStart="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
+        android:background="@color/greyColor"
         android:layout_height="wrap_content">
 
 
     <ImageButton
         android:id="@+id/img10th"
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
         android:layout_height="250dp"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/ic_add_circle_outline_black_24dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_margin = "10dp"
+        app:srcCompat="@android:drawable/ic_menu_add"
 
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/img10th"
-        android:layout_marginBottom="11dp"
-        android:layout_margin="10dp"
-        android:textSize="20dp"
-        android:layout_below="@+id/img10th"
-        android:text=" 10th Board Certificate" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
 
     <ImageButton
         android:id="@+id/imgbtn12th"
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
         android:layout_height="250dp"
         android:scaleType="centerCrop"
-        android:layout_below="@+id/textView11"
-        android:layout_marginTop="34dp"
-        app:srcCompat="@android:drawable/ic_menu_add" />
+        android:layout_margin = "10dp"
+        app:srcCompat="@android:drawable/ic_menu_add"
+        android:layout_below="@+id/img10th"
+        android:layout_alignParentEnd="true" />
 
     <ImageButton
         android:id="@+id/imgbtnothercertificates"
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
         android:layout_height="250dp"
+        android:layout_margin = "10dp"
         android:scaleType="centerCrop"
-        android:layout_below="@+id/textView12"
-        android:layout_marginTop="34dp"
-        app:srcCompat="@android:drawable/ic_menu_add" />
+        app:srcCompat="@android:drawable/ic_menu_add"
+        android:layout_below="@+id/imgbtn12th"
+        android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+</ScrollView>
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/tv10th"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imgbtn12th"
-        android:layout_marginTop="15dp"
-        android:text="Upload 12th Board Certificate" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="24dp"
+        android:gravity="center"
+        android:layout_marginTop="118dp"
+        android:textStyle="bold"
+        android:text="Add 10th marksheet" />
 
     <TextView
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imgbtnothercertificates"
-        android:layout_below="@+id/imgbtnothercertificates"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:text="Add other Certificates" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/tv10th"
+        android:layout_marginBottom="88dp"
+        android:layout_marginStart="12dp"
+        android:textStyle="bold"
+        android:text="Add 12th marksheet" />
 
-    </RelativeLayout>
-</ScrollView>
 </RelativeLayout>
 

@@ -2,11 +2,16 @@ package college.root.vi12.NetworkTasks;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.format.Formatter;
 import android.util.Log;
 
 import org.json.JSONObject;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.URISyntaxException;
+import java.util.Enumeration;
 
 import college.root.vi12.Miscleneous.Toast;
 import io.socket.client.IO;
@@ -27,9 +32,28 @@ public class NetworkUtils {
     public  String TAG = "Test";
     public  String collectionName;
     public  JSONObject object;
-    public String ipaddress = "http://192.168.1.103:8083/";
+    public String ipaddress = "http://192.168.43.98:8083/";
     Toast toast;
 
+
+    public String getLocalIpAddress() {
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        String ip = Formatter.formatIpAddress(inetAddress.hashCode());
+                        Log.i(TAG, "***** IP="+ ip);
+                        return ip;
+                    }
+                }
+            }
+        } catch (SocketException ex) {
+            Log.e(TAG, ex.toString());
+        }
+        return null;
+    }
 
 
     public Socket createSocketNameSpace(String nameSpace) throws URISyntaxException {

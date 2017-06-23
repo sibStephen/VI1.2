@@ -20,6 +20,7 @@ import java.net.URISyntaxException;
 
 import college.root.vi12.Miscleneous.IPAddess;
 import io.realm.Realm;
+import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -131,7 +132,7 @@ public class RegisterActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    socket.emit("register" , object.toString() );
+                    socket.emit("register", object.toString());
                     socket.on("registerResult", new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
