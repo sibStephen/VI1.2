@@ -32,9 +32,12 @@ public class NetworkUtils {
     public  String TAG = "Test";
     public  String collectionName;
     public  JSONObject object;
-    public String ipaddress = "http://192.168.43.98:8083/";
+    public String ipaddress = "http://192.168.1.103:8083/";
     Toast toast;
 
+
+    public NetworkUtils() {
+    }
 
     public String getLocalIpAddress() {
         try {
@@ -70,17 +73,6 @@ public class NetworkUtils {
     }
 
 
-    public void disconnectSocket() throws URISyntaxException {
-
-        socket = get();
-        socket.disconnect();
-        if (socket.connected()){
-            Log.d(TAG, "run: socket still connected");
-        }else {
-            Log.d(TAG, "disconnectSocket: socket disconnected");
-        }
-
-    }
 
     public void disconnectSocketAsync(){
         threadDisconnect = new Thread(new Runnable() {
@@ -104,32 +96,6 @@ public class NetworkUtils {
     }
 
 
-    public  Socket getSocketAsync() throws URISyntaxException {
-        threadConnect = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    socket = IO.socket(ipaddress);
-                    Log.d(TAG, "run: socket created successfully");
-                    socket.connect();
-                    Log.d(TAG, "run: socket connected successfully");
-
-                    if (socket.connected()){
-                        Log.d(TAG, "run: socket is connected ");
-                    }else {
-                        Log.d(TAG, "run: socket is not connected..");
-                    }
-
-                } catch (URISyntaxException e) {
-                    Log.d(TAG, "run: Error "+e.getMessage());
-                }
-
-
-            }
-        });
-        threadConnect.start();
-        return  socket;
-    }
 
     public Socket get() throws URISyntaxException {
         socket = IO.socket(ipaddress);
@@ -173,7 +139,11 @@ public void emitSocket(final String collectionName , final JSONObject object){
 
     this.collectionName = collectionName;
     this.object = object;
-    
+
+
+
+
+
    Thread thread = new Thread(new Runnable() {
         @Override
         public void run() {

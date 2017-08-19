@@ -18,7 +18,10 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
+import college.root.vi12.StudentProfile.Student_profile;
+import io.realm.Realm;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -34,15 +37,28 @@ public class PreTimeTableSetup extends AppCompatActivity implements OnItemSelect
     final String branch[]={" ","Computer","B2","B3","B4"};
     final String year[]={" ","FE","SE","TE","BE"};
     final String sem[]={" ","Sem1","Sem2"};
-    final String division[]={" ","D1","D2","D3","D4"};
-    private String IPAddr = "http://192.168.1.103:8083/";
+    final String division[]={" ","A","B","C"};
     Socket socket_loc;
-    JSONObject array;
+    Realm realm;
+    NetworkUtils networkUtils;
+    Student_profile profile;
+    String TAG = "Test";
+    JSONObject subjetObject = null;
+    JSONObject roomObject = null;
+    String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pre_time_table_setup);
+
+        networkUtils = new NetworkUtils();
+        profile  = new Student_profile();
+
+        realm = Realm.getDefaultInstance();
+        profile = realm.where(Student_profile.class).findFirst();
+
+        id = profile.getYear() + profile.getBranch() + profile.getSemester();
 
         spinner_branch = (Spinner)findViewById(R.id.spinner_branch_id);
         spinner_sem = (Spinner)findViewById(R.id.spinner_sem_id);
@@ -83,65 +99,120 @@ public class PreTimeTableSetup extends AppCompatActivity implements OnItemSelect
 
     }
 
-    public void proceed(View view) {
+    public void proceed(View view) throws JSONException, URISyntaxException {
         if(spinner_branch.getSelectedItem().toString()==" " || spinner_year.getSelectedItem().toString()==" " ||spinner_sem.getSelectedItem().toString()==" " ||spinner_division.getSelectedItem().toString()==" ")
         {
             Toast.makeText(this,"Please Enter Valid Information",Toast.LENGTH_LONG).show();
         }
         else
         {
-            try {
-                final JSONObject obj = new JSONObject();
-                obj.put("grNumber","2017");
-                obj.put("collectionName","RoomAllocation");
-                socket_loc = IO.socket(IPAddr);
-                socket_loc.connect();
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            socket_loc = IO.socket(IPAddr);
-                            socket_loc.connect();
-                            Log.d("run: ","is connected");
-                            if(socket_loc.connected())
-                            {
-                                socket_loc.emit("getAllData",obj.toString());
-                                socket_loc.on("Get_Rooms",roomListener);
-                            }
-                        } catch (URISyntaxException e) {
 
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                thread.start();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            next();
+
+
+
+                final JSONObject obj = new JSONObject();
+                obj.put("GrNumber","2017");
+                obj.put("collectionName","RoomAllocation");
+
+                socket_loc = networkUtils.get();
+                socket_loc.emit("getAllData",obj.toString());
+                socket_loc.on("Result",roomListener);
+
+
+
 
         }
     }
 
     private void next() {
+
+
+
+
         Intent time_table_setup_intent = new Intent(getApplicationContext(), TimeTableSetup.class);
         time_table_setup_intent.putExtra("Branch", select_branch);
         time_table_setup_intent.putExtra("Year", select_year);
         time_table_setup_intent.putExtra("Sem", select_sem);
         time_table_setup_intent.putExtra("Division", select_division);
+        time_table_setup_intent.putExtra("SubjectObject" , subjetObject.toString());
+        time_table_setup_intent.putExtra("RoomObject" , roomObject.toString());
 
-       //time_table_setup_intent.putExtra("Rooms",array);
+
+
+
+        //time_table_setup_intent.putExtra("Rooms",array);
         startActivity(time_table_setup_intent);
     }
 
     private Emitter.Listener roomListener = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
+            Log.d("obj", args[0].toString());
+            final org.json.JSONArray[] array = {(org.json.JSONArray) args[0]};
+            Log.d(TAG, "call: array is " + array);
+
+            try {
+                final JSONObject obj = (JSONObject) array[0].get(0);
+                Log.d(TAG, "call: obj is " + obj);
+                roomObject = obj;
+
+
+                // more work
+                try {
+                    gotoSubjectListener();
+
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        };
+
+
+
+    private void gotoSubjectListener() throws URISyntaxException, JSONException {
+
+        Socket soc_Subj ;
+        soc_Subj = networkUtils.get();
+        final JSONObject obj1 = new JSONObject();
+        obj1.put("GrNumber",id);
+        obj1.put("collectionName" , "Subjects");
+
+        soc_Subj.emit("getAllData", obj1.toString());
+        soc_Subj.on("Result", subjectListener );
+
+
+
+
+    }
+
+    private Emitter.Listener subjectListener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
             Log.d("obj",args[0].toString());
+            final org.json.JSONArray[] array = {(org.json.JSONArray) args[0]};
+            Log.d(TAG, "call: array is " + array);
+
+            try {
+                final JSONObject obj = (JSONObject) array[0].get(0);
+                Log.d(TAG, "call: obj is " + obj);
+                subjetObject = obj;
+
+            }catch (Exception e){
+
+            }
+
+            next();
+
+
         }
     };
+
 }
 
 

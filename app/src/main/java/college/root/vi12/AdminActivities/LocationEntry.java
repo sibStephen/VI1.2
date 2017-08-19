@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -38,6 +39,7 @@ public class LocationEntry extends AppCompatActivity implements AdapterView.OnIt
     Button btnSendToServer;
     NetworkUtils networkUtils;
     JSONObject finalObj ;
+    TextView tvDisplayEntry;
 
     //branch,year,sem,location: build.no,floor,room
     @Override
@@ -48,6 +50,8 @@ public class LocationEntry extends AppCompatActivity implements AdapterView.OnIt
         allLocations = new ArrayList<>();
         networkUtils = new NetworkUtils();
         finalObj =  new JSONObject();
+
+        tvDisplayEntry = (TextView) findViewById(R.id.tvDisplayLocation);
 
         spinner_branch = (Spinner) findViewById(R.id.spinner_branch);
         branch= new String[] {"branch","Computer", "E&TC", "Civil", "IT" , "Mechanical", "E&AS"};
@@ -123,6 +127,7 @@ public class LocationEntry extends AppCompatActivity implements AdapterView.OnIt
             loc = loc.concat(item[i]);
            }
         locations.add(loc);
+        tvDisplayEntry.setText(locations.toString());
 
         Log.d(TAG, "add_location: "+loc);
         Log.d(TAG, "add_location: final array list contains "+locations);
@@ -137,6 +142,7 @@ public class LocationEntry extends AppCompatActivity implements AdapterView.OnIt
 
         try {
             finalObj.put(item[0] , locations);
+            tvDisplayEntry.setText(finalObj.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }

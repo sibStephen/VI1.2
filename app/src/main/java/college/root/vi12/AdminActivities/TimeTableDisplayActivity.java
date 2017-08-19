@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -26,11 +27,10 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private static String LOG_TAG = "CardViewActivity";
     JSONObject obj ;
-    private Socket socket;
-    private String IPAddr = "http://192.168.1.35:8083/";
     String id;
     String TAG = "logging";
     ArrayList<JSONObject> j1;
+    NetworkUtils networkUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,26 +120,11 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
         obj.put("grNumber",id);
         Log.d("final obj",obj.toString());
 
-        //startActivity(new Intent(TimeTableSetup.this,TimeTableDisplayActivity.class));
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    socket = IO.socket(IPAddr);
-                    socket.connect();
-                    socket.emit("Allinfo",obj.toString());
-                    Log.d("ABD","Thread is called");
-                    if(socket.connected())
-                    {
-                        Log.d("TAG", "socket is connected");
-                    }
-                } catch (URISyntaxException e) {
+        networkUtils = new NetworkUtils();
+        networkUtils.emitSocket("Allinfo" , obj);
 
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread.start();
+
+
 
 
     }

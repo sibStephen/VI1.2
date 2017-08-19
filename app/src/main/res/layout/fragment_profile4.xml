@@ -13,6 +13,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 android:orientation="vertical">
                 <TableLayout
                     android:layout_width="match_parent"
@@ -38,15 +39,18 @@
                     <TableRow android:layout_margin="8dp">
                         <TextView android:text="Maths   "/>
                         <EditText
-                            android:id="@+id/ssc_maths"/>
-                        <TextView android:text="100   "/>
+                            android:id="@+id/ssc_maths"
+                            android:background="@drawable/custo_et"
+                            />
+                        <TextView android:text="  /100   "/>
 
                     </TableRow>
                     <TableRow android:layout_margin="8dp">
                         <TextView android:text="Science   "/>
                         <EditText
-                            android:id="@+id/ssc_science"/>
-                        <TextView android:text="100   "/>
+                            android:id="@+id/ssc_science" android:background="@drawable/custo_et"
+                            />
+                        <TextView android:text="  /100     "/>
 
                     </TableRow>
 
@@ -55,8 +59,9 @@
                         <TextView android:text="Grand Total   "
                             android:textStyle="bold"/>
                         <EditText
-                            android:id="@+id/ssc_total"/>
-                        <TextView android:text="300   "/>
+                            android:id="@+id/ssc_total"  android:background="@drawable/custo_et"
+                            />
+                        <TextView android:text="  /300     "/>
 
                     </TableRow>
 
@@ -90,46 +95,56 @@
                     <TableRow android:layout_margin="8dp">
                         <TextView android:text="Physics   "/>
                         <EditText
-                            android:id="@+id/hsc_phy"/>
-                        <TextView android:text="100   "/>
+                            android:id="@+id/hsc_phy"
+                            android:background="@drawable/custo_et"
+                            />
+                        <TextView android:text="  /100     "/>
 
                     </TableRow>
                     <TableRow android:layout_margin="8dp">
                         <TextView android:text="Chemistry   "/>
                         <EditText
-                            android:id="@+id/hsc_chem"/>
-                        <TextView android:text="100   "/>
+                            android:id="@+id/hsc_chem"
+                            android:background="@drawable/custo_et"
+                            />
+                        <TextView android:text="  /100     "/>
 
                     </TableRow>
                     <TableRow android:layout_margin="8dp">
                         <TextView android:text="Maths   "/>
                         <EditText
-                            android:id="@+id/hsc_maths"/>
-                        <TextView android:text="100   "/>
+                            android:id="@+id/hsc_maths"
+                            android:background="@drawable/custo_et"
+                            />
+                        <TextView android:text="  /100    "/>
 
                     </TableRow>
                     <TableRow android:layout_margin="8dp">
                         <TextView android:text="English   "/>
                         <EditText
-                            android:id="@+id/hsc_eng"/>
-                        <TextView android:text="100   "/>
+                            android:id="@+id/hsc_eng"
+                            android:background="@drawable/custo_et"
+                            />
+                        <TextView android:text="  /100    "/>
 
                     </TableRow>
 
                     <TableRow android:layout_margin="8dp">
                         <TextView android:text="CS/IT/Elec   "/>
-                        <EditText android:hint="Enter..."
+                        <EditText  android:background="@drawable/custo_et"
+
                             android:id="@+id/hsc_it"/>
-                        <TextView android:text="200   "/>
+                        <TextView android:text="  /100     "/>
 
                     </TableRow>
 
                     <TableRow android:layout_margin="8dp">
                         <TextView android:text="Grand Total   "
                             android:textStyle="bold"/>
-                        <EditText android:hint="Enter..."
+                        <EditText  android:background="@drawable/custo_et"
+
                             android:id="@+id/hsc_total"/>
-                        <TextView android:text="500   "/>
+                        <TextView android:text="  /600   "/>
 
                     </TableRow>
 
@@ -144,7 +159,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Save Details"
-
                     android:id="@+id/save_academic"
                     android:background="@color/blue_pressed"
                     android:textColor="#ffffff"/>

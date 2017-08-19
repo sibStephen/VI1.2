@@ -5,7 +5,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:layout_marginTop="16dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -160,7 +162,8 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/pref"
+            android:id="@+id/pref"   android:background="@drawable/custo_et"
+
             android:layout_below="@+id/tv_pref"/>
 
         <TextView
@@ -226,6 +229,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/custo_et"
             android:id="@+id/blood"
             android:layout_below="@+id/tv_blood"/>
 
@@ -287,6 +291,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="SAVE"
+            android:layout_margin="8dp"
             android:background="@color/blue_pressed"
             android:textColor="@color/white"
             android:layout_below="@+id/emcontact"

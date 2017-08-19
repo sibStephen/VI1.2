@@ -48,6 +48,7 @@ public class UploadSubjectsActivity extends AppCompatActivity {
     String  branch , year , semester;
     NetworkUtils networkUtils ;
     Toast toast;
+    ImageButton mimageBtnAdd;
 
 
     private static final String[] NUMBER = new String[]{
@@ -67,6 +68,7 @@ public class UploadSubjectsActivity extends AppCompatActivity {
 
 
 
+
         container = (LinearLayout) findViewById(R.id.container);
         btnSave = (Button)findViewById(R.id.btnSaveSubjs);
 
@@ -74,6 +76,35 @@ public class UploadSubjectsActivity extends AppCompatActivity {
 
         networkUtils = new NetworkUtils();
         toast = new Toast();
+
+        btnSave.setVisibility(View.INVISIBLE);
+
+        mimageBtnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                LayoutInflater layoutInflater =
+                        (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final View addView = layoutInflater.inflate(R.layout.row, null);
+                AutoCompleteTextView textOut = (AutoCompleteTextView)addView.findViewById(R.id.actvnewsubj);
+                textOut.setAdapter(adapter);
+                //textOut.setText(textIn.getText().toString());
+                imgBtnRemove = (ImageButton)findViewById(R.id.imgBtnremove);
+                final View.OnClickListener thisListener = new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        ((LinearLayout)addView.getParent()).removeView(addView);
+
+                         listAllAddView();
+                    }
+                };
+                // imgBtnRemove.setOnClickListener(thisListener);
+                container.addView(addView);
+                btnSave.setVisibility(View.VISIBLE);
+
+
+            }
+        });
 
 
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -111,29 +142,18 @@ public class UploadSubjectsActivity extends AppCompatActivity {
 
     }
 
+
+
+
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
             case R.id.add:
 
-                LayoutInflater layoutInflater =
-                        (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                final View addView = layoutInflater.inflate(R.layout.row, null);
-                AutoCompleteTextView textOut = (AutoCompleteTextView)addView.findViewById(R.id.actvnewsubj);
-                textOut.setAdapter(adapter);
-                //textOut.setText(textIn.getText().toString());
-                imgBtnRemove = (ImageButton)findViewById(R.id.imgBtnremove);
-                final View.OnClickListener thisListener = new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-                        ((LinearLayout)addView.getParent()).removeView(addView);
 
-                        // listAllAddView();
-                    }
-                };
-                // imgBtnRemove.setOnClickListener(thisListener);
-                container.addView(addView);
 
 
                 break;
@@ -235,6 +255,7 @@ public class UploadSubjectsActivity extends AppCompatActivity {
 
     public void initializeViews(){
 
+        mimageBtnAdd = (ImageButton) findViewById(R.id.imgBtnAdd);
 
 
         department = new ArrayList<String>();

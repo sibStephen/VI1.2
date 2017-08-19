@@ -17,104 +17,70 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             tools:layout_editor_absoluteY="0dp"
-            tools:layout_editor_absoluteX="8dp">
+            tools:layout_editor_absoluteX="8dp"
+            android:weightSum="1">
+
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_margin="8dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-            <TextView
+                android:layout_height="wrap_content">
+
+                <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Branch:"
-                android:textSize="20sp"
-                android:textStyle="bold"/>
-            <TextView
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_branch_id"
                 android:paddingStart="8dp"
-                android:gravity="center"
+                android:text="Computer"
                 android:textSize="20sp"
                 android:textStyle="bold"
                  />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Year:"
-                android:textSize="20sp"
-                android:textStyle="bold"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_year_id"
-                android:paddingStart="8dp"
-                android:gravity="center"
-                android:textSize="20sp"
-                android:textStyle="bold"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_margin="8dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+
+
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_year_id"
+                    android:layout_width="84dp"
                     android:layout_height="wrap_content"
-                    android:text="Sem:"
+                    android:gravity="center"
+                    android:paddingStart="8dp"
+                    android:text="TE"
                     android:textSize="20sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:layout_weight="0.56" />
+
+
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="89dp"
                     android:layout_height="wrap_content"
                     android:paddingStart="8dp"
                     android:gravity="center"
                     android:textSize="20sp"
+                    android:text="Sem2"
                     android:textStyle="bold"
                     android:id="@+id/tv_sem_id"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Division:"
-                android:textSize="20sp"
-                android:textStyle="bold"/>
-            <TextView
-                android:layout_width="match_parent"
+
+
+                <TextView
+                android:layout_width="95dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_division_id"
                 android:paddingStart="8dp"
                 android:gravity="center"
                 android:textSize="20sp"
+                android:text="C"
                 android:textStyle="bold" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_margin="8dp"
                 android:gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select Staff"
-                android:textSize="20sp"
-                android:textStyle="bold"/>
+
             <Spinner
                 android:layout_width="wrap_content"
               android:layout_marginLeft="8dp"
-                android:layout_height="20sp"
+                android:layout_height="wrap_content"
                 android:id="@+id/spinner_staff_id"/>
             </LinearLayout>
             <LinearLayout
@@ -123,16 +89,11 @@
                 android:layout_margin="8dp"
                 android:orientation="horizontal"
                 android:gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select Subject"
-                android:textSize="20sp"
-                android:textStyle="bold"/>
+
             <Spinner android:id="@+id/spinner_subject_id"
                 android:layout_width="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:layout_height="20sp"
+                android:layout_height="wrap_content"
                 android:paddingBottom="10sp"/>
             </LinearLayout>
 
@@ -551,12 +512,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Save"
+                android:background="@color/blue_pressed"
+                android:textColor="@color/white"
                 android:id="@+id/save_Checkbox"
+                android:layout_margin="8dp"
                 android:onClick="finalize"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/blue_pressed"
+                android:textColor="@color/white"
                 android:text="Submit"
+                android:layout_margin="8dp"
                 android:id="@+id/final_push"
                 android:onClick="push_to_server"/>
 

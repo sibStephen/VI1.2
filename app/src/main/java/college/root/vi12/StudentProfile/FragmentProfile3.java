@@ -1,9 +1,11 @@
 package college.root.vi12.StudentProfile;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,9 +93,6 @@ public class FragmentProfile3 extends Fragment  implements AdapterView.OnItemSel
             }
         }
         Collections.sort(countries);
-        for (String country : countries) {
-            System.out.println(country);
-        }
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, countries);
@@ -136,6 +135,8 @@ public class FragmentProfile3 extends Fragment  implements AdapterView.OnItemSel
             pincode.setText(profile.getPincode());
             city.setText(profile.getCity());
             district.setText(profile.getDistrict());
+            int pos = dataAdapter.getPosition(profile.getNationality());
+            spinner_country.setSelection(pos);
 
 
         }else{
@@ -148,101 +149,127 @@ public class FragmentProfile3 extends Fragment  implements AdapterView.OnItemSel
             public void onClick(View v) {
 
 
-                profile = new Student_profile();
-                profile = realm.where(Student_profile.class).findFirst();
-                if(profile==null) {
-                    Log.d(TAG, "save: profile is null");
-
-                    realm.beginTransaction();
-                    profile = new Student_profile();
-
-                    profile.setLandlineNumber(landline.getText().toString());
-                    profile.setAddress(address.getText().toString());
-                    profile.setState(state.getText().toString());
-                    profile.setCity(city.getText().toString());
-                    profile.setPincode(pincode.getText().toString());
-                    profile.setNationality(Country);
-                    profile.setDistrict(district.getText().toString());
-
-                    realm.commitTransaction();
-                    realm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            realm.copyToRealmOrUpdate(profile);
-                        }
-                    });
 
 
-                }else{
-                    realm.beginTransaction();
-                    profile = new Student_profile();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Save data ?");
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
-                    profile.setLandlineNumber(landline.getText().toString());
-                    profile.setAddress(address.getText().toString());
-                    profile.setState(state.getText().toString());
-                    profile.setCity(city.getText().toString());
-                    profile.setPincode(pincode.getText().toString());
-                    profile.setNationality(Country);
-                    profile.setDistrict(district.getText().toString());
-
-                    realm.commitTransaction();
-                    realm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            realm.copyToRealmOrUpdate(profile);
-                        }
-                    });
-                }// end of if else
-
-
-
-                try {
-                    networkUtils = new NetworkUtils();
-                    socket = networkUtils.initializeSocketAsync();
-                    JSONObject basicUserDetails = new JSONObject();
-                    basicUserDetails.put("landline" , landline.getText().toString());
-                    basicUserDetails.put("address" , address.getText().toString());
-                    basicUserDetails.put("state" , state.getText().toString());
-                    basicUserDetails.put("city" , city.getText().toString());
-                    basicUserDetails.put("pincode" , pincode.getText().toString());
-                    basicUserDetails.put("Country" , Country);
-                    basicUserDetails.put("district" , district.getText().toString());
-                    basicUserDetails.put("Timestamp",networkUtils.getLocalIpAddress()+" "+ new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime() ));
-
-
-
-
-
-                    String[] contents = {"landline" , "address" , "state", "city"
-                            , "pincode" , "Country" , "Country" , "district","Timestamp"};
-                    StringBuilder sb = new StringBuilder();
-                    for (int j=0 ; j<contents.length; j++){
-                        Log.d(TAG, "onClick: "+contents[j]);
-                        sb.append(contents[j]+",");
+                        dialogInterface.dismiss();
                     }
-                    JSONObject finalObj = new JSONObject();
-                    finalObj.put("obj" , basicUserDetails.toString());
-                    finalObj.put("contents" , sb.toString());
-                    finalObj.put("Length" , contents.length);
-                    finalObj.put("collectionName" , "residentialInfo");
-                    finalObj.put("grNumber" , profile.getGrno());
+                });
 
-                    networkUtils.emitSocket("Allinfo",finalObj);
-
-                    networkUtils.disconnectSocketAsync();
-                    networkUtils.listener("Allinfo" , getActivity() , getContext(), toast); //success  listener
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
 
+                        profile = new Student_profile();
+                        profile = realm.where(Student_profile.class).findFirst();
+                        if(profile==null) {
+                            Log.d(TAG, "save: profile is null");
+
+                            realm.beginTransaction();
+                            profile = new Student_profile();
+
+                            profile.setLandlineNumber(landline.getText().toString());
+                            profile.setAddress(address.getText().toString());
+                            profile.setState(state.getText().toString());
+                            profile.setCity(city.getText().toString());
+                            profile.setPincode(pincode.getText().toString());
+                            profile.setNationality(Country);
+                            profile.setDistrict(district.getText().toString());
+
+                            realm.commitTransaction();
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    realm.copyToRealmOrUpdate(profile);
+                                }
+                            });
+
+
+                        }else{
+                            realm.beginTransaction();
+                            profile = new Student_profile();
+
+                            profile.setLandlineNumber(landline.getText().toString());
+                            profile.setAddress(address.getText().toString());
+                            profile.setState(state.getText().toString());
+                            profile.setCity(city.getText().toString());
+                            profile.setPincode(pincode.getText().toString());
+                            profile.setNationality(Country);
+                            profile.setDistrict(district.getText().toString());
+
+                            realm.commitTransaction();
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    realm.copyToRealmOrUpdate(profile);
+                                }
+                            });
+                        }// end of if else
+
+
+
+                        try {
+                            networkUtils = new NetworkUtils();
+                            socket = networkUtils.initializeSocketAsync();
+                            JSONObject basicUserDetails = new JSONObject();
+                            basicUserDetails.put("landline" , landline.getText().toString());
+                            basicUserDetails.put("address" , address.getText().toString());
+                            basicUserDetails.put("state" , state.getText().toString());
+                            basicUserDetails.put("city" , city.getText().toString());
+                            basicUserDetails.put("pincode" , pincode.getText().toString());
+                            basicUserDetails.put("Country" , Country);
+                            basicUserDetails.put("district" , district.getText().toString());
+                            basicUserDetails.put("Timestamp",networkUtils.getLocalIpAddress()+" "+ new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime() ));
 
 
 
 
 
-                }  catch (JSONException e) {
-                    Log.d(TAG, "onClick: json error " + e.getMessage());
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
+                            String[] contents = {"landline" , "address" , "state", "city"
+                                    , "pincode" , "Country" , "Country" , "district","Timestamp"};
+                            StringBuilder sb = new StringBuilder();
+                            for (int j=0 ; j<contents.length; j++){
+                                Log.d(TAG, "onClick: "+contents[j]);
+                                sb.append(contents[j]+",");
+                            }
+                            JSONObject finalObj = new JSONObject();
+                            finalObj.put("obj" , basicUserDetails.toString());
+                            finalObj.put("contents" , sb.toString());
+                            finalObj.put("Length" , contents.length);
+                            finalObj.put("collectionName" , "residentialInfo");
+                            finalObj.put("grNumber" , profile.getGrno());
+
+                            networkUtils.emitSocket("Allinfo",finalObj);
+
+                            networkUtils.disconnectSocketAsync();
+                            networkUtils.listener("Allinfo" , getActivity() , getContext(), toast); //success  listener
+
+
+
+
+
+
+
+                        }  catch (JSONException e) {
+                            Log.d(TAG, "onClick: json error " + e.getMessage());
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                });
+                builder.show();
+
+
+
+
             }
         });
 

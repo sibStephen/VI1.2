@@ -14,7 +14,6 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:background="@color/greyColor"
         android:layout_height="wrap_content">
 
 
@@ -50,8 +49,8 @@
         android:layout_below="@+id/imgbtn12th"
         android:layout_alignParentEnd="true" />
 
-    </RelativeLayout>
-</ScrollView>
+
+
 
     <TextView
         android:id="@+id/tv10th"
@@ -69,12 +68,14 @@
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+       android:layout_below="@+id/img10th"
+        android:layout_marginTop="120dp"
         android:layout_alignStart="@+id/tv10th"
-        android:layout_marginBottom="88dp"
         android:layout_marginStart="12dp"
         android:textStyle="bold"
         android:text="Add 12th marksheet" />
+    </RelativeLayout>
+</ScrollView>
 
 </RelativeLayout>
 

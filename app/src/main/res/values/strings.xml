@@ -2,9 +2,9 @@
     <string name="app_name">VI 1.2</string>
     <string name="parse_app_id">mjBwOzJFhHqt2TNi4a2XbTEsn9nVLpUzZopI0XK8</string>
     <string name="parse_client_key">0HRT8ZEkxJ2RRNce5whyC5dwcHMEATpf1jljhtIu</string>
-    <string name="menu_home">Home</string>
+    <string name="menu_home">Admin</string>
     <string name="menu_search">Search</string>
-    <string name="profile">Profile</string>
+    <string name="profile">Student</string>
     <string name="menu_notifications">Notify</string>
     <string name="facebook_app_id">145074849325227</string>
     <string name="myIP">http://192.168.1.38:8083/</string>

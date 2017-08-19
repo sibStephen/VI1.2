@@ -25,106 +25,85 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true" />
 
+            <RelativeLayout
+                android:id="@+id/rlFirstPart"
+                android:layout_below="@id/toolbar1"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                >
+
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:id="@+id/imgCoverPic"
+                    android:background="@color/blue_normal"/>
+
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:onClick="editPicture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/profilepic"
-                android:foregroundGravity="fill"
+                android:onClick="editPicture"
                 android:src="@drawable/profile"
-                android:layout_below="@id/toolbar1"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="50dp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/name"
-                android:text="Shubham"
-                android:textStyle="bold"
-                android:textSize="25sp"
-                android:layout_below="@id/profilepic"
-                android:layout_marginLeft="130dp"
-                android:layout_marginTop="20dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/surname"
-                android:text="Purandare"
-                android:textStyle="bold"
-                android:textSize="25sp"
-                android:layout_marginLeft="120dp"
-                android:layout_below="@+id/name"
+                android:layout_marginTop="50dp"
                 />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/year"
-                android:text="TE"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:layout_marginTop="31dp"
-                android:layout_marginLeft="20dp"
-                android:layout_below="@+id/textView5"
-                android:layout_alignParentStart="true" />
+                <TextView
+                    android:id="@+id/year"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/imgCoverPic"
+                    android:layout_marginStart="76dp"
+                    android:textStyle="bold"
+                    tools:text="TE" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/div"
-                android:text="A"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:layout_marginLeft="40dp"
-                android:layout_alignBaseline="@+id/year"
-                android:layout_alignBottom="@+id/year"
-                android:layout_toEndOf="@+id/year" />
+                <TextView
+                    android:id="@+id/branch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@+id/imgCoverPic"
+                    android:layout_marginEnd="80dp"
+                    android:text="Computer"
+                    android:textStyle="bold"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/branch"
-                android:text="COMPUTER"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:layout_below="@id/year"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="20dp"/>
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profilepic"
+                    android:layout_centerHorizontal="true"
+                    android:text="Shubham"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    android:textSize="20sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/grno"
-                android:text="U1410186"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:layout_below="@id/branch"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="20dp"/>
+                <TextView
+                    android:id="@+id/surname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:text="Purandare"
+                    android:textColor="#000000"
+                    android:layout_below="@+id/name"
+                    android:layout_centerHorizontal="true" />
 
-            <TextView
-                tools:text="75"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="160dp"
-                android:textSize="25dp"
-                android:layout_marginTop="35dp"
-                android:layout_below="@id/name"
-                android:id="@+id/tvAtten"
+                <TextView
+                    android:id="@+id/div"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imgCoverPic"
+                    android:layout_marginStart="13dp"
+                    android:textStyle="bold"
+                    android:layout_toEndOf="@+id/year"
+                    tools:text="C" />
 
-                 />
+            </RelativeLayout>
 
-            <TextView
-                android:text="%"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/tvAtten"
-                android:layout_toEndOf="@+id/tvAtten"
-                android:id="@+id/textView5"
-                android:textSize="25dp"
-                android:layout_toRightOf="@+id/tvAtten" />
 
 
         </RelativeLayout>

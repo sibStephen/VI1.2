@@ -22,7 +22,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
     <TextView
-        android:text="Register here "
+        android:text="Welcome ..."
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20dp"
@@ -93,6 +93,35 @@
             android:id="@+id/etEmailReg"/>
 
     </android.support.design.widget.TextInputLayout>
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spFaculty"
+            android:layout_margin="8dp"
+            android:layout_below="@+id/tilEmailReg">
+        </Spinner>
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spDiscipline"
+            android:layout_margin="8dp"
+            android:layout_below="@+id/spFaculty">
+
+        </Spinner>
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spProgram"
+            android:layout_margin="8dp"
+            android:layout_below="@+id/spDiscipline">
+
+
+
+        </Spinner>
+
     <android.support.design.widget.TextInputLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -100,7 +129,7 @@
         app:hintAnimationEnabled="true"
         android:hint="Branch"
         android:id="@+id/tilBranch"
-        android:layout_below="@+id/tilEmailReg"
+        android:layout_below="@+id/spProgram"
         android:layout_alignLeft="@+id/tilEmailReg"
         android:layout_alignStart="@+id/tilEmailReg"
         android:layout_marginTop="16dp">
@@ -194,6 +223,8 @@
     android:layout_height="wrap_content"
     android:layout_below="@id/tilFirstName"
     android:text="Register"
+    android:background="@color/blue_pressed"
+    android:textColor="@color/white"
     android:gravity="center"
     android:id="@+id/btnRegister"
     android:layout_alignParentLeft="true"

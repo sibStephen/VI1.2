@@ -1,5 +1,6 @@
 package college.root.vi12.MySubjects;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,10 +37,12 @@ public class MySubjectsActivity extends AppCompatActivity {
     NetworkUtils networkUtils;
     Toast toast;
     Student_profile profile;
+    ProgressDialog dialog;
 
     RealmList<MySubjects> subjectsRealmList;
     String TAG = "Test";
     Socket socket;
+    ProgressBar progressBar ;
 
     String count = "";
     ArrayList<MySubjects> list ;
@@ -53,6 +57,9 @@ public class MySubjectsActivity extends AppCompatActivity {
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mrecyclerView.setLayoutManager(layoutManager);
+
+        dialog = new ProgressDialog(MySubjectsActivity.this); // Progress Dialog
+        dialog.setCanceledOnTouchOutside(false);
 
         SubjectsAdapter adapter = new SubjectsAdapter(list , getApplicationContext());
         mrecyclerView.setAdapter(adapter);
@@ -92,6 +99,9 @@ public class MySubjectsActivity extends AppCompatActivity {
         initializeClasses();
         initializeRealmStuff();
 
+        dialog.setTitle("Fetching Subjects....");
+        dialog.show();
+        btnSubmitSubjects.setVisibility(View.INVISIBLE);
         try {
             socket = networkUtils.get();
             Log.d(TAG, "onCreate: Socket initialized properly");
@@ -216,6 +226,9 @@ public class MySubjectsActivity extends AppCompatActivity {
                                     if (key.equals("_id") || key.equals("SubjectCount")){
                                         // do not store it in name array
                                     }else {
+
+
+
                                         mysubjects = new MySubjects();
 
                                         realm.beginTransaction();
@@ -289,6 +302,8 @@ public class MySubjectsActivity extends AppCompatActivity {
                                 for ( i=0 ;i<subjectsRealmList.size() ; i++){
                                     Log.d(TAG, "run: Subject list is "+subjectsRealmList.get(i));
                                 }
+                                btnSubmitSubjects.setVisibility(View.VISIBLE);
+                                dialog.cancel();
 
 
                             } catch (JSONException e) {

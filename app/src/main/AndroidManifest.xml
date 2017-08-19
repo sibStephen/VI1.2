@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:name=".StarterApplication"
@@ -46,9 +46,7 @@
             android:name=".HomePageActivity"
             android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity android:name=".RegisterActivity" />
-        <activity
-            android:name=".StudentProfile.UserProfile"
-             />
+        <activity android:name=".StudentProfile.UserProfile" />
         <activity android:name=".StudentProfile.EditProfileActivity" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -72,13 +70,13 @@
             android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity android:name=".AdminActivities.FacultyLoadActivity" />
         <activity android:name=".AdminActivities.AdminActivity" />
-        <activity android:name=".AdminActivities.LocationEntry"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".AdminActivities.PreTimeTableSetup"/>
-        <activity android:name=".AdminActivities.TimeTableSetup"/>
-        <activity android:name=".AdminActivities.TimeTableDisplayActivity"/>
-
-
+        <activity
+            android:name=".AdminActivities.LocationEntry"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".AdminActivities.PreTimeTableSetup" />
+        <activity android:name=".AdminActivities.TimeTableSetup" />
+        <activity android:name=".AdminActivities.TimeTableDisplayActivity" />
+        <activity android:name=".Faculty.SearchStudentActivity"></activity>
     </application>
 
 </manifest>

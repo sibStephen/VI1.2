@@ -71,7 +71,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/epYear"
         android:layout_margin="4dp"
-        android:background="@color/greyColor"
         android:layout_below="@+id/year_txt">
     </Spinner>
 

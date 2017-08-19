@@ -9,16 +9,22 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
+import college.root.vi12.Miscleneous.EncryptPassword;
 import college.root.vi12.Miscleneous.IPAddess;
+import college.root.vi12.NetworkTasks.NetworkUtils;
 import io.realm.Realm;
 import io.socket.client.Ack;
 import io.socket.client.IO;
@@ -35,9 +41,14 @@ public class RegisterActivity extends AppCompatActivity {
     Thread threadRegister;
     Socket socket;
     String ipaddres;
-    String GrNumber, email, password, username , year , branch, firstName , lastName;
+    String GrNumber, email, password, username , year , branch, firstName , lastName, mdisc , mfaculty,
+            mprogram;
     String ipaddress;
     IPAddess ipAddess;
+    ArrayAdapter<String> dataAdapter,discAdapter, programAdapter;
+    Spinner spDiscipline, spFaculty, spProgram;
+
+    EncryptPassword encryptPassword ;
 
 
     @Override
@@ -46,6 +57,44 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         setViews(); // initialize views
+
+
+        List<String> list = new ArrayList<String>();
+        list.add("Enter Faculty");
+        list.add("STEM");
+        list.add("ADA");
+        list.add("CML");
+        list.add("JNC");
+        list.add("HSS");
+        list.add("Other");
+        dataAdapter = new ArrayAdapter<String>(RegisterActivity.this,
+                android.R.layout.simple_spinner_item,list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spFaculty.setAdapter(dataAdapter);
+
+        List<String> listOfPrograms = new ArrayList<String>();
+        listOfPrograms.add("Enter Program");
+        listOfPrograms.add("B.Tech");
+        listOfPrograms.add("M.Tech");
+        listOfPrograms.add("Other");
+
+        programAdapter = new ArrayAdapter<String>(RegisterActivity.this,
+                android.R.layout.simple_spinner_item,listOfPrograms);
+        programAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spProgram.setAdapter(programAdapter);
+
+
+        List<String> listOfDepisc = new ArrayList<String>();
+        listOfDepisc.add("Enter Discipline");
+        listOfDepisc.add("Engineering");
+        listOfDepisc.add("Science");
+        listOfDepisc.add("Mathematics & Statistics");
+        listOfDepisc.add("Other");
+
+        discAdapter = new ArrayAdapter<String>(RegisterActivity.this,
+                android.R.layout.simple_spinner_item,listOfDepisc);
+        discAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spDiscipline.setAdapter(discAdapter);
 
 
         btnReg.setOnClickListener(new View.OnClickListener() {
@@ -69,12 +118,24 @@ public class RegisterActivity extends AppCompatActivity {
                         year = etYear.getText().toString();
                         username = etUser.getText().toString();
                         password = etPass.getText().toString();
+                        try {
+                            String encryptedPass = encryptPassword.encrypt(password);
+                            Log.d(TAG, "onClick:Encrypted Password "+encryptedPass);
+                            String decryptPass = encryptPassword.decrypt(encryptedPass);
+                            Log.d(TAG, "onClick: Decrypted password is "+decryptPass);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         firstName = etFirstName.getText().toString();
                         lastName = etLastName.getText().toString();
+                        mdisc = spDiscipline.getSelectedItem().toString();
+                        mfaculty = spFaculty.getSelectedItem().toString();
+                        mprogram = spProgram.getSelectedItem().toString();
 
                         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(GrNumber) || TextUtils.isEmpty(password)
                                 || TextUtils.isEmpty(username) || TextUtils.isEmpty(branch)
-                                || TextUtils.isEmpty(firstName)|| TextUtils.isEmpty(lastName)) {
+                                || TextUtils.isEmpty(firstName)|| TextUtils.isEmpty(lastName) || mfaculty.equals("Enter Faculty")
+                                || mdisc.equals("Enter Discipline") || mprogram.equals("Enter Program")) {
                             Toast.makeText(RegisterActivity.this, "Please enter all teh details", Toast.LENGTH_SHORT).show();
 
                         } else {
@@ -109,8 +170,8 @@ public class RegisterActivity extends AppCompatActivity {
                 try {
                     Log.d(TAG, "run: into the thread");
 
-                    socket = IO.socket("http://192.168.1.103:8083/");
-                    socket.connect();
+                    NetworkUtils networkUtils = new NetworkUtils();
+                    socket = networkUtils.get();
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                     Log.d(TAG, "run: error "+e.getMessage() );
@@ -127,6 +188,9 @@ public class RegisterActivity extends AppCompatActivity {
                         object.put("year", year);
                         object.put("FirstName" , firstName);
                         object.put("LastName" , lastName);
+                        object.put("Discipline" , mdisc);
+                        object.put("Faculty" , mfaculty);
+                        object.put("Program" , mprogram);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -168,6 +232,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     public  void setViews(){
         realm = Realm.getDefaultInstance();
+        encryptPassword = new EncryptPassword();
 
         btnReg = (Button) findViewById(R.id.btnRegister);
         etEmail = (EditText) findViewById(R.id.etEmailReg);
@@ -178,6 +243,9 @@ public class RegisterActivity extends AppCompatActivity {
         etYear = (EditText) findViewById(R.id.etYear);
         etFirstName = (EditText)findViewById(R.id.etFirstName);
         etLastName = (EditText)findViewById(R.id.etLastname);
+        spDiscipline = (Spinner) findViewById(R.id.spDiscipline);
+        spFaculty = (Spinner) findViewById(R.id.spFaculty);
+        spProgram = (Spinner) findViewById(R.id.spProgram);
 
     }
 }

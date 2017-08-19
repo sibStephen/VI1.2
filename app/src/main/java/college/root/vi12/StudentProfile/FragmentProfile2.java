@@ -1,7 +1,9 @@
 package college.root.vi12.StudentProfile;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,6 +75,8 @@ public class FragmentProfile2 extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 religion = adapterView.getSelectedItemPosition();
+                sreligion = (String) adapterView.getSelectedItem();
+
             }
 
             @Override
@@ -129,6 +133,11 @@ public class FragmentProfile2 extends Fragment {
             mobile.setText(profile.getMobile());
             mstatus.setText(profile.getMstatus());
             emcontact.setText(profile.getEmcontact());
+
+            int pos = adapter.getPosition(profile.getReligion());
+            spReligion.setSelection(pos);
+
+
         }
 
 
@@ -138,174 +147,205 @@ public class FragmentProfile2 extends Fragment {
             @Override
             public void onClick(View view) {
 
-                profile = new Student_profile();
-                profile = realm.where(Student_profile.class).findFirst();
-                if(profile==null) {
-                    Log.d(TAG, "save: profile is null");
-                    //     profile = realm.createObject(Student_profile.class);
-                    realm.beginTransaction();
-                    profile = new Student_profile();
-
-                    profile.setEmail_pri(email_pri.getText().toString());
-                    profile.setEmail_sec(email_sec.getText().toString());
-                    profile.setMother_ton(mother_ton.getText().toString());
-                    profile.setBirth_place(birth.getText().toString());
-                    profile.setSub_caste(sub_caste.getText().toString());
-                    profile.setUni_area(uni_area.getText().toString());
-                    profile.setFull_name(full_name.getText().toString());
-                    profile.setPref_no(pref.getText().toString());
-                    profile.setIncome(income.getText().toString());
-                    profile.setAadhar(aadhar.getText().toString());
-                    profile.setNationality(nationality.getText().toString());
-                    profile.setBlood(blood.getText().toString());
-                    profile.setMobile(mobile.getText().toString());
-                    profile.setMstatus(mstatus.getText().toString());
-                    profile.setEmcontact(emcontact.getText().toString());
-
-                    realm.commitTransaction();
-
-                    realm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            realm.copyToRealmOrUpdate(profile);
-                        }
-                    });
-//            realm.commitTransaction();
-                }
-                else
-                {
-
-                    Toast toast = new Toast();
-                    toast.showProgressDialog(getActivity() , "Saving details....");
-                    //  oldgrno=profile.getGrno();
-                    profile = realm.where(Student_profile.class).findFirst();
-                    realm.beginTransaction();
-                    profile.setEmail_pri(email_pri.getText().toString());
-                    profile.setEmail_sec(email_sec.getText().toString());
-
-                    profile.setMother_ton(mother_ton.getText().toString());
-                    profile.setBirth_place(birth.getText().toString());
-                    profile.setSub_caste(sub_caste.getText().toString());
-                    profile.setUni_area(uni_area.getText().toString());
-                    profile.setFull_name(full_name.getText().toString());
-                    profile.setPref_no(pref.getText().toString());
-                    profile.setIncome(income.getText().toString());
-                    profile.setAadhar(aadhar.getText().toString());
-                    profile.setNationality(nationality.getText().toString());
-                    profile.setBlood(blood.getText().toString());
-                    profile.setMobile(mobile.getText().toString());
-                    profile.setMstatus(mstatus.getText().toString());
-                    profile.setEmcontact(emcontact.getText().toString());
-                    realm.commitTransaction();
-                    realm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            realm.copyToRealmOrUpdate(profile);
-
-                        }
-                    });
 
 
-                    semcontact= emcontact.getText().toString();
-                    semail_pri= email_pri.getText().toString();
-                    semail_sec= email_sec.getText().toString();
-                    saadhar= aadhar.getText().toString();
-                    sbirth= birth.getText().toString();
-                    sfull_name= full_name.getText().toString();
-                    sincome= income.getText().toString();
-                    smobile= mobile.getText().toString();
-                    smother_ton= mother_ton.getText().toString();
-                    smstatus= mstatus.getText().toString();
-                    snationality= nationality.getText().toString();
-                    ssub_caste= sub_caste.getText().toString();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Save data ?");
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
-                    sblood= blood.getText().toString();
-                    spref= pref.getText().toString();
-                    suni_area = uni_area.getText().toString();
+                        dialogInterface.dismiss();
+                    }
+                });
 
-                    try {
-                        networkUtils = new NetworkUtils();
-                        socket = networkUtils.initializeSocketAsync();
-                        JSONObject basicUserDetails = new JSONObject();
-                        basicUserDetails.put("semcontact" , semcontact);
-                        basicUserDetails.put("semail_pri" , semail_pri);
-                        basicUserDetails.put("semail_sec" , semail_sec);
-                        basicUserDetails.put("saadhar" , saadhar);
-                        basicUserDetails.put("sbirth" , sbirth);
-                        basicUserDetails.put("sfull_name" , sfull_name);
-                        basicUserDetails.put("sincome" , sincome);
-                        basicUserDetails.put("smobile" , smobile);
-                        basicUserDetails.put("smother_ton" , smother_ton);
-                        basicUserDetails.put("smstatus" , smstatus);
-                        basicUserDetails.put("snationality" , snationality);
-                        basicUserDetails.put("ssub_caste" , ssub_caste);
-                        basicUserDetails.put("sreligion" , sreligion);
-                        basicUserDetails.put("sblood" , sblood);
-                        basicUserDetails.put("spref" , spref);
-                        basicUserDetails.put("suni_area" , suni_area);
-                        basicUserDetails.put("Timestamp",networkUtils.getLocalIpAddress()+" "+ new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime() ));
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
 
 
+                        profile = new Student_profile();
+                        profile = realm.where(Student_profile.class).findFirst();
+                        if(profile==null) {
+                            Log.d(TAG, "save: profile is null");
+                            //     profile = realm.createObject(Student_profile.class);
+                            realm.beginTransaction();
+                            profile = new Student_profile();
 
+                            profile.setEmail_pri(email_pri.getText().toString());
+                            profile.setEmail_sec(email_sec.getText().toString());
+                            profile.setMother_ton(mother_ton.getText().toString());
+                            profile.setBirth_place(birth.getText().toString());
+                            profile.setSub_caste(sub_caste.getText().toString());
+                            profile.setUni_area(uni_area.getText().toString());
+                            profile.setFull_name(full_name.getText().toString());
+                            profile.setPref_no(pref.getText().toString());
+                            profile.setIncome(income.getText().toString());
+                            profile.setAadhar(aadhar.getText().toString());
+                            profile.setNationality(nationality.getText().toString());
+                            profile.setBlood(blood.getText().toString());
+                            profile.setMobile(mobile.getText().toString());
+                            profile.setMstatus(mstatus.getText().toString());
+                            profile.setEmcontact(emcontact.getText().toString());
+                            profile.setReligion(sreligion);
 
-                        String[] contents = {"semcontact" , "semail_pri" , "semail_sec", "saadhar"
-                                , "sfull_name" , "sincome" , "sfull_name" , "smobile"
-                                , "smother_ton" , "smstatus" , "snationality"
-                                , "sreligion", "sreligion", "sblood", "spref", "suni_area","Timestamp"};
-                        StringBuilder sb = new StringBuilder();
-                        for (int j=0 ; j<contents.length; j++){
-                            Log.d(TAG, "onClick: "+contents[j]);
-                            sb.append(contents[j]+",");
-                        }
-                        JSONObject finalObj = new JSONObject();
-                        finalObj.put("obj" , basicUserDetails.toString());
-                        finalObj.put("contents" , sb.toString());
-                        finalObj.put("Length" , contents.length);
-                        finalObj.put("collectionName" , "personalDetails");
-                        finalObj.put("grNumber" , profile.getGrno());
+                            realm.commitTransaction();
 
-                        CheckNetwork network = new CheckNetwork();
-                        if (!network.isNetWorkAvailable(getActivity())){
-
-                            Log.d(TAG, "onClick: No internet ");
-                            final JsontoSend jsontoSend= new JsontoSend();
-                            jsontoSend.setCollection("Allinfo");
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-                            String currentDateandTime = sdf.format(new Date());
-                            jsontoSend.setId(currentDateandTime);
-                            jsontoSend.setJson(finalObj.toString());
                             realm.executeTransaction(new Realm.Transaction() {
                                 @Override
                                 public void execute(Realm realm) {
+                                    realm.copyToRealmOrUpdate(profile);
+                                }
+                            });
+//            realm.commitTransaction();
+                        }
+                        else
+                        {
 
-                                    realm.copyToRealmOrUpdate(jsontoSend);
-                                    Log.d(TAG, "execute: json saved in realm");
+                            Toast toast = new Toast();
+                            toast.showProgressDialog(getActivity() , "Saving details....");
+                            //  oldgrno=profile.getGrno();
+                            profile = realm.where(Student_profile.class).findFirst();
+                            realm.beginTransaction();
+                            profile.setEmail_pri(email_pri.getText().toString());
+                            profile.setEmail_sec(email_sec.getText().toString());
+
+                            profile.setMother_ton(mother_ton.getText().toString());
+                            profile.setBirth_place(birth.getText().toString());
+                            profile.setSub_caste(sub_caste.getText().toString());
+                            profile.setUni_area(uni_area.getText().toString());
+                            profile.setFull_name(full_name.getText().toString());
+                            profile.setPref_no(pref.getText().toString());
+                            profile.setIncome(income.getText().toString());
+                            profile.setAadhar(aadhar.getText().toString());
+                            profile.setNationality(nationality.getText().toString());
+                            profile.setBlood(blood.getText().toString());
+                            profile.setMobile(mobile.getText().toString());
+                            profile.setMstatus(mstatus.getText().toString());
+                            profile.setEmcontact(emcontact.getText().toString());
+                            profile.setReligion(sreligion);
+
+                            realm.commitTransaction();
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    realm.copyToRealmOrUpdate(profile);
 
                                 }
                             });
 
 
+                            semcontact= emcontact.getText().toString();
+                            semail_pri= email_pri.getText().toString();
+                            semail_sec= email_sec.getText().toString();
+                            saadhar= aadhar.getText().toString();
+                            sbirth= birth.getText().toString();
+                            sfull_name= full_name.getText().toString();
+                            sincome= income.getText().toString();
+                            smobile= mobile.getText().toString();
+                            smother_ton= mother_ton.getText().toString();
+                            smstatus= mstatus.getText().toString();
+                            snationality= nationality.getText().toString();
+                            ssub_caste= sub_caste.getText().toString();
+
+                            sblood= blood.getText().toString();
+                            spref= pref.getText().toString();
+                            suni_area = uni_area.getText().toString();
+
+                            try {
+                                networkUtils = new NetworkUtils();
+                                socket = networkUtils.initializeSocketAsync();
+                                JSONObject basicUserDetails = new JSONObject();
+                                basicUserDetails.put("semcontact" , semcontact);
+                                basicUserDetails.put("semail_pri" , semail_pri);
+                                basicUserDetails.put("semail_sec" , semail_sec);
+                                basicUserDetails.put("saadhar" , saadhar);
+                                basicUserDetails.put("sbirth" , sbirth);
+                                basicUserDetails.put("sfull_name" , sfull_name);
+                                basicUserDetails.put("sincome" , sincome);
+                                basicUserDetails.put("smobile" , smobile);
+                                basicUserDetails.put("smother_ton" , smother_ton);
+                                basicUserDetails.put("smstatus" , smstatus);
+                                basicUserDetails.put("snationality" , snationality);
+                                basicUserDetails.put("ssub_caste" , ssub_caste);
+                                basicUserDetails.put("sreligion" , sreligion);
+                                basicUserDetails.put("sblood" , sblood);
+                                basicUserDetails.put("spref" , spref);
+                                basicUserDetails.put("suni_area" , suni_area);
+                                basicUserDetails.put("Timestamp",networkUtils.getLocalIpAddress()+" "+ new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime() ));
+
+
+
+
+
+                                String[] contents = {"semcontact" , "semail_pri" , "semail_sec", "saadhar"
+                                        , "sfull_name" , "sincome" , "sfull_name" , "smobile"
+                                        , "smother_ton" , "smstatus" , "snationality"
+                                        , "sreligion", "sreligion", "sblood", "spref", "suni_area","Timestamp"};
+                                StringBuilder sb = new StringBuilder();
+                                for (int j=0 ; j<contents.length; j++){
+                                    Log.d(TAG, "onClick: "+contents[j]);
+                                    sb.append(contents[j]+",");
+                                }
+                                JSONObject finalObj = new JSONObject();
+                                finalObj.put("obj" , basicUserDetails.toString());
+                                finalObj.put("contents" , sb.toString());
+                                finalObj.put("Length" , contents.length);
+                                finalObj.put("collectionName" , "personalDetails");
+                                finalObj.put("grNumber" , profile.getGrno());
+
+                                CheckNetwork network = new CheckNetwork();
+                                if (!network.isNetWorkAvailable(getActivity())){
+
+                                    Log.d(TAG, "onClick: No internet ");
+                                    final JsontoSend jsontoSend= new JsontoSend();
+                                    jsontoSend.setCollection("Allinfo");
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
+                                    String currentDateandTime = sdf.format(new Date());
+                                    jsontoSend.setId(currentDateandTime);
+                                    jsontoSend.setJson(finalObj.toString());
+                                    Log.d(TAG, "onClick: object to save in realm is "+finalObj);
+                                    realm.executeTransaction(new Realm.Transaction() {
+                                        @Override
+                                        public void execute(Realm realm) {
+
+                                            realm.copyToRealmOrUpdate(jsontoSend);
+                                            Log.d(TAG, "execute: json saved in realm");
+
+                                        }
+                                    });
+
+
+                                }else{
+                                    networkUtils.emitSocket("Allinfo",finalObj);
+
+                                    networkUtils.listener("Allinfo" , getActivity() , getContext(), toast); //success  listener
+
+                                }
+
+
+
+
+
+
+
+
+
+                            }  catch (JSONException e) {
+                                Log.d(TAG, "onClick: json error " + e.getMessage());
+                            } catch (URISyntaxException e) {
+                                e.printStackTrace();
+                            }
                         }
 
 
-                        networkUtils.emitSocket("Allinfo",finalObj);
-
-                        networkUtils.disconnectSocketAsync();
-                        networkUtils.listener("Allinfo" , getActivity() , getContext(), toast); //success  listener
-
+                        }
+                    });
+                builder.show();
 
 
 
-
-
-
-                    }  catch (JSONException e) {
-                        Log.d(TAG, "onClick: json error " + e.getMessage());
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
-                    }
-                }
 
 
             }

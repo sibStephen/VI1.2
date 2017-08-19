@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
 
 
@@ -33,6 +34,7 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
 
     JSONObject finalObj ;
     String sa;
+    NetworkUtils networkUtils;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -40,6 +42,8 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_faculty_load);
+
+        networkUtils = new NetworkUtils();
 
         spinner_branch = (Spinner) findViewById(R.id.spinner_branch);
         ArrayAdapter<String> branch_adapter;
@@ -207,6 +211,8 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
                             finalObj.put("_id", input_branch + input_year + input_semester + input_division);
                             finalObj.put("Subjects_Faculty", store_data);
                             Log.d("tag", "onClick: " + finalObj);
+                            networkUtils.emitSocket("Allinfo" , finalObj);
+
                         } catch (JSONException e)
                         {
                             e.printStackTrace();

@@ -10,5 +10,10 @@
         android:checked="false"
         android:icon="@drawable/profile_def"
         android:title="My Subjects"/>
+    <item
+        android:id="@+id/timetable"
+        android:checked="false"
+        android:icon="@drawable/profile_def"
+        android:title="My TimeTable"/>
 
 </menu>

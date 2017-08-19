@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -53,11 +55,41 @@ public class MainActivity extends AppCompatActivity {
     Thread threadLogin;
     Socket socket;
     String ipaddress;
-   Student_profile profile;
+    Student_profile profile;
     ProgressDialog dialog ;
     CheckBox cbShowPass;
-    SharedPreferences.Editor editorLogin;
-    SharedPreferences sharedPreferencesLogin;
+    LoggedIn loggedIn;
+
+    public boolean isLoggedIn(){
+
+        boolean login = false;
+
+        realm = Realm.getDefaultInstance();
+        loggedIn = realm.where(LoggedIn.class).findFirst();
+
+        if(loggedIn == null){
+            Log.d(TAG, "isLoggedIn: usr not logged in");
+            login = false;
+
+        }else {
+
+            Log.d(TAG, "isLoggedIn: user logged in");
+            if(loggedIn.isLoggedIn()){
+                Log.d(TAG, "isLoggedIn: user has been logged in");
+                login = true;
+            }else{
+                Log.d(TAG, "isLoggedIn: object exists but does not not have a true isLoggedIn value");
+
+                login = false;
+            }
+
+
+        }
+
+
+        return  login;
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,14 +98,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         realm = Realm.getDefaultInstance();
 
-        sharedPreferencesLogin = getSharedPreferences("login", Context.MODE_PRIVATE);
-        editorLogin = sharedPreferencesLogin.edit();
-
-        boolean isLoggedIn = sharedPreferencesLogin.getBoolean("login", false);
-        if (isLoggedIn){
+        if (isLoggedIn()){
+            Log.d(TAG, "onCreate: shared pref gave true ");
             startActivity(new Intent(MainActivity.this, HomePageActivity.class));
             finish();
         }
+
+
+
 
         setviews(); // initialize views
 
@@ -232,19 +264,44 @@ public class MainActivity extends AppCompatActivity {
                                    //     Log.d(TAG, "call: name " + firstName);
                                      //   Log.d(TAG, "call: last name " + lastName);
 
-                                        SharedPreferences sharedPreferences = getSharedPreferences("ShaPreferences", Context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                       // SharedPreferences sharedPreferences = getSharedPreferences("ShaPreferences", Context.MODE_PRIVATE);
+                                        //SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                                        boolean firstTime = sharedPreferences.getBoolean("first", true);
+                                        realm = Realm.getDefaultInstance();
+                                        loggedIn = realm.where(LoggedIn.class).findFirst();
 
-                                        if (firstTime) {
-                                            editor.putBoolean("first", false);
+
+
+                                        //boolean firstTime = sharedPreferences.getBoolean("first", true);
+
+                                        if (loggedIn == null) {
+                                            Log.d(TAG, "call: its the first time so load the class into realm");
+                                          //  editor.putBoolean("first", false);
                                             //For commit the changes, Use either editor.commit(); or  editor.apply();.
-                                            editor.commit();
+                                            //editor.commit();
 
 
-                                            editorLogin.putBoolean("login" , true);
-                                            editorLogin.commit();
+                                            loggedIn = realm.where(LoggedIn.class).findFirst();
+                                            if (loggedIn == null){
+                                                Log.d(TAG, "call: adding loggedin class for the first tym");
+
+                                                realm.beginTransaction();
+                                                loggedIn = new LoggedIn();
+                                                loggedIn.setId(1);
+                                                loggedIn.setLoggedIn(true);
+                                                realm.commitTransaction();
+                                                realm.executeTransaction(new Realm.Transaction() {
+                                                    @Override
+                                                    public void execute(Realm realm) {
+                                                        realm.copyToRealmOrUpdate(loggedIn);
+                                                        Log.d(TAG, "execute: logged in realm obj set to true");
+
+                                                    }
+                                                });
+
+                                            }
+
+
 
                                             realm = Realm.getDefaultInstance();
                                             profile = new Student_profile();
@@ -289,6 +346,7 @@ public class MainActivity extends AppCompatActivity {
                                         } else {
 
 
+                                            Log.d(TAG, "call: its not the first time so direct intent to home page");
 
                                             Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
                                             startActivity(intent);
@@ -305,7 +363,29 @@ public class MainActivity extends AppCompatActivity {
 
                             // college.root.vi12.Miscleneous.Toast.makeText(MainActivity.this , "Successfully logged in ..", college.root.vi12.Miscleneous.Toast.LENGTH_SHORT).show();
                         } else {
-                            editorLogin.putBoolean("login" , false);
+
+
+                            realm = Realm.getDefaultInstance();
+                            loggedIn = realm.where(LoggedIn.class).findFirst();
+                            if (loggedIn == null){
+                                Log.d(TAG, "call: adding loggedin class for the first tym");
+
+                                realm.beginTransaction();
+                                loggedIn = new LoggedIn();
+                                loggedIn.setId(1);
+                                loggedIn.setLoggedIn(false);
+                                realm.commitTransaction();
+                                realm.executeTransaction(new Realm.Transaction() {
+                                    @Override
+                                    public void execute(Realm realm) {
+                                        realm.copyToRealmOrUpdate(loggedIn);
+                                        Log.d(TAG, "execute: logged in realm obj set to true");
+
+                                    }
+                                });
+
+                            }
+                            //editorLogin.putBoolean("login" , false);
                             Log.d(TAG, "call: error in login");
                             //    dialog.dismiss();
                             //college.root.vi12.Miscleneous.Toast.makeText(MainActivity.this , "Error logging in", college.root.vi12.Miscleneous.Toast.LENGTH_SHORT).show();
@@ -333,5 +413,6 @@ public class MainActivity extends AppCompatActivity {
         cbShowPass = (CheckBox)findViewById(R.id.cbShowPass);
 
     }
+
 
 }

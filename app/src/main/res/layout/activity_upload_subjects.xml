@@ -17,7 +17,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_width="363dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <Spinner
@@ -92,6 +92,14 @@
                 android:layout_marginLeft="160dp"
                 android:layout_centerVertical="true"
                 android:id="@+id/spSem" />
+
+            <ImageButton
+                android:id="@+id/imgBtnAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/textView8"
+                app:srcCompat="@drawable/ic_add_circle_outline_black_24dp" />
         </RelativeLayout>
 
 

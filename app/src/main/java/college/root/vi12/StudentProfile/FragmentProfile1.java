@@ -51,6 +51,7 @@ public class FragmentProfile1 extends Fragment {
    ArrayAdapter<String> yearAdapter;
     ArrayAdapter<String> SemAdapter;
     ArrayAdapter<String> dataAdapter,divAdapter,branchAdapter;
+    int pos=0;
 
 
     public FragmentProfile1() {
@@ -163,8 +164,23 @@ public class FragmentProfile1 extends Fragment {
 
         profile = new Student_profile();
         profile = realm.where(Student_profile.class).findFirst();
-        name.setText(profile.getName());
-        surname.setText(profile.getSurname());
+
+        if(profile != null){
+            name.setText(profile.getName());
+            surname.setText(profile.getSurname());
+            pos =  branchAdapter.getPosition(profile.getBranch());
+            spBranch.setSelection(pos);
+
+            pos = yearAdapter.getPosition(profile.getYear());
+            spYear.setSelection(pos);
+
+            pos = divAdapter.getPosition(profile.getDiv());
+            spDiv.setSelection(pos);
+
+            pos = SemAdapter.getPosition(profile.getSemester());
+            spSem.setSelection(pos);
+
+        }
 
 
         imageuri=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
@@ -268,7 +284,7 @@ public class FragmentProfile1 extends Fragment {
                                 basicUserDetails.put("GRNumber" , mygrno);
                                 basicUserDetails.put("div" , mydiv);
                                 basicUserDetails.put("sem" , sem);
-                                basicUserDetails.put("Timestamp",networkUtils.getLocalIpAddress()+" "+ new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime() ));
+                                basicUserDetails.put("Timestamp",networkUtils.getLocalIpAddress()+" "+ new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(Calendar.getInstance().getTime() ));
 
 
 

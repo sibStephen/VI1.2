@@ -31,6 +31,7 @@ import io.socket.client.Socket;
 
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.Iterator;
 
 public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
@@ -40,19 +41,19 @@ public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnI
     ArrayAdapter<String> adapter_subject;
     ArrayAdapter<String> adapter_staff;
     ArrayAdapter<String> adapter_location;
-    final String subject[]={" ","Sub1","Sub2","Sub3","Sub4"};
-    final String staff[]={" ","Staff A","Staff B","Staff C","Staff D"};
+    final String subject[]={"Enter Subject ","Sub1","Sub2","Sub3","Sub4"};
+    final String staff[]={"Enter Staff ","Staff A","Staff B","Staff C","Staff D"};
     String temp_location[] = new String[49];
     TableLayout table;
     TextView tv;
     CheckBox ckb1,ckb2,ckb3,ckb4,ckb5,ckb6,ckb7,ckb8,ckb9,ckb10,ckb11,ckb12,ckb13,ckb14,ckb15,ckb16,ckb17,ckb18,ckb19,ckb20,ckb21,ckb22,ckb23,ckb24,ckb25,ckb26,ckb27,ckb28,ckb29,ckb30,ckb31,ckb32,ckb33,ckb34,ckb35,ckb36,ckb37,ckb38,ckb39,ckb40,ckb41,ckb42,ckb43,ckb44,ckb45,ckb46,ckb47,ckb48;
     String data = "";
     int array[] = new int [49];
-    JSONObject obj,final_obj;
+    JSONObject roomObject,subjectObject,final_obj, obj;
     JSONArray Monday,Tuesday,Wednesday,Thursday,Friday,Saturday;
     Button send_button;
-
-    String temp_room[]={" ","room1","room2","room3"};
+    String TAG = "test";
+    String temp_room[]={"Enter room ","room1","room2","room3"};
 
 
     @Override
@@ -85,6 +86,51 @@ public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnI
         selection[1]=extras.getString("Year");
         selection[2]=extras.getString("Sem");
         selection[3]=extras.getString("Division");
+
+        try {
+            subjectObject =  new JSONObject();
+            roomObject = new JSONObject();
+            // Bundle extras = getIntent().getExtras();
+            //obj = (JSONObject) extras.getString("obj");
+            String str = getIntent().getStringExtra("SubjectObject");
+            Log.d(TAG, "str" + str);
+
+            subjectObject = new JSONObject(str);
+            String str1 = getIntent().getStringExtra("RoomObject");
+            Log.d(TAG, "str" + str);
+            String count = subjectObject.getString("SubjectCount");
+
+            Iterator<?> keys = subjectObject.keys();
+            Log.d(TAG, "run: kes are "+keys);
+
+            int i=0;
+            while( keys.hasNext() ) {
+                String key = (String) keys.next();
+                Log.d(TAG, "run: key is " + key);
+                Log.d(TAG, "run: and value of key is " + subjectObject.getString(key));
+
+                if (key.equals("_id") || key.equals("SubjectCount")) {
+                    // do not store it in name array
+                } else {
+
+                    subject[i] = key;
+                    i++;
+
+
+
+                }
+            }
+
+
+
+                    roomObject = new JSONObject(str1);
+
+
+            Log.d(TAG, "onCreate: "+obj.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         spinner_staff = (Spinner)findViewById(R.id.spinner_staff_id);
         spinner_subject = (Spinner)findViewById(R.id.spinner_subject_id);
@@ -1080,7 +1126,7 @@ public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnI
     public void push_to_server(View view) {
         try {
 
-            final_obj.put("id",selection[0].toString()+selection[1].toString()+selection[2].toString()+selection[3].toString());
+            final_obj.put("id",selection[0]+selection[1]+selection[2]+selection[3]);
             final_obj.put("Monday",Monday);
             final_obj.put("Tuesday",Tuesday);
             final_obj.put("Wednesday",Wednesday);
@@ -1090,7 +1136,7 @@ public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnI
             Intent i1 = new Intent(TimeTableSetup.this,TimeTableDisplayActivity.class);
 
             i1.putExtra("object",final_obj.toString());
-            i1.putExtra("id",selection[0].toString()+selection[1].toString()+selection[2].toString()+selection[3].toString());
+            i1.putExtra("id",selection[0]+selection[1]+selection[2]+selection[3]);
             startActivity(i1);
 
         }
