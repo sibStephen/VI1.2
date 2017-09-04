@@ -51,16 +51,14 @@ public class MainActivity extends AppCompatActivity {
 
     Realm realm;
     LoginButton loginButton;
-    CallbackManager manager;
     Thread threadLogin;
     Socket socket;
-    String ipaddress;
     Student_profile profile;
-    ProgressDialog dialog ;
     CheckBox cbShowPass;
     LoggedIn loggedIn;
 
     public boolean isLoggedIn(){
+// TODO when user is logged in but his profile gets null then next tym after login the userprofile remains null "bug"
 
         boolean login = false;
 

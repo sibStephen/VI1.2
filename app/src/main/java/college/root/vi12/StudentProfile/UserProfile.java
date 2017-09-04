@@ -1,14 +1,22 @@
 package college.root.vi12.StudentProfile;
 
+import android.app.AlarmManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+//import android.icu.util.Calendar;
+import java.util.Calendar;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -26,6 +34,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import college.root.vi12.AdminActivities.TimeTableDisplayActivity;
 import college.root.vi12.MySubjects.MySubjectsActivity;
@@ -162,17 +172,33 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
     }
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
     protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_user_profile);
 
 
             //TODO add a student profile field named as 1) isTTLoaded 2) areSubjectsLoaded
             // TODO if internet connection exists then load TT from server else load locally.
-            setContentView(R.layout.activity_user_profile);
+
+            Calendar calendar =Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY , 8);
+            Intent intent = new Intent(this , TTReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+            manager.setRepeating(AlarmManager.RTC_WAKEUP , calendar.getTimeInMillis() , AlarmManager.INTERVAL_HOUR, pendingIntent);
+
+
+
+            TTNotification();
+
             try {
 
                 //ActionBar bar = getActionBar();
+
+
 
                 //bar.setTitle("Profile");
             } catch (NullPointerException e) {
@@ -194,8 +220,6 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
             networkUtils = new NetworkUtils();
             toast = new Toast();
 
-            RealmConfiguration config = new RealmConfiguration.Builder(this).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
-            realm.setDefaultConfiguration(config);
 
             realm = Realm.getDefaultInstance();
 
@@ -271,9 +295,6 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
     public void editPicture(View view){
 
-       // Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        //galleryIntent.setType("image/*");
-        //startActivityForResult(galleryIntent, GALLERY_REQUEST);
 
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, GALLERY_REQUEST);
@@ -330,35 +351,62 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
         }
 
         if (id == R.id.timetable){
-            profile = realm.where(Student_profile.class).findFirst();
-
-            if (profile==null)
-            {
-                Log.d(TAG, "onNavigationItemSelected: profile is null");
-            }
-
-             ttID = profile.getBranch()+profile.getYear()+profile.getSemester()+profile.getDiv();
-
-            NetworkUtils networkUtils = new NetworkUtils();
-
-            try {
-                socket = networkUtils.get();
-                JSONObject object = new JSONObject();
-                object.put("GrNumber", ttID );
-                object.put("collectionName", "Load_Time_Table");
-              //  networkUtils.emitSocket("getAllData" , object);
-
-                socket.emit("getAllData" , object.toString());
-                socket.on("Result" , ttlistener);
 
 
 
+            if(CheckNetwork.isNetWorkAvailable(this)){
+                // if network available .... fetch recent TT
 
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+                realm = Realm.getDefaultInstance();
+
+                profile = realm.where(Student_profile.class).findFirst();
+
+                if (profile==null)
+                {
+                    Log.d(TAG, "onNavigationItemSelected: profile is null");
+                }
+                ttID = profile.getBranch()+profile.getYear()+profile.getSemester()+profile.getDiv();
+
+                NetworkUtils networkUtils = new NetworkUtils();
+
+                try {
+                    socket = networkUtils.get();
+                    JSONObject object = new JSONObject();
+                    object.put("GrNumber", ttID );
+                    object.put("collectionName", "Load_Time_Table");
+                    //  networkUtils.emitSocket("getAllData" , object);
+
+                    socket.emit("getAllData" , object.toString());
+                    socket.on("Result" , ttlistener);
+
+
+
+
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }else{
+                // else load the local TT
+
+                Intent i1 = new Intent(UserProfile.this,TimeTableDisplayActivity.class);
+                realm = Realm.getDefaultInstance();
+                realmObject  = realm.where(TTRealmObject.class).findFirst();
+
+                if (realmObject != null){
+                    i1.putExtra("object",realmObject.getJsonTTObject());
+                    i1.putExtra("id",ttID);
+                    i1.putExtra("User" , "Student");
+                    startActivity(i1);
+
+                  }else{
+                    Log.d(TAG, "onNavigationItemSelected: realmobject is null");
+                }
+                }
+
+
 
 
            // startActivity(new Intent(this , TimeTableDisplayActivity.class));
@@ -422,6 +470,8 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
                 i1.putExtra("object",realmObject.getJsonTTObject());
                 i1.putExtra("id",ttID);
+                i1.putExtra("User" , "Student");
+
                 startActivity(i1);
 
             } catch (JSONException e) {
@@ -432,6 +482,79 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
         }
     };
 
+
+    public void TTNotification(){
+        TTRealmObject ttobject;
+        Log.d(TAG, "TTNotification: in TTNotificaton");
+        realm = Realm.getDefaultInstance();
+        ttobject = realm.where(TTRealmObject.class).findFirst();
+        if (ttobject == null){
+            Log.d(TAG, "onReceive: ttobject was null");
+
+        }else{
+            // check the current task here....
+
+            SimpleDateFormat sdf = new SimpleDateFormat("HH");
+            String currentDateandTime = sdf.format(new Date());
+            Log.d(TAG, "onReceive: current hour is "+currentDateandTime);
+         //   if (Integer.parseInt(currentDateandTime)>8 && Integer.parseInt(currentDateandTime)< 7)
+             {
+
+                // valid ... check lectures
+
+                SimpleDateFormat format = new SimpleDateFormat("EEEE");
+                Date d = new Date();
+                String dayOfTheWeek = format.format(d);
+                Log.d(TAG, "onReceive: today is "+dayOfTheWeek);
+                String  str = ttobject.getJsonTTObject();
+                try {
+                    JSONObject object = new JSONObject(str);
+                    Log.d(TAG, "onReceive: tt object is"+object);
+                    JSONArray array = object.getJSONArray(dayOfTheWeek);
+                    Log.d(TAG, "onReceive: tt for today is "+array);
+
+                    int length = array.length();
+                    for (int i=0 ; i<length ; i++){
+                        JSONObject currentObject = array.getJSONObject(i);
+
+
+                        int time = Integer.parseInt(currentObject.getString("Time"));
+                        if (time == 14){
+                            NotificationManager notificationManager = (NotificationManager) UserProfile.this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+                            Intent intent1 = new Intent(UserProfile.this , UserProfile.class);
+                            intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            PendingIntent pendingIntent= PendingIntent.getActivity(UserProfile.this , 100, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                            NotificationCompat.Builder builder = new NotificationCompat.Builder(UserProfile.this)
+                                    .setContentIntent(pendingIntent)
+                                    .setContentTitle("Next Lecture Updates")
+                                    .setContentText("Subject - "+currentObject.getString("Subject") +
+                                    "\n Staff - "+currentObject.getString("Staff") + "\n Location - "+currentObject.getString("Location")
+                                    +"\n Time - "+currentObject.getString("Time"))
+                                    .setSmallIcon(R.drawable.profile)
+                                    .setAutoCancel(true);
+
+                            notificationManager.notify(100, builder.build());
+                            Log.d(TAG, "TTNotification: current lecture is"+currentObject);
+                        }else{
+                            Log.d(TAG, "TTNotification: No lecture in this slot");
+
+                        }
+
+
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+
+    }
 
 
 

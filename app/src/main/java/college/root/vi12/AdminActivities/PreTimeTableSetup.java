@@ -1,5 +1,6 @@
 package college.root.vi12.AdminActivities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -45,7 +46,8 @@ public class PreTimeTableSetup extends AppCompatActivity implements OnItemSelect
     String TAG = "Test";
     JSONObject subjetObject = null;
     JSONObject roomObject = null;
-    String id;
+    JSONObject staffObject = null;
+    ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +57,13 @@ public class PreTimeTableSetup extends AppCompatActivity implements OnItemSelect
         networkUtils = new NetworkUtils();
         profile  = new Student_profile();
 
+        dialog = new ProgressDialog(this);
+        dialog.setTitle("Please wait.....");
+
         realm = Realm.getDefaultInstance();
         profile = realm.where(Student_profile.class).findFirst();
 
-        id = profile.getYear() + profile.getBranch() + profile.getSemester();
+       // id = profile.getYear() + profile.getBranch() + profile.getSemester();
 
         spinner_branch = (Spinner)findViewById(R.id.spinner_branch_id);
         spinner_sem = (Spinner)findViewById(R.id.spinner_sem_id);
@@ -117,6 +122,7 @@ public class PreTimeTableSetup extends AppCompatActivity implements OnItemSelect
                 socket_loc = networkUtils.get();
                 socket_loc.emit("getAllData",obj.toString());
                 socket_loc.on("Result",roomListener);
+            dialog.show();
 
 
 
@@ -128,21 +134,25 @@ public class PreTimeTableSetup extends AppCompatActivity implements OnItemSelect
 
 
 
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 
-        Intent time_table_setup_intent = new Intent(getApplicationContext(), TimeTableSetup.class);
-        time_table_setup_intent.putExtra("Branch", select_branch);
-        time_table_setup_intent.putExtra("Year", select_year);
-        time_table_setup_intent.putExtra("Sem", select_sem);
-        time_table_setup_intent.putExtra("Division", select_division);
-        time_table_setup_intent.putExtra("SubjectObject" , subjetObject.toString());
-        time_table_setup_intent.putExtra("RoomObject" , roomObject.toString());
+                Intent time_table_setup_intent = new Intent(getApplicationContext(), TimeTableSetup.class);
+                time_table_setup_intent.putExtra("Branch", select_branch);
+                time_table_setup_intent.putExtra("Year", select_year);
+                time_table_setup_intent.putExtra("Sem", select_sem);
+                time_table_setup_intent.putExtra("Division", select_division);
+                time_table_setup_intent.putExtra("SubjectObject" , subjetObject.toString());
+                time_table_setup_intent.putExtra("RoomObject" , roomObject.toString());
+                time_table_setup_intent.putExtra("StaffObject" , staffObject.toString());
+                dialog.dismiss();
+                startActivity(time_table_setup_intent);
 
+            }
+        });
 
-
-
-        //time_table_setup_intent.putExtra("Rooms",array);
-        startActivity(time_table_setup_intent);
-    }
+       }
 
     private Emitter.Listener roomListener = new Emitter.Listener() {
         @Override
@@ -180,7 +190,8 @@ public class PreTimeTableSetup extends AppCompatActivity implements OnItemSelect
         Socket soc_Subj ;
         soc_Subj = networkUtils.get();
         final JSONObject obj1 = new JSONObject();
-        obj1.put("GrNumber",id);
+        obj1.put("GrNumber",select_year+select_branch+select_sem);
+
         obj1.put("collectionName" , "Subjects");
 
         soc_Subj.emit("getAllData", obj1.toString());
@@ -207,12 +218,57 @@ public class PreTimeTableSetup extends AppCompatActivity implements OnItemSelect
 
             }
 
-            next();
+            try {
+                goToStaffListener();
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
 
 
         }
     };
 
-}
+    private void goToStaffListener() throws JSONException, URISyntaxException {
+        Socket soc_Subj ;
+        soc_Subj = networkUtils.get();
+        final JSONObject obj1 = new JSONObject();
+        obj1.put("GrNumber",select_branch+select_year+select_sem+select_division);
+
+        obj1.put("collectionName" , "FacultyAllocation");
+
+        soc_Subj.emit("getAllData", obj1.toString());
+        soc_Subj.on("Result", staffListener );
+
+
+
+    }
+    private Emitter.Listener staffListener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+
+            Log.d("obj",args[0].toString());
+            final org.json.JSONArray[] array = {(org.json.JSONArray) args[0]};
+            Log.d(TAG, "call: array is " + array);
+
+            try {
+                final JSONObject obj = (JSONObject) array[0].get(0);
+                staffObject = obj;
+
+                next();
+
+            }catch (Exception e){
+
+            }
+
+            }
+    };
+
+
+
+        }
 
 

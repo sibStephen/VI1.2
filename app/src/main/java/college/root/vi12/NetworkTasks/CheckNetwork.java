@@ -12,7 +12,7 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
 public class CheckNetwork {
 
 
-    public   boolean isNetWorkAvailable(Activity activity){
+    public  static boolean isNetWorkAvailable(Activity activity){
         ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(CONNECTIVITY_SERVICE);
         return connectivityManager.getActiveNetworkInfo() != null;
     }

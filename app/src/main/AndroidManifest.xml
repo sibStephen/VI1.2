@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
     <application
         android:name=".StarterApplication"
@@ -76,7 +77,9 @@
         <activity android:name=".AdminActivities.PreTimeTableSetup" />
         <activity android:name=".AdminActivities.TimeTableSetup" />
         <activity android:name=".AdminActivities.TimeTableDisplayActivity" />
-        <activity android:name=".Faculty.SearchStudentActivity"></activity>
+        <activity android:name=".Faculty.SearchStudentActivity" />
+        <activity android:name=".Faculty.FacultyProfileActivity" />
+        <activity android:name=".Faculty.FacultySubjectsActivity"></activity>
     </application>
 
 </manifest>

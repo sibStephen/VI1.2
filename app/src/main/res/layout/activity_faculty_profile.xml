@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/facultydrawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/facultyToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"
+            app:titleTextColor="@android:color/white"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+        <RelativeLayout
+            android:id="@+id/rlFirstPart1"
+            android:layout_below="@id/facultyToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            >
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:id="@+id/facultyimgCoverPic"
+                android:background="@color/blue_normal"/>
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/facultyprofilepic"
+                android:onClick="editPicture"
+                android:src="@drawable/profile"
+                android:layout_marginTop="50dp"
+                />
+
+
+
+            <TextView
+                android:id="@+id/facultybranch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/facultyimgCoverPic"
+                android:layout_marginEnd="80dp"
+                android:text="Computer"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/facultyname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/facultyprofilepic"
+                android:layout_centerHorizontal="true"
+                android:text="Shubham"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/facultySurname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="Purandare"
+                android:textColor="#000000"
+                android:layout_below="@+id/facultyname"
+                android:layout_centerHorizontal="true" />
+
+
+
+        </RelativeLayout>
+
+
+
+    </RelativeLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/facultynav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:layout_marginTop="55dp"
+        android:fitsSystemWindows="true"
+        app:menu="@menu/menu_drawer" />
+
+</android.support.v4.widget.DrawerLayout>
+
+

@@ -98,6 +98,9 @@ public class MySubjectsActivity extends AppCompatActivity {
         initializeViews();
         initializeClasses();
         initializeRealmStuff();
+        realm = Realm.getDefaultInstance();
+
+        profile = realm.where(Student_profile.class).findFirst();
 
         dialog.setTitle("Fetching Subjects....");
         dialog.show();
@@ -114,7 +117,7 @@ public class MySubjectsActivity extends AppCompatActivity {
 
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("GrNumber" , userProfile.getYear()+""+userProfile.getBranch()+""+userProfile.getSemester());
+            jsonObject.put("GrNumber" , profile.getYear()+""+profile.getBranch()+""+profile.getSemester());
             jsonObject.put("collectionName" , "Subjects");
 
             Log.d(TAG, "onCreateView: object emitted  is "+jsonObject);
@@ -146,9 +149,6 @@ public class MySubjectsActivity extends AppCompatActivity {
                 JSONObject obj = new JSONObject();
                 try {
 
-                    realm = Realm.getDefaultInstance();
-
-                    profile = realm.where(Student_profile.class).findFirst();
 
 
                     if (profile == null){

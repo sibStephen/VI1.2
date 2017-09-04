@@ -6,6 +6,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,11 +32,14 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
     String TAG = "logging";
     ArrayList<JSONObject> j1;
     NetworkUtils networkUtils;
+    String user= null;
+    Button btnConfirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_view);
+        btnConfirm = (Button) findViewById(R.id.confirm);
 
         Log.d(TAG, "onCreate: ");
         j1 = new ArrayList<>();
@@ -46,6 +50,14 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
             String str = getIntent().getStringExtra("object");
             Log.d(TAG, "str" + str);
             id = getIntent().getStringExtra("id");
+            user = getIntent().getStringExtra("User");
+            if(user.equals("Admin")){
+                btnConfirm.setVisibility(View.VISIBLE);
+            }else {
+                btnConfirm.setVisibility(View.GONE);
+
+            }
+
 
             obj = new JSONObject(str);
             Log.d(TAG, "onCreate: "+obj.toString());
@@ -65,7 +77,6 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
 
         // mRecyclerView.setAdapter(mAdapter);
 
-
         ArrayList<String> days = new ArrayList<>();
         days.add("Monday");
         days.add("Tuesday");
@@ -77,12 +88,23 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
         JSONArray array;
         try {
             for(int j=0;j<days.size();j++){
+                JSONObject jobj = new JSONObject();
                 array =  obj.getJSONArray(days.get(j));
                 for (int i=0;i<array.length();i++) {
-                    JSONObject jobj = new JSONObject();
                     jobj = array.getJSONObject(i);
                     j1.add(jobj);
                     Log.d("array", "onCreate: " + j1);
+                }
+                if(array.length()!=8)
+                {
+                    while(j1.size()%8!=0)
+                    {
+                        jobj.put("Subject", "No lecture");
+                        jobj.put("Time", "Nill");
+                        jobj.put("Staff", "No Staff");
+                        jobj.put("Location","No Location");
+                        j1.add(jobj);
+                    }
                 }
             }
         } catch (JSONException e) {

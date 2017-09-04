@@ -41,15 +41,15 @@ public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnI
     ArrayAdapter<String> adapter_subject;
     ArrayAdapter<String> adapter_staff;
     ArrayAdapter<String> adapter_location;
-    final String subject[]={"Enter Subject ","Sub1","Sub2","Sub3","Sub4"};
-    final String staff[]={"Enter Staff ","Staff A","Staff B","Staff C","Staff D"};
+    final String subject[]= new String[20];
+    String staff[] = new String[5];
     String temp_location[] = new String[49];
     TableLayout table;
     TextView tv;
     CheckBox ckb1,ckb2,ckb3,ckb4,ckb5,ckb6,ckb7,ckb8,ckb9,ckb10,ckb11,ckb12,ckb13,ckb14,ckb15,ckb16,ckb17,ckb18,ckb19,ckb20,ckb21,ckb22,ckb23,ckb24,ckb25,ckb26,ckb27,ckb28,ckb29,ckb30,ckb31,ckb32,ckb33,ckb34,ckb35,ckb36,ckb37,ckb38,ckb39,ckb40,ckb41,ckb42,ckb43,ckb44,ckb45,ckb46,ckb47,ckb48;
     String data = "";
     int array[] = new int [49];
-    JSONObject roomObject,subjectObject,final_obj, obj;
+    JSONObject roomObject,subjectObject,final_obj, obj, staffObject;
     JSONArray Monday,Tuesday,Wednesday,Thursday,Friday,Saturday;
     Button send_button;
     String TAG = "test";
@@ -81,6 +81,7 @@ public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnI
         tv_sem.setText(extras.getString("Sem"));
         tv_division.setText(extras.getString("Division"));
 
+
         //temp_room=extras.getStringArray("Rooms");
         selection[0]=extras.getString("Branch");
         selection[1]=extras.getString("Year");
@@ -92,13 +93,20 @@ public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnI
             roomObject = new JSONObject();
             // Bundle extras = getIntent().getExtras();
             //obj = (JSONObject) extras.getString("obj");
-            String str = getIntent().getStringExtra("SubjectObject");
+
+            String str = getIntent().getStringExtra("StaffObject");
+            staffObject = new JSONObject(str);
+            Log.d(TAG, "onCreate: staffobject is "+subjectObject);
+
+
+             str = getIntent().getStringExtra("SubjectObject");
             Log.d(TAG, "str" + str);
 
             subjectObject = new JSONObject(str);
             String str1 = getIntent().getStringExtra("RoomObject");
             Log.d(TAG, "str" + str);
             String count = subjectObject.getString("SubjectCount");
+
 
             Iterator<?> keys = subjectObject.keys();
             Log.d(TAG, "run: kes are "+keys);
@@ -126,7 +134,7 @@ public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnI
                     roomObject = new JSONObject(str1);
 
 
-            Log.d(TAG, "onCreate: "+obj.toString());
+          //  Log.d(TAG, "onCreate: "+obj.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -188,6 +196,7 @@ public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnI
          ckb41 = (CheckBox) findViewById(R.id.checkbox_41);
          ckb42 = (CheckBox) findViewById(R.id.checkbox_42);
          ckb44 = (CheckBox) findViewById(R.id.checkbox_44);
+         ckb43 = (CheckBox) findViewById(R.id.checkbox_43);
          ckb45 = (CheckBox) findViewById(R.id.checkbox_45);
          ckb46 = (CheckBox) findViewById(R.id.checkbox_46);
          ckb47 = (CheckBox) findViewById(R.id.checkbox_47);
@@ -201,11 +210,33 @@ public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnI
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        selection[4]=spinner_staff.getSelectedItem().toString();
+     //   selection[4]=spinner_staff.getSelectedItem().toString();
         selection[5]=spinner_subject.getSelectedItem().toString();
+
+        try {
+            JSONArray array = staffObject.getJSONArray("object");
+
+            int k=0;
+            for (int i=0 ; i <array.length() ; i++){
+                JSONObject obj = array.getJSONObject(i);
+                if (obj.getString("Subject").equals(selection[5]) ){
+                    staff[k++] = obj.getString("Faculty");
+
+
+                }
+            }
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void onCheckBoxClicked(View view) {
+        // TODO loop this toooooooooooooooooooooo
+        // TODO backup array to "array"
             switch (view.getId())
             {
                 case R.id.checkbox_1:
@@ -213,6 +244,7 @@ public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnI
                     {
                         array[1]=1;
                        openDialog(view,1);
+
                     }
                     else
                     {
@@ -771,6 +803,7 @@ public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnI
     }
 
     public void finalize(View view) {
+        // TODO loop this .
         if(spinner_subject.getSelectedItem().toString()==" " || spinner_staff.getSelectedItem().toString()==" " || timetable==" ")
         {
             Toast.makeText(this,"Please Enter Valid Text",Toast.LENGTH_LONG).show();
@@ -1072,31 +1105,30 @@ public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnI
                     break;
             }
         }
-            data = Arrays.toString(selection);
+           /* data = Arrays.toString(selection);
             data = data + "\n" + timetable + "\n" + location + "\n";
-            data = "";
-            timetable = "";
+            data = "";*/
         }
     }
 
     private String convertIntToTime(int i) {
         switch(i) {
             case 1:
-                return "TimeSlot1";
+                return "8";
             case 2:
-                return "TimeSlot2";
+                return "9";
             case 3:
-                return "TimeSlot3";
+                return "10";
             case 4:
-                return "TimeSlot4";
+                return "11";
             case 5:
-                return "TimeSlot5";
+                return "12";
             case 6:
-                return "TimeSlot6";
+                return "13";
             case 7:
-                return "TimeSlot7";
+                return "14";
             case 8:
-                return "TimeSlot8";
+                return "15";
             default:
                 return "Error";
 
@@ -1137,6 +1169,7 @@ public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnI
 
             i1.putExtra("object",final_obj.toString());
             i1.putExtra("id",selection[0]+selection[1]+selection[2]+selection[3]);
+            i1.putExtra("User" , "Admin");
             startActivity(i1);
 
         }
