@@ -13,17 +13,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
-import college.root.vi12.StudentProfile.Student_profile;
 
 public class LocationEntry extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -34,7 +33,7 @@ public class LocationEntry extends AppCompatActivity implements AdapterView.OnIt
     String input_branch,input_building,input_floor,input_room;
     String item[] = {"","","",""};
     ArrayAdapter<String> branch_adapter,building_adapter,floor_adapter,room_adapter;
-    ArrayList<String> locations ;
+   JSONArray locations ;
     ArrayList<JSONObject> allLocations;
     Button btnSendToServer;
     NetworkUtils networkUtils;
@@ -46,7 +45,8 @@ public class LocationEntry extends AppCompatActivity implements AdapterView.OnIt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_entry);
-        locations = new ArrayList<>();
+
+        locations = new JSONArray();
         allLocations = new ArrayList<>();
         networkUtils = new NetworkUtils();
         finalObj =  new JSONObject();
@@ -126,7 +126,7 @@ public class LocationEntry extends AppCompatActivity implements AdapterView.OnIt
             message = message.concat(item[i] + ",");
             loc = loc.concat(item[i]);
            }
-        locations.add(loc);
+        locations.put(loc);
         tvDisplayEntry.setText(locations.toString());
 
         Log.d(TAG, "add_location: "+loc);
@@ -150,7 +150,7 @@ public class LocationEntry extends AppCompatActivity implements AdapterView.OnIt
         Log.d(TAG, "save:  final obj is "+finalObj);
        // allLocations.add(finalObj);
         Log.d(TAG, "save: allLocations now contains "+allLocations);
-        locations = new ArrayList<>();
+        locations = new JSONArray();
 
 
 

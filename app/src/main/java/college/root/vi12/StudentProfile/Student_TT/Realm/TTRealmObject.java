@@ -1,4 +1,4 @@
-package college.root.vi12.StudentProfile.Student_TT;
+package college.root.vi12.StudentProfile.Student_TT.Realm;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

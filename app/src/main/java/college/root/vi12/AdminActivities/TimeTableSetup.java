@@ -53,6 +53,7 @@ public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnI
     JSONArray Monday,Tuesday,Wednesday,Thursday,Friday,Saturday;
     Button send_button;
     String TAG = "test";
+    JSONArray array1;
     String temp_room[]={"Enter room ","room1","room2","room3"};
 
 
@@ -105,8 +106,14 @@ public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnI
             subjectObject = new JSONObject(str);
             String str1 = getIntent().getStringExtra("RoomObject");
             Log.d(TAG, "str" + str);
-            String count = subjectObject.getString("SubjectCount");
+            roomObject = new JSONObject(str1);
 
+           // roomObject.getString(selection[0]);
+           // Log.d(TAG, "onCreate: room array is"+roomObject.getString(selection[0]));
+
+           array1 =  roomObject.getJSONArray(selection[0]);
+
+            Log.d(TAG, "onCreate: array is "+array1);
 
             Iterator<?> keys = subjectObject.keys();
             Log.d(TAG, "run: kes are "+keys);
@@ -234,7 +241,7 @@ public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnI
 
     }
 
-    public void onCheckBoxClicked(View view) {
+    public void onCheckBoxClicked(View view) throws JSONException {
         // TODO loop this toooooooooooooooooooooo
         // TODO backup array to "array"
             switch (view.getId())
@@ -727,10 +734,14 @@ public class TimeTableSetup extends AppCompatActivity implements AdapterView.OnI
         }
     }
 
-    private void openDialog(View view,final int i) {
+    private void openDialog(View view,final int i) throws JSONException {
         final Dialog dialog = new Dialog(TimeTableSetup.this);
         dialog.setContentView(R.layout.dialogforlocation);
         dialog.setCancelable(true);
+        for (int j=0; j< array1.length(); j++){
+
+            temp_room[j] = array1.getString(j);
+        }
         spinner_location = (Spinner) dialog.findViewById(R.id.spinner_location);
 
         adapter_location = new ArrayAdapter<String>(TimeTableSetup.this,android.R.layout.simple_spinner_dropdown_item,temp_room);

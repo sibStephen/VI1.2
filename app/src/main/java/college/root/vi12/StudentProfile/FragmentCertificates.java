@@ -4,14 +4,11 @@ package college.root.vi12.StudentProfile;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringDef;
 import android.support.v4.app.Fragment;
-import android.text.format.Formatter;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,23 +21,18 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Enumeration;
 
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
 import college.root.vi12.Miscleneous.Toast;
+import college.root.vi12.StudentProfile.Realm.Student_profile;
 import io.realm.Realm;
 import io.socket.client.Socket;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.Context.WIFI_SERVICE;
 
 public class FragmentCertificates extends Fragment {
 

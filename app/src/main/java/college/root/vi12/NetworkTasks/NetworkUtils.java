@@ -32,7 +32,7 @@ public class NetworkUtils {
     public  String TAG = "Test";
     public  String collectionName;
     public  JSONObject object;
-    public String ipaddress = "http://192.168.43.216:8083/";
+    public String ipaddress = "http://192.168.1.37:8083/";
     Toast toast;
 
 

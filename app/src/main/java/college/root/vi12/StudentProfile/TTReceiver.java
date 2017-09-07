@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import college.root.vi12.R;
-import college.root.vi12.StudentProfile.Student_TT.TTRealmObject;
+import college.root.vi12.StudentProfile.Student_TT.Realm.TTRealmObject;
 import io.realm.Realm;
 
 /**

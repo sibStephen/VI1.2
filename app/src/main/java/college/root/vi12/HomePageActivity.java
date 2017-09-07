@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import college.root.vi12.AdminActivities.AdminActivity;
-import college.root.vi12.MySubjects.UploadSubjectsActivity;
+import college.root.vi12.Faculty.FacultyProfileActivity;
 import college.root.vi12.StudentProfile.UserProfile;
 
 public class HomePageActivity extends AppCompatActivity {
@@ -42,7 +42,7 @@ public class HomePageActivity extends AppCompatActivity {
                        startActivity(new Intent(HomePageActivity.this , UserProfile.class));
                         break;
                     case R.id.menu_search:
-                        startActivity(new Intent(HomePageActivity.this , TestActivity.class));
+                        startActivity(new Intent(HomePageActivity.this , FacultyProfileActivity.class));
 
                         //addFragment(new TestFragment() , null);
                         break;

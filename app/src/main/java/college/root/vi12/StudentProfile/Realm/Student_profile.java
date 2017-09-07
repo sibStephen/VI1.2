@@ -1,14 +1,13 @@
-package college.root.vi12.Faculty;
+package college.root.vi12.StudentProfile.Realm;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by root on 3/9/17.
+ * Created by MRUNAL JOSHI on 1/14/2017.
  */
 
-public class FacultyDB extends RealmObject {
-
+public class Student_profile extends RealmObject {
     @PrimaryKey
     private String grno;
     private String div;
@@ -52,45 +51,87 @@ public class FacultyDB extends RealmObject {
     String address, landlineNumber, area, pincode,state,city, district;
     String certificate10th, certificate12th;
 
-
-    public String getGrno() {
-        return grno;
+    public Student_profile() {
     }
 
-    public void setGrno(String grno) {
-        this.grno = grno;
+    public String getCertificate10th() {
+        return certificate10th;
     }
 
-    public String getDiv() {
-        return div;
+    public void setCertificate10th(String certificate10th) {
+        this.certificate10th = certificate10th;
     }
 
-    public void setDiv(String div) {
-        this.div = div;
+    public String getCertificate12th() {
+        return certificate12th;
     }
 
-    public int getUid() {
-        return uid;
+    public void setCertificate12th(String certificate12th) {
+        this.certificate12th = certificate12th;
     }
 
-    public void setUid(int uid) {
-        this.uid = uid;
+    public String getDistrict() {
+        return district;
     }
 
-    public String getBranch() {
-        return branch;
+    public void setDistrict(String district) {
+        this.district = district;
     }
 
-    public void setBranch(String branch) {
-        this.branch = branch;
+    public String getAddress() {
+        return address;
     }
 
-    public String getUsername() {
-        return username;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getLandlineNumber() {
+        return landlineNumber;
+    }
+
+    public void setLandlineNumber(String landlineNumber) {
+        this.landlineNumber = landlineNumber;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getPincode() {
+        return pincode;
+    }
+
+    public void setPincode(String pincode) {
+        this.pincode = pincode;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getSemester() {
+        return semester;
+    }
+
+    public void setSemester(String semester) {
+        this.semester = semester;
     }
 
     public String getPassword() {
@@ -101,12 +142,28 @@ public class FacultyDB extends RealmObject {
         this.password = password;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getMname() {
         return mname;
     }
 
     public void setMname(String mname) {
         this.mname = mname;
+    }
+
+    public String getFname() {
+        return fname;
+    }
+
+    public void setFname(String fname) {
+        this.fname = fname;
     }
 
     public String getFprofession() {
@@ -181,20 +238,14 @@ public class FacultyDB extends RealmObject {
         this.mmobile = mmobile;
     }
 
-    public String getName() {
-        return name;
+
+
+    public String getEmail_sec() {
+        return email_sec;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSsc_maths() {
-        return ssc_maths;
-    }
-
-    public void setSsc_maths(String ssc_maths) {
-        this.ssc_maths = ssc_maths;
+    public void setEmail_sec(String email_sec) {
+        this.email_sec = email_sec;
     }
 
     public String getEmail_pri() {
@@ -203,14 +254,6 @@ public class FacultyDB extends RealmObject {
 
     public void setEmail_pri(String email_pri) {
         this.email_pri = email_pri;
-    }
-
-    public String getEmail_sec() {
-        return email_sec;
-    }
-
-    public void setEmail_sec(String email_sec) {
-        this.email_sec = email_sec;
     }
 
     public String getReligion() {
@@ -325,12 +368,22 @@ public class FacultyDB extends RealmObject {
         this.emcontact = emcontact;
     }
 
+
+
     public String getSsc_sci() {
         return ssc_sci;
     }
 
     public void setSsc_sci(String ssc_sci) {
         this.ssc_sci = ssc_sci;
+    }
+
+    public String getSsc_maths() {
+        return ssc_maths;
+    }
+
+    public void setSsc_maths(String ssc_maths) {
+        this.ssc_maths = ssc_maths;
     }
 
     public String getSsc_total() {
@@ -389,6 +442,8 @@ public class FacultyDB extends RealmObject {
         this.hsc_total = hsc_total;
     }
 
+
+
     public String getImagePath() {
         return imagePath;
     }
@@ -397,13 +452,7 @@ public class FacultyDB extends RealmObject {
         this.imagePath = imagePath;
     }
 
-    public String getFname() {
-        return fname;
-    }
 
-    public void setFname(String fname) {
-        this.fname = fname;
-    }
 
     public String getSurname() {
         return surname;
@@ -413,6 +462,7 @@ public class FacultyDB extends RealmObject {
         this.surname = surname;
     }
 
+
     public String getYear() {
         return year;
     }
@@ -421,83 +471,46 @@ public class FacultyDB extends RealmObject {
         this.year = year;
     }
 
-    public String getSemester() {
-        return semester;
+    public String getDiv() {
+        return div;
     }
 
-    public void setSemester(String semester) {
-        this.semester = semester;
+    public void setDiv(String div) {
+        this.div = div;
     }
 
-    public String getAddress() {
-        return address;
+    public String getBranch() {
+        return branch;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setBranch(String branch) {
+        this.branch = branch;
     }
 
-    public String getLandlineNumber() {
-        return landlineNumber;
+
+    public String getGrno() {
+        return grno;
     }
 
-    public void setLandlineNumber(String landlineNumber) {
-        this.landlineNumber = landlineNumber;
+    public void setGrno(String grno) {
+        this.grno = grno;
     }
 
-    public String getArea() {
-        return area;
+
+    public int getUid() {
+        return uid;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setUid(int uid) {
+        this.uid = uid;
     }
 
-    public String getPincode() {
-        return pincode;
+    public String getName() {
+        return name;
     }
 
-    public void setPincode(String pincode) {
-        this.pincode = pincode;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
-    public String getCertificate10th() {
-        return certificate10th;
-    }
-
-    public void setCertificate10th(String certificate10th) {
-        this.certificate10th = certificate10th;
-    }
-
-    public String getCertificate12th() {
-        return certificate12th;
-    }
-
-    public void setCertificate12th(String certificate12th) {
-        this.certificate12th = certificate12th;
-    }
 }

@@ -1,12 +1,8 @@
 package college.root.vi12;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.Preference;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,19 +19,16 @@ import android.widget.Toast;
 // cz.msebera.android.httpclient.NameValuePair;
 //import cz.msebera.android.httpclient.message.BasicNameValuePair;
 //import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
 import com.facebook.login.widget.LoginButton;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.logging.StreamHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import college.root.vi12.NetworkTasks.NetworkUtils;
-import college.root.vi12.StudentProfile.Student_profile;
+import college.root.vi12.StudentProfile.Realm.Student_profile;
 import io.realm.Realm;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
