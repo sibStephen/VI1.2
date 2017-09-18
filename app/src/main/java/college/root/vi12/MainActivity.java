@@ -179,22 +179,13 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
 
                 try {
-/*                    ipAddess = new IPAddess();
-                    ipAddess = realm.where(IPAddess.class).findFirst();
-                    ipaddress = ipAddess.getIpaddress();*/
-                    //socket = IO.socket("http://192.168.1.38:8083");
+
                     NetworkUtils networkUtils = new NetworkUtils();
                     socket = networkUtils.get();
-                    // college.root.vi12.Miscleneous.Toast.makeText(getBaseContext() , "Its a toast from backgrond thread ", college.root.vi12.Miscleneous.Toast.LENGTH_SHORT).show();
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                     Log.d(TAG, "run: error " + e.getMessage());
                 }
-//                socket.connect();
-
-                //  Log.d(TAG, "run:connected.........");
-                //  socket.on()
-                // socket.connect();
                 if (!socket.connected()) {
 
                     JSONObject object = new JSONObject();
@@ -206,7 +197,6 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     socket.emit("login", object.toString());
-                    //  progress.dismiss();
                 } else {
                     Log.d(TAG, "run: not connected");
                 }
@@ -214,11 +204,7 @@ public class MainActivity extends AppCompatActivity {
                 socket.on("loginResult", new Emitter.Listener() {
                     @Override
                     public void call(Object... args) {
-                        // check if user is authenticated
-//                        dialog = new ProgressDialog(MainActivity.this);
-                        //                      dialog.setMessage("Please wait whiel we log you in...");
-                        //                    dialog.show();
-                        int isAuth = (int) args[0];
+                       int isAuth = (int) args[0];
                         Log.d(TAG, "call: value is " + isAuth);
                         if (isAuth == 1) {
                             Log.d(TAG, "call: is Auth is 1 hence getting data from server");
@@ -238,8 +224,8 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                     try {
                                         String GrNumber = userData.getString("_id");
-                                     //   final String firstName = userData.getString("firstName");
-                                       // String lastName = userData.getString("lastName");
+                                         final String firstName = userData.getString("firstName");
+                                        String lastName = userData.getString("lastName");
                                         String branch = userData.getString("branch");
                                         String year = userData.getString("year");
                                         String username = userData.getString("username");
@@ -267,9 +253,6 @@ public class MainActivity extends AppCompatActivity {
 
                                         if (loggedIn == null) {
                                             Log.d(TAG, "call: its the first time so load the class into realm");
-                                          //  editor.putBoolean("first", false);
-                                            //For commit the changes, Use either editor.commit(); or  editor.apply();.
-                                            //editor.commit();
 
 
                                             loggedIn = realm.where(LoggedIn.class).findFirst();
@@ -307,6 +290,8 @@ public class MainActivity extends AppCompatActivity {
                                                 //profile.setSurname(lastName);
                                                 profile.setBranch(branch);
                                                 profile.setYear(year);
+                                                profile.setName(firstName);
+                                                profile.setSurname(lastName);
                                                 profile.setGrno(GrNumber);
                                                 profile.setUsername(username);
                                                 profile.setPassword(password);

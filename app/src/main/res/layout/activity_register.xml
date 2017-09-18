@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         app:hintEnabled="true"
         app:hintAnimationEnabled="true"
-        android:hint="Username"
+        android:hint="First Name"
         android:id="@+id/tilUser"
         android:layout_below="@+id/textView2">
 
@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         app:hintEnabled="true"
         app:hintAnimationEnabled="true"
-        android:hint="Password"
+        android:hint="last Name"
         android:id="@+id/tilPass"
         android:layout_marginTop="21dp"
         android:layout_below="@+id/tilUser"
@@ -68,7 +68,7 @@
         <android.support.design.widget.TextInputEditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
+           android:inputType="textAutoCorrect"
             android:ems="10"
             android:id="@+id/etPass"/>
 
@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         app:hintEnabled="true"
         app:hintAnimationEnabled="true"
-        android:hint="Email"
+        android:hint="GR Number"
         android:id="@+id/tilEmailReg"
         android:layout_below="@+id/tilPass"
         android:layout_alignLeft="@+id/tilPass"
@@ -87,7 +87,7 @@
         <android.support.design.widget.TextInputEditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
+            android:inputType="textAutoCorrect"
             android:ems="10"
             android:layout_marginTop="16dp"
             android:id="@+id/etEmailReg"/>
@@ -122,35 +122,27 @@
 
         </Spinner>
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:hintEnabled="true"
-        app:hintAnimationEnabled="true"
-        android:hint="Branch"
-        android:id="@+id/tilBranch"
-        android:layout_below="@+id/spProgram"
-        android:layout_alignLeft="@+id/tilEmailReg"
-        android:layout_alignStart="@+id/tilEmailReg"
-        android:layout_marginTop="16dp">
 
-        <android.support.design.widget.TextInputEditText
+
+        <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:id="@+id/etBranch"/>
+            android:id="@+id/spBranchReg"
+            android:layout_below="@+id/spProgram"
+            android:layout_margin="8dp">
 
-    </android.support.design.widget.TextInputLayout>
+
+        </Spinner>
+
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:hintEnabled="true"
         app:hintAnimationEnabled="true"
-        android:hint="GR Number"
+        android:hint="Choose a Username"
         android:id="@+id/tilGrNumber"
-        android:layout_below="@+id/tilBranch"
+        android:layout_below="@+id/spYearReg"
         android:layout_alignLeft="@+id/tilEmailReg"
         android:layout_alignStart="@+id/tilEmailReg"
         android:layout_marginTop="16dp">
@@ -162,39 +154,30 @@
             android:ems="10"
             android:id="@+id/etGrNumber"/>
         </android.support.design.widget.TextInputLayout>
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:hintEnabled="true"
-        app:hintAnimationEnabled="true"
-        android:hint="Year"
-        android:id="@+id/tilYear"
-        android:layout_below="@+id/tilGrNumber"
-        android:layout_alignLeft="@+id/tilEmailReg"
-        android:layout_alignStart="@+id/tilEmailReg"
-        android:layout_marginTop="16dp">
-        <android.support.design.widget.TextInputEditText
+
+
+        <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:id="@+id/etYear"/>
+            android:id="@+id/spYearReg"
+            android:layout_below="@+id/spBranchReg"
+            android:layout_margin="8dp">
 
-        </android.support.design.widget.TextInputLayout>
+        </Spinner>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:hintEnabled="true"
             app:hintAnimationEnabled="true"
-            android:hint="Last Name"
+            android:hint="Password"
             android:id="@+id/tilLastName"
-            android:layout_below="@id/tilYear">
+            android:layout_below="@id/tilGrNumber">
 
             <android.support.design.widget.TextInputEditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
+                android:inputType="textPassword"
                 android:ems="10"
                 android:id="@+id/etLastname"
                 />
@@ -206,14 +189,14 @@
             android:layout_height="wrap_content"
             app:hintEnabled="true"
             app:hintAnimationEnabled="true"
-            android:hint="First Name"
+            android:hint="Email"
             android:id="@+id/tilFirstName"
             android:layout_below="@id/tilLastName">
 
             <android.support.design.widget.TextInputEditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
+                android:inputType="textEmailAddress"
                 android:ems="10"
                 android:id="@+id/etFirstName"/>
 

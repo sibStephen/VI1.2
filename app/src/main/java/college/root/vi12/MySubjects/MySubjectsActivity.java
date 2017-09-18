@@ -1,6 +1,9 @@
 package college.root.vi12.MySubjects;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import college.root.vi12.MainActivity;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
 import college.root.vi12.StudentProfile.Realm.Student_profile;
@@ -29,28 +34,27 @@ import io.socket.emitter.Emitter;
 public class MySubjectsActivity extends AppCompatActivity {
 
     RecyclerView mrecyclerView;
-    RecyclerView.LayoutManager layoutManager;
     MySubjects mysubjects ;
     SubjectList subjectList ;
-    Student_profile userProfile;
     Realm realm;
     NetworkUtils networkUtils;
     Toast toast;
     Student_profile profile;
     ProgressDialog dialog;
-
     RealmList<MySubjects> subjectsRealmList;
     String TAG = "Test";
     Socket socket;
-    ProgressBar progressBar ;
-
     String count = "";
     ArrayList<MySubjects> list ;
-
-   public ArrayList<String> codes;
-    Button btnSubmitSubjects;
+    TextView tvDept, tvSem, tvYear;
+    public ArrayList<String> codes;
+    static Button btnSubmitSubjects;
 
     private  void initializeViews(){
+
+        tvDept = (TextView) findViewById(R.id.tvSubDept);
+        tvSem = (TextView) findViewById(R.id.tvSubSem);
+        tvYear = (TextView) findViewById(R.id.tvSubYear);
 
         mrecyclerView = (RecyclerView) findViewById(R.id.recyclerForSubjects);
         mrecyclerView.hasFixedSize();
@@ -85,7 +89,16 @@ public class MySubjectsActivity extends AppCompatActivity {
         realm = Realm.getDefaultInstance();
 
 
-        userProfile = realm.where(Student_profile.class).findFirst();
+        profile = realm.where(Student_profile.class).findFirst();
+        if (profile == null){
+            startActivity(new Intent(MySubjectsActivity.this, MainActivity.class));
+        }else {
+
+            tvYear.setText(profile.getYear());
+            tvDept.setText(profile.getBranch());
+            tvSem.setText(profile.getSemester());
+        }
+
 
     }
 
@@ -142,37 +155,67 @@ public class MySubjectsActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick: Submit button clicked .... ");
                 Log.d(TAG, "onClick: Contents of Codes array list are ");
 
-                for (  int i = 0; i<list.size(); i++){
-                    Log.i("Code is : ", ""+ codes.get(i));
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(MySubjectsActivity.this);
+                builder.setTitle("Confirm Registration?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-                JSONObject obj = new JSONObject();
-                try {
+                        for (  int i = 0; i<list.size(); i++){
+//                            Log.i("Code is : ", ""+ codes.get(i));
+                        }
+
+                        JSONObject obj = new JSONObject();
+                        try {
 
 
 
-                    if (profile == null){
-                        Log.d(TAG, "onClick: profile is n null");
-                    }else{
+                            if (profile == null){
+                                Log.d(TAG, "onClick: profile is n null");
+                            }else{
 
-                        obj.put("Array",codes.toString());
-                        obj.put("grNumber" , profile.getGrno());
+                                obj.put("Array",codes.toString());
+                                obj.put("grNumber" , profile.getGrno());
 
-                        networkUtils = new NetworkUtils();
-                        networkUtils.emitSocket("RegisterStudent",obj);
-                        networkUtils.disconnectSocketAsync();
-                        networkUtils.listener("RegisterStudent" , MySubjectsActivity.this , MySubjectsActivity.this, toast); //success  listener
+                                networkUtils = new NetworkUtils();
+                                networkUtils.emitSocket("RegisterStudent",obj);
+                                toast.showToast(MySubjectsActivity.this , "registered Successfully...");
+                             //   networkUtils.disconnectSocketAsync();
+                                networkUtils.listener("RegisterStudent" , MySubjectsActivity.this , MySubjectsActivity.this, toast); //success  listener
+
+                                // set subjects fetched to true
+
+                                realm.beginTransaction();
+                                profile.setSubjectsFetched(true);
+                                realm.commitTransaction();
+                                realm.executeTransaction(new Realm.Transaction() {
+                                    @Override
+                                    public void execute(Realm realm) {
+                                        realm.copyToRealmOrUpdate(profile);
+                                    }
+                                });
+                            }
+
+
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
 
                     }
+                });
 
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.show();
 
-
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
 
 
             }
@@ -279,7 +322,7 @@ public class MySubjectsActivity extends AppCompatActivity {
                                     realm.beginTransaction();
 
                                     subjectList.setCount(count);
-                                    subjectList.setGrNumber(userProfile.getGrno());
+                                    subjectList.setGrNumber(profile.getGrno());
                                     subjectList.setSubjectsRealmList(subjectsRealmList);
 
                                     realm.commitTransaction();

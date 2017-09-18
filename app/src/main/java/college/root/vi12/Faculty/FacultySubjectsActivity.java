@@ -128,7 +128,7 @@ public class FacultySubjectsActivity extends AppCompatActivity {
         realmObj = realm.where(FacultySubjRealmObj.class).findFirst();
 
         if(realmObj != null){
-
+//TODO realm data error
             String jsonString = realmObj.getJsonSubjObj();
 
             JSONObject subjectObj = new JSONObject(jsonString);

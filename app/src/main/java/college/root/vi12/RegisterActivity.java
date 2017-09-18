@@ -34,7 +34,7 @@ import io.socket.emitter.Emitter;
 public class RegisterActivity extends AppCompatActivity {
 
     Button btnReg;
-    EditText etEmail, etUser, etPass, etGRNumber, etBranch, etYear, etFirstName , etLastName;
+    EditText etEmail, etUser, etPass, etGRNumber,  etFirstName , etLastName;
     String TAG = "Test";
     ProgressDialog progress;
     Realm realm;
@@ -45,8 +45,9 @@ public class RegisterActivity extends AppCompatActivity {
             mprogram;
     String ipaddress;
     IPAddess ipAddess;
-    ArrayAdapter<String> dataAdapter,discAdapter, programAdapter;
-    Spinner spDiscipline, spFaculty, spProgram;
+    ArrayAdapter<String> dataAdapter,discAdapter, programAdapter, yearAdapter , branchAdapter;
+    Spinner spDiscipline, spFaculty, spProgram, spYear, spBranch;
+
 
     EncryptPassword encryptPassword ;
 
@@ -57,6 +58,34 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         setViews(); // initialize views
+
+
+        List<String> listOfYear = new ArrayList<String>();
+        listOfYear.add("Enter Year");
+        listOfYear.add("FE");
+        listOfYear.add("SE");
+        listOfYear.add("TE");
+        listOfYear.add("BE");
+        listOfYear.add("ME");
+        yearAdapter = new ArrayAdapter<String>(RegisterActivity.this,
+                android.R.layout.simple_spinner_item,listOfYear);
+        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spYear.setAdapter(yearAdapter);
+
+        List<String> listOfBranch = new ArrayList<String>();
+        listOfBranch.add("Enter Branch");
+        listOfBranch.add("Computer");
+        listOfBranch.add("Mechanical");
+        listOfBranch.add("Civil");
+        listOfBranch.add("E&TC");
+        listOfBranch.add("IT");
+        listOfBranch.add("Others");
+
+        branchAdapter = new ArrayAdapter<String>(RegisterActivity.this,
+                android.R.layout.simple_spinner_item,listOfBranch);
+        branchAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spBranch.setAdapter(branchAdapter);
+
 
 
         List<String> list = new ArrayList<String>();
@@ -114,10 +143,16 @@ public class RegisterActivity extends AppCompatActivity {
                         progress.show();
                         GrNumber = etGRNumber.getText().toString();
                         email = etEmail.getText().toString();
-                        branch = etBranch.getText().toString();
-                        year = etYear.getText().toString();
+                        branch = spBranch.getSelectedItem().toString();
+                        year = spYear.getSelectedItem().toString();
                         username = etUser.getText().toString();
                         password = etPass.getText().toString();
+                        firstName = etFirstName.getText().toString();
+                        lastName = etLastName.getText().toString();
+                        mdisc = spDiscipline.getSelectedItem().toString();
+                        mfaculty = spFaculty.getSelectedItem().toString();
+                        mprogram = spProgram.getSelectedItem().toString();
+
                         try {
                             String encryptedPass = encryptPassword.encrypt(password);
                             Log.d(TAG, "onClick:Encrypted Password "+encryptedPass);
@@ -126,14 +161,9 @@ public class RegisterActivity extends AppCompatActivity {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        firstName = etFirstName.getText().toString();
-                        lastName = etLastName.getText().toString();
-                        mdisc = spDiscipline.getSelectedItem().toString();
-                        mfaculty = spFaculty.getSelectedItem().toString();
-                        mprogram = spProgram.getSelectedItem().toString();
 
                         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(GrNumber) || TextUtils.isEmpty(password)
-                                || TextUtils.isEmpty(username) || TextUtils.isEmpty(branch)
+                                || TextUtils.isEmpty(username) || year.equals("Enter Year") || branch.equals("Enter Branch")
                                 || TextUtils.isEmpty(firstName)|| TextUtils.isEmpty(lastName) || mfaculty.equals("Enter Faculty")
                                 || mdisc.equals("Enter Discipline") || mprogram.equals("Enter Program")) {
                             Toast.makeText(RegisterActivity.this, "Please enter all teh details", Toast.LENGTH_SHORT).show();
@@ -141,7 +171,9 @@ public class RegisterActivity extends AppCompatActivity {
                         } else {
                             // save user on to server
                             Log.d(TAG, "onClick: about to start the thread");
-                            threadRegister.start();
+
+                            if (!threadRegister.isAlive())
+                                threadRegister.start();
 
                         }
 
@@ -210,7 +242,9 @@ public class RegisterActivity extends AppCompatActivity {
                                 
                             }else {
                                 progress.dismiss();
+
                                 Log.d(TAG, "call: register error");
+                                threadRegister.interrupt();
                                 
                             }
                         }
@@ -235,17 +269,17 @@ public class RegisterActivity extends AppCompatActivity {
         encryptPassword = new EncryptPassword();
 
         btnReg = (Button) findViewById(R.id.btnRegister);
-        etEmail = (EditText) findViewById(R.id.etEmailReg);
-        etPass = (EditText) findViewById(R.id.etPass);
-        etUser = (EditText) findViewById(R.id.etUser);
-        etBranch = (EditText) findViewById(R.id.etBranch);
-        etGRNumber = (EditText) findViewById(R.id.etGrNumber);
-        etYear = (EditText) findViewById(R.id.etYear);
-        etFirstName = (EditText)findViewById(R.id.etFirstName);
-        etLastName = (EditText)findViewById(R.id.etLastname);
+        etGRNumber = (EditText) findViewById(R.id.etEmailReg);
+        etLastName = (EditText) findViewById(R.id.etPass);
+        etFirstName = (EditText) findViewById(R.id.etUser);
+        etUser = (EditText) findViewById(R.id.etGrNumber);
+        etEmail = (EditText)findViewById(R.id.etFirstName);
+        etPass = (EditText)findViewById(R.id.etLastname);
         spDiscipline = (Spinner) findViewById(R.id.spDiscipline);
         spFaculty = (Spinner) findViewById(R.id.spFaculty);
         spProgram = (Spinner) findViewById(R.id.spProgram);
+        spYear = (Spinner) findViewById(R.id.spYearReg);
+        spBranch = (Spinner) findViewById(R.id.spBranchReg);
 
     }
 }

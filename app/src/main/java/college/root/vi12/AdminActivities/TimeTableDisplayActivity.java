@@ -1,5 +1,7 @@
 package college.root.vi12.AdminActivities;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -7,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,17 +33,20 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
     private static String LOG_TAG = "CardViewActivity";
     JSONObject obj ;
     String id;
-    String TAG = "logging";
+    String TAG = "Test";
     ArrayList<JSONObject> j1;
     NetworkUtils networkUtils;
     String user= null;
     Button btnConfirm;
+   static TextView tvday;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_view);
         btnConfirm = (Button) findViewById(R.id.confirm);
+        tvday = (TextView) findViewById(R.id.tv_day);
+
 
         Log.d(TAG, "onCreate: ");
         j1 = new ArrayList<>();
@@ -68,7 +75,7 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: "+obj);
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new GridLayoutManager(this,8,GridLayoutManager.HORIZONTAL,false);
+        mLayoutManager = new GridLayoutManager(this,9,GridLayoutManager.HORIZONTAL,false);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mAdapter = new MyRecyclerViewAdapter(j1);
@@ -87,23 +94,33 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
 
         JSONArray array;
         try {
+            int count=0;
             for(int j=0;j<days.size();j++){
                 JSONObject jobj = new JSONObject();
+                Log.d(TAG, "onCreate: checking for "+days.get(j));
                 array =  obj.getJSONArray(days.get(j));
+                count= array.length();
                 for (int i=0;i<array.length();i++) {
                     jobj = array.getJSONObject(i);
                     j1.add(jobj);
+                    count++;
                     Log.d("array", "onCreate: " + j1);
                 }
-                if(array.length()!=8)
+                Log.d(TAG, "onCreate: day is "+days.get(j) + " size is "+array.length());
+                if(count<8)
                 {
-                    while(j1.size()%8!=0)
+                    Log.d(TAG, "onCreate: insideif count is "+count);
+                    while(count < 8)
                     {
+                        Log.d(TAG, "onCreate: inside while");
                         jobj.put("Subject", "No lecture");
                         jobj.put("Time", "Nill");
                         jobj.put("Staff", "No Staff");
                         jobj.put("Location","No Location");
                         j1.add(jobj);
+                        count++;
+                        Log.d(TAG, "onCreate: now length is "+j1.size());
+
                     }
                 }
             }
@@ -128,27 +145,49 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
     }
 
     public void confirm(View view) throws JSONException {
-        String[] contents = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
-        StringBuilder sb = new StringBuilder();
-        for(int j=0;j<contents.length;j++)
-        {
-            sb.append(contents[j]+",");
-        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(TimeTableDisplayActivity.this);
+        builder.setTitle("Confirm TimeTable?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String[] contents = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+                StringBuilder sb = new StringBuilder();
+                for(int j=0;j<contents.length;j++)
+                {
+                    sb.append(contents[j]+",");
+                }
 
-        obj.put("obj",obj.toString());
-        obj.put("contents",sb.toString());
-        obj.put("Length",contents.length);
-        obj.put("collectionName","Load_Time_Table");
-        obj.put("grNumber",id);
-        Log.d("final obj",obj.toString());
+                try {
+                    obj.put("obj",obj.toString());
+                    obj.put("contents",sb.toString());
+                    obj.put("Length",contents.length);
+                    obj.put("collectionName","Load_Time_Table");
+                    obj.put("grNumber",id);
+                    Log.d("final obj",obj.toString());
 
-        networkUtils = new NetworkUtils();
-        networkUtils.emitSocket("Allinfo" , obj);
+                    networkUtils = new NetworkUtils();
+                    networkUtils.emitSocket("Allinfo" , obj);
+                    Toast.makeText(TimeTableDisplayActivity.this , "TimeTable saved ...", Toast.LENGTH_SHORT).show();
+                    finish();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
 
 
 
+            }
+        });
 
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 }
 

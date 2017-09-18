@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.annotation.StringDef;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
@@ -27,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -59,7 +61,7 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
     Uri imageuri;
     Realm realm;
     Student_profile userProfile;
-    TextView tvname,tvsurname,tvyear,tvdiv,tvbranch,tvgrno , tvAttendance;
+    TextView tvname,tvsurname,tvyear,tvdiv,tvbranch;
     CircleImageView profilePic;
     int GALLERY_REQUEST = 1;
     Uri mImageUri;
@@ -71,9 +73,40 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
     String ttID;
 
     TTRealmObject realmObject ;
+    TextView  tvStlec, tvSttime, tvStLoc, tvStlecnext,
+            tvSttimenext, tvStLocnext, tvStFaculty,tvStFacultynext;
+
+
+    private void initializeViews() {
+
+        profilePic = (CircleImageView) findViewById(R.id.profilepic);
+        tvname = (TextView) findViewById(R.id.name);
+        tvsurname = (TextView) findViewById(R.id.surname);
+        tvyear = (TextView) findViewById(R.id.year);
+        tvdiv = (TextView) findViewById(R.id.div);
+        tvbranch = (TextView) findViewById(R.id.branch);
 
 
 
+        tvStlec = (TextView)findViewById(R.id.tvStLec);
+        tvSttime = (TextView)findViewById(R.id.tvSttime);
+        tvStLoc = (TextView)findViewById(R.id.tvStloc);
+        tvStFaculty = (TextView)findViewById(R.id.tvStFaculty);
+
+        tvSttimenext = (TextView)findViewById(R.id.tvSttimenext);
+        tvStlecnext = (TextView)findViewById(R.id.tvStLecnext);
+        tvStLocnext = (TextView)findViewById(R.id.tvStlocnext);
+        tvStFacultynext = (TextView)findViewById(R.id.tvStFacultynext);
+
+        networkUtils = new NetworkUtils();
+        toast = new Toast();
+        realm = Realm.getDefaultInstance();
+
+
+
+
+
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -87,12 +120,54 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
 
         switch (item.getItemId()) {
+
+
+            case R.id.settings:
+
+                CheckBox notifCheckBox = (CheckBox) item.getActionView();
+                if (item.isChecked()){
+                    Log.d(TAG, "onOptionsItemSelected: checkbox was checked");
+                    item.setChecked(false);
+                    profile = realm.where(Student_profile.class).findFirst();
+                    if (profile != null){
+                        realm.beginTransaction();
+                        profile.setAreNotificationsEnabled(false);
+                        realm.commitTransaction();
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                realm.copyToRealmOrUpdate(profile);
+                            }
+                        });
+                    }
+                    android.widget.Toast.makeText(UserProfile.this , "Notifications disabled..", android.widget.Toast.LENGTH_SHORT).show();
+                }else {
+                    Log.d(TAG, "onOptionsItemSelected: checkbox was not checked ");
+                    item.setChecked(true);
+                    profile = realm.where(Student_profile.class).findFirst();
+                    if (profile != null){
+                        realm.beginTransaction();
+                        profile.setAreNotificationsEnabled(true);
+                        realm.commitTransaction();
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                realm.copyToRealmOrUpdate(profile);
+                            }
+                        });
+                    }
+                    android.widget.Toast.makeText(UserProfile.this , "Notifications Enabled..", android.widget.Toast.LENGTH_SHORT).show();
+
+                }
+
+
+                break;
             case R.id.sync_server:
 
                 Log.d(TAG, "onOptionsItemSelected: sync server called");
 
                 CheckNetwork checkNetwork = new CheckNetwork();
-                if (!checkNetwork.isNetWorkAvailable(UserProfile.this)){
+                if (!CheckNetwork.isNetWorkAvailable(UserProfile.this)){
 
                     android.widget.Toast.makeText(UserProfile.this , "No Network available", android.widget.Toast.LENGTH_SHORT).show();
 
@@ -164,6 +239,7 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
 
 
+
         }
 
 
@@ -191,19 +267,12 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
             manager.setRepeating(AlarmManager.RTC_WAKEUP , calendar.getTimeInMillis() , AlarmManager.INTERVAL_HOUR, pendingIntent);
 
 
-
-            TTNotification();
-
-            try {
-
-                //ActionBar bar = getActionBar();
+            initializeViews();
+            loadCurrentLecture();
+            //loadNextLecture();
+            //TTNotification();
 
 
-
-                //bar.setTitle("Profile");
-            } catch (NullPointerException e) {
-                Log.d(TAG, "onCreate: " + e.getMessage());
-            }
             SharedPreferences sharedPreferences = getSharedPreferences("flag", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -217,31 +286,9 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
             navigationView.setNavigationItemSelectedListener(UserProfile.this);
             boolean flag = sharedPreferences.getBoolean("flag", true);
             Log.d("FLAG:", String.valueOf(flag));
-            networkUtils = new NetworkUtils();
-            toast = new Toast();
 
 
-            realm = Realm.getDefaultInstance();
-
-
-            try {
-                socket = networkUtils.get();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.d(TAG, "onCreate: cannot initialize socket !!");
-
-            }
-
-            profilePic = (CircleImageView) findViewById(R.id.profilepic);
-            tvname = (TextView) findViewById(R.id.name);
-            tvsurname = (TextView) findViewById(R.id.surname);
-            tvyear = (TextView) findViewById(R.id.year);
-            tvdiv = (TextView) findViewById(R.id.div);
-            tvbranch = (TextView) findViewById(R.id.branch);
-
-            userProfile = realm.where(Student_profile.class).findFirst();
-            // realm.beginTransaction();
+             userProfile = realm.where(Student_profile.class).findFirst();
 
             if (userProfile == null) {
                 Log.d(TAG, "onCreate: user profile is null ");
@@ -263,7 +310,6 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
                 profilePic.setImageURI(imageuri);
 
             }
-//        tvbranch.setText(userProfile.getBranch());
             if (!flag) {
                 Log.d("FLAG1:", String.valueOf(flag));
 
@@ -271,25 +317,192 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
                     profilePic.setImageURI(Uri.parse(userProfile.getImagePath()));
             }
 
-            // tvgrno.setText(userProfile.getGrno());
-            profile = new Student_profile();
-
-
-            try {
-                // socket = networkUtils.get();
-                JSONObject o = new JSONObject();
-                o.put("GrNumber", userProfile.getGrno());
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-            //realm.commitTransaction();
-
-
         }
+
+    }
+
+    private void loadNextLecture() {
+
+        TTRealmObject ttobject;
+        Log.d(TAG, "TTNotification: in TTNotificaton");
+        realm = Realm.getDefaultInstance();
+        ttobject = realm.where(TTRealmObject.class).findFirst();
+        if (ttobject == null){
+            Log.d(TAG, "onReceive: ttobject was null");
+
+        }else{
+            // check the current task here....
+
+            SimpleDateFormat sdf = new SimpleDateFormat("HH");
+            String currentDateandTime = sdf.format(new Date());
+            Log.d(TAG, "onReceive: current hour is "+currentDateandTime);
+            //   if (Integer.parseInt(currentDateandTime)>8 && Integer.parseInt(currentDateandTime)< 7)
+            {
+
+                // valid ... check lectures
+
+                SimpleDateFormat format = new SimpleDateFormat("EEEE");
+                Date d = new Date();
+                String dayOfTheWeek = format.format(d);
+                Log.d(TAG, "onReceive: today is "+dayOfTheWeek);
+                String  str = ttobject.getJsonTTObject();
+                try {
+                    JSONObject object = new JSONObject(str);
+                    Log.d(TAG, "onReceive: tt object is"+object);
+                    JSONArray array = object.getJSONArray(dayOfTheWeek);
+                    Log.d(TAG, "onReceive: tt for today is "+array);
+
+                    int length = array.length();
+                    for (int i=0 ; i<length ; i++){
+                        JSONObject currentObject = array.getJSONObject(i);
+
+                        if (!currentObject.getString("Time").equals("Nill")){
+
+
+
+
+                            int time = Integer.parseInt(currentObject.getString("Time"));
+                            if (time == (Integer.parseInt(currentDateandTime) +1 )){
+
+                                tvStlecnext.setText(currentObject.getString("Subject"));
+                                tvStLocnext.setText(currentObject.getString("Location"));
+                                tvSttimenext.setText(currentObject.getString("Time"));
+                                tvStFacultynext.setText(currentObject.getString("Staff"));
+
+
+                                Log.d(TAG, "TTNotification: current lecture is"+currentObject);
+                            }else{
+                                Log.d(TAG, "TTNotification: No lecture in this slot");
+
+                            }
+
+
+                        }
+
+
+
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+    }
+
+    private void loadCurrentLecture() {
+
+
+        TTRealmObject ttobject;
+        Log.d(TAG, "TTNotification: in TTNotificaton");
+        realm = Realm.getDefaultInstance();
+        ttobject = realm.where(TTRealmObject.class).findFirst();
+        if (ttobject == null){
+            Log.d(TAG, "onReceive: ttobject was null");
+
+        }else{
+            // check the current task here....
+
+            SimpleDateFormat sdf = new SimpleDateFormat("mm");
+            String currentMins = sdf.format(new Date());
+            sdf = new SimpleDateFormat("HH");
+            String currentHour = sdf.format(new Date());
+            Log.d(TAG, "onReceive: current hour is "+currentHour+"."+currentMins);
+            {
+
+                // valid ... check lectures
+
+                SimpleDateFormat format = new SimpleDateFormat("EEEE");
+                Date d = new Date();
+                String dayOfTheWeek = format.format(d);
+                Log.d(TAG, "onReceive: today is "+dayOfTheWeek);
+                String  str = ttobject.getJsonTTObject();
+                try {
+                    JSONObject object = new JSONObject(str);
+                    Log.d(TAG, "onReceive: tt object is"+object);
+                    JSONArray array = object.getJSONArray(dayOfTheWeek);
+                    Log.d(TAG, "onReceive: tt for today is "+array);
+
+                    int length = array.length();
+                     for (int i=0 ; i<length ; i++){
+                        JSONObject currentObject = array.getJSONObject(i);
+
+                        if (!currentObject.getString("Time").equals("Nill")){
+
+                            String time = currentObject.getString("Time");
+                            Log.d(TAG, "loadCurrentLecture: time is "+time);
+                            int index = time.indexOf(".");
+                            String hourOfLec = time.substring(0, index);
+                            String minOfLec = time.substring(index+1);
+                            int hourOfLecIint = Integer.parseInt(hourOfLec);
+                            int nextHour = hourOfLecIint+1;
+                            String nextHourString = String.valueOf(nextHour);
+
+                            if (hourOfLec.equals(currentHour))
+                                // hours are same check for mins
+                            {
+
+                                if (Integer.parseInt(currentMins)>= Integer.parseInt(minOfLec)) {
+
+
+                                    tvStlec.setText(currentObject.getString("Subject"));
+                                    tvStLoc.setText(currentObject.getString("Location"));
+                                    if (hourOfLecIint > 12){
+                                        hourOfLecIint -= 12;
+                                        time = String.valueOf(hourOfLecIint) +"."+ minOfLec + " PM";
+                                    }else{
+                                        time = String.valueOf(hourOfLecIint) +"."+ minOfLec + " AM";
+
+                                    }
+                                    tvSttime.setText(time);
+                                    tvStFaculty.setText(currentObject.getString("Staff"));
+                                    Log.d(TAG, "TTNotification: current lecture is" + currentObject);
+                                    break;
+                                }
+                            } if((hourOfLecIint +1)  == Integer.parseInt(currentHour)){
+                                if (Integer.parseInt(currentMins)< Integer.parseInt(minOfLec)) {
+
+
+                                    tvStlec.setText(currentObject.getString("Subject"));
+                                    tvStLoc.setText(currentObject.getString("Location"));
+                                    if (hourOfLecIint > 12){
+                                        hourOfLecIint -= 12;
+                                        time = String.valueOf(hourOfLecIint) +"."+ minOfLec + " PM";
+                                    }else{
+                                        time = String.valueOf(hourOfLecIint) +"."+ minOfLec + " AM";
+
+                                    }
+                                    tvSttime.setText(time);
+                                    tvStFaculty.setText(currentObject.getString("Staff"));
+                                    Log.d(TAG, "TTNotification: current lecture is" + currentObject);
+                                    break;
+                                }
+
+
+
+                            }else{
+                                Log.d(TAG, "TTNotification: No lecture in this slot");
+
+                            }
+
+
+                        }
+
+
+
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
 
     }
 
@@ -484,74 +697,92 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
 
     public void TTNotification(){
-        TTRealmObject ttobject;
-        Log.d(TAG, "TTNotification: in TTNotificaton");
-        realm = Realm.getDefaultInstance();
-        ttobject = realm.where(TTRealmObject.class).findFirst();
-        if (ttobject == null){
-            Log.d(TAG, "onReceive: ttobject was null");
 
-        }else{
-            // check the current task here....
+        profile = realm.where(Student_profile.class).findFirst();
+        if (profile != null){
 
-            SimpleDateFormat sdf = new SimpleDateFormat("HH");
-            String currentDateandTime = sdf.format(new Date());
-            Log.d(TAG, "onReceive: current hour is "+currentDateandTime);
-         //   if (Integer.parseInt(currentDateandTime)>8 && Integer.parseInt(currentDateandTime)< 7)
-             {
+            if (profile.isAreNotificationsEnabled()){
+                Log.d(TAG, "TTNotification: notifications are enabled...");
+                TTRealmObject ttobject;
+                Log.d(TAG, "TTNotification: in TTNotificaton");
+                realm = Realm.getDefaultInstance();
+                ttobject = realm.where(TTRealmObject.class).findFirst();
+                if (ttobject == null){
+                    Log.d(TAG, "onReceive: ttobject was null");
 
-                // valid ... check lectures
+                }else{
+                    // check the current task here....
 
-                SimpleDateFormat format = new SimpleDateFormat("EEEE");
-                Date d = new Date();
-                String dayOfTheWeek = format.format(d);
-                Log.d(TAG, "onReceive: today is "+dayOfTheWeek);
-                String  str = ttobject.getJsonTTObject();
-                try {
-                    JSONObject object = new JSONObject(str);
-                    Log.d(TAG, "onReceive: tt object is"+object);
-                    JSONArray array = object.getJSONArray(dayOfTheWeek);
-                    Log.d(TAG, "onReceive: tt for today is "+array);
+                    SimpleDateFormat sdf = new SimpleDateFormat("HH");
+                    String currentDateandTime = sdf.format(new Date());
+                    Log.d(TAG, "onReceive: current hour is "+currentDateandTime);
+                    //   if (Integer.parseInt(currentDateandTime)>8 && Integer.parseInt(currentDateandTime)< 7)
+                    {
 
-                    int length = array.length();
-                    for (int i=0 ; i<length ; i++){
-                        JSONObject currentObject = array.getJSONObject(i);
+                        // valid ... check lectures
+
+                        SimpleDateFormat format = new SimpleDateFormat("EEEE");
+                        Date d = new Date();
+                        String dayOfTheWeek = format.format(d);
+                        Log.d(TAG, "onReceive: today is "+dayOfTheWeek);
+                        String  str = ttobject.getJsonTTObject();
+                        try {
+                            JSONObject object = new JSONObject(str);
+                            Log.d(TAG, "onReceive: tt object is"+object);
+                            JSONArray array = object.getJSONArray(dayOfTheWeek);
+                            Log.d(TAG, "onReceive: tt for today is "+array);
+
+                            int length = array.length();
+                            for (int i=0 ; i<length ; i++){
+                                JSONObject currentObject = array.getJSONObject(i);
+
+                                if (!currentObject.getString("Time").equals("Nill")){
 
 
-                        int time = Integer.parseInt(currentObject.getString("Time"));
-                        if (time == 14){
-                            NotificationManager notificationManager = (NotificationManager) UserProfile.this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-                            Intent intent1 = new Intent(UserProfile.this , UserProfile.class);
-                            intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            PendingIntent pendingIntent= PendingIntent.getActivity(UserProfile.this , 100, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+                                    int time = Integer.parseInt(currentObject.getString("Time"));
+                                    if (time == Integer.parseInt(currentDateandTime) +1){
+                                        NotificationManager notificationManager = (NotificationManager) UserProfile.this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-                            NotificationCompat.Builder builder = new NotificationCompat.Builder(UserProfile.this)
-                                    .setContentIntent(pendingIntent)
-                                    .setContentTitle("Next Lecture Updates")
-                                    .setContentText("Subject - "+currentObject.getString("Subject") +
-                                    "\n Staff - "+currentObject.getString("Staff") + "\n Location - "+currentObject.getString("Location")
-                                    +"\n Time - "+currentObject.getString("Time"))
-                                    .setSmallIcon(R.drawable.profile)
-                                    .setAutoCancel(true);
+                                        Intent intent1 = new Intent(UserProfile.this , UserProfile.class);
+                                        intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        PendingIntent pendingIntent= PendingIntent.getActivity(UserProfile.this , 100, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                            notificationManager.notify(100, builder.build());
-                            Log.d(TAG, "TTNotification: current lecture is"+currentObject);
-                        }else{
-                            Log.d(TAG, "TTNotification: No lecture in this slot");
+                                        NotificationCompat.Builder builder = new NotificationCompat.Builder(UserProfile.this)
+                                                .setContentIntent(pendingIntent)
+                                                .setContentTitle("Next Lecture Updates")
+                                                .setContentText("Subject - "+currentObject.getString("Subject") +
+                                                        "\n Staff - "+currentObject.getString("Staff") + "\n Location - "+currentObject.getString("Location")
+                                                        +"\n Time - "+currentObject.getString("Time"))
+                                                .setSmallIcon(R.drawable.profile)
+                                                .setAutoCancel(true);
 
+                                        notificationManager.notify(100, builder.build());
+                                        Log.d(TAG, "TTNotification: current lecture is"+currentObject);
+                                    }else{
+                                        Log.d(TAG, "TTNotification: No lecture in this slot");
+
+                                    }
+
+
+                                }
+
+
+
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
 
-
                     }
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-
             }
+
         }
+
+
 
 
     }

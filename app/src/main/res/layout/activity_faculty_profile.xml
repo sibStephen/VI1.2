@@ -9,10 +9,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:id="@+id/rlupperPart">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/facultyToolbar"
@@ -30,8 +35,7 @@
             android:id="@+id/rlFirstPart1"
             android:layout_below="@id/facultyToolbar"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            >
+            android:layout_height="250dp">
 
 
             <ImageView
@@ -89,9 +93,194 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/rlFirstPart2"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/rlFirstPart1">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:id="@+id/rlInside1">
+
+
+                <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#000000">
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ongoing lecture"
+                android:textColor="#000000"
+
+                android:textSize="20dp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tvFacLec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="lecture"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Year"
+                    android:layout_toRightOf="@+id/tvFacLec"
+                    android:layout_below="@id/textView16"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginTop="16dp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvfacyear"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#000000"
+                android:layout_alignParentBottom="true">
+            </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvFacloc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="19dp"
+                    tools:text="Location" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="time"
+                    android:layout_below="@+id/textView16"
+                    android:layout_toRightOf="@+id/tvFacDiv"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="16dp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvfactime"/>
+                <TextView
+                    android:id="@+id/tvFacDiv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:textStyle="bold"
+                    tools:text="Div"
+                    android:layout_alignBaseline="@+id/tvFacloc"
+                    android:layout_alignBottom="@+id/tvFacloc"
+                    android:layout_toEndOf="@+id/textView16" />
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:id="@+id/rlInside2"
+                android:layout_below="@+id/rlInside1">
+
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvFacDayNext"
+                    android:layout_marginTop="4dp"
+                    tools:text="Day"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toRightOf="@+id/textView17"/>
+
+                <TextView
+                    android:id="@+id/textView17"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Next lecture"
+                    android:textColor="#000000"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvFacLecnext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="lecture"
+                    android:textStyle="bold"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Year"
+                    android:layout_toRightOf="@+id/tvFacLecnext"
+                    android:layout_below="@id/textView17"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginTop="16dp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvfacyearnext"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#000000"
+                    android:layout_alignParentBottom="true">
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvFaclocnext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="19dp"
+                    tools:text="Location" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="time"
+                    android:layout_below="@+id/textView17"
+                    android:layout_toRightOf="@+id/tvFacDivnext"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="16dp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvfactimenext"/>
+                <TextView
+                    android:id="@+id/tvFacDivnext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="71dp"
+                    android:textStyle="bold"
+                    tools:text="Div"
+                    android:layout_alignBaseline="@+id/tvFaclocnext"
+                    android:layout_alignBottom="@+id/tvFaclocnext"
+                    android:layout_toEndOf="@+id/textView17" />
+
+            </RelativeLayout>
+
+
+
+
+        </RelativeLayout>
+
 
 
     </RelativeLayout>
+
+    </ScrollView>
+
 
     <android.support.design.widget.NavigationView
         android:id="@+id/facultynav_view"

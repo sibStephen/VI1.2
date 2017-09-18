@@ -1,4 +1,5 @@
-package college.root.vi12.StudentProfile;
+package college.root.vi12.Faculty;
+
 
 import android.content.ContentResolver;
 import android.content.DialogInterface;
@@ -25,22 +26,21 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import college.root.vi12.Faculty.Realm.FacultyProfileRealm;
 import college.root.vi12.Miscleneous.Toast;
 import college.root.vi12.NetworkTasks.CheckNetwork;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
 import college.root.vi12.StudentProfile.Realm.Student_profile;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.socket.client.Socket;
 
-
-public class FragmentProfile1 extends Fragment {
+public class FragmentFacultyProfile extends Fragment {
 
     Realm realm;
     EditText name,surname,year,div,branch,grno , etSem;
     Button save,back;
-    Student_profile profile;
+    FacultyProfileRealm profile;
     Uri imageuri;
     String TAG = "Test";
     String myname , mysurname , myyear, mydiv, mybranch, mygrno , sem;
@@ -48,20 +48,49 @@ public class FragmentProfile1 extends Fragment {
     Toast toast;
     NetworkUtils networkUtils;
     Spinner spGender , spBranch, spSem, spYear , spDiv;
-   ArrayAdapter<String> yearAdapter;
+    ArrayAdapter<String> yearAdapter;
     ArrayAdapter<String> SemAdapter;
     ArrayAdapter<String> dataAdapter,divAdapter,branchAdapter;
     int pos=0;
 
 
-    public FragmentProfile1() {
+    public FragmentFacultyProfile() {
         // Required empty public constructor
     }
 
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
 
-    public  void initializeViews(View view){
+
+
+
+
+        return inflater.inflate(R.layout.fragment_fragment_faculty_profile, container, false);
+    }
+
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        realm = Realm.getDefaultInstance();
+
         networkUtils = new NetworkUtils() ;
+
+
+
+        //getActivity().getString(R.array.religion);
+        try {
+            socket = networkUtils.get();
+
+            Log.d(TAG, "onCreateView: listener called");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
 
         CheckNetwork checkNetwork = new CheckNetwork();
         boolean isNetWorkAvailable = CheckNetwork.isNetWorkAvailable(getActivity());
@@ -70,14 +99,16 @@ public class FragmentProfile1 extends Fragment {
             toast.showToast(getActivity() , "No internet connection");
         }
 
+
+
         realm = Realm.getDefaultInstance();
-        name=(EditText)view.findViewById(R.id.etname);
-        surname=(EditText)view.findViewById(R.id.etsurname);
-        spBranch = (Spinner)view.findViewById(R.id.spBranch);
-        spGender = (Spinner)view.findViewById(R.id.spgender);
-        spSem = (Spinner)view.findViewById(R.id.spSem);
-        spDiv = (Spinner)view.findViewById(R.id.spDiv);
-        spYear = (Spinner)view.findViewById(R.id.epYear);
+        name=(EditText)view.findViewById(R.id.facetname);
+        surname=(EditText)view.findViewById(R.id.facetsurname);
+        spBranch = (Spinner)view.findViewById(R.id.facspBranch);
+        spGender = (Spinner)view.findViewById(R.id.facspgender);
+        spSem = (Spinner)view.findViewById(R.id.facspSem);
+        spDiv = (Spinner)view.findViewById(R.id.facspDiv);
+        spYear = (Spinner)view.findViewById(R.id.facepYear);
         List<String> list = new ArrayList<String>();
         list.add("Male");
         list.add("Female");
@@ -141,22 +172,10 @@ public class FragmentProfile1 extends Fragment {
 
 
 
-        save=(Button)view.findViewById(R.id.save);
+        save=(Button)view.findViewById(R.id.facsave);
 
-        profile = new Student_profile();
-
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-
-
-      initializeViews(view);
-
-        profile = realm.where(Student_profile.class).findFirst();
-
+        profile = new FacultyProfileRealm();
+        profile = realm.where(FacultyProfileRealm.class).findFirst();
         if(profile != null){
             name.setText(profile.getName());
             surname.setText(profile.getSurname());
@@ -179,6 +198,7 @@ public class FragmentProfile1 extends Fragment {
                 "://" + getResources().getResourcePackageName(R.drawable.profile_def)
                 + '/' + getResources().getResourceTypeName(R.drawable.profile_def) + '/' + getResources().getResourceEntryName(R.drawable.profile_def) );
 
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -198,13 +218,13 @@ public class FragmentProfile1 extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        profile = new Student_profile();
-                        profile = realm.where(Student_profile.class).findFirst();
+                        profile = new FacultyProfileRealm();
+                        profile = realm.where(FacultyProfileRealm.class).findFirst();
                         if(profile==null) {
                             Log.d(TAG, "save: profile is null");
                             //     profile = realm.createObject(Student_profile.class);
                             realm.beginTransaction();
-                            profile = new Student_profile();
+                            profile = new FacultyProfileRealm();
                             profile.setUid(0);
                             profile.setName(name.getText().toString());
                             profile.setSurname(surname.getText().toString());
@@ -226,9 +246,9 @@ public class FragmentProfile1 extends Fragment {
                         {
                             Toast toast = new Toast();
                             toast.showProgressDialog(getActivity() , "Saving details...");
-                            profile = realm.where(Student_profile.class).findFirst();
+                            profile = realm.where(FacultyProfileRealm.class).findFirst();
                             realm.beginTransaction();
-                            mygrno = profile.getGrno(); // get GR number as its the primary key
+                            mygrno = profile.getEid(); // get GR number as its the primary key
                             mybranch = spBranch.getSelectedItem().toString();
                             mydiv =spDiv.getSelectedItem().toString();
                             myname = name.getText().toString();
@@ -287,7 +307,7 @@ public class FragmentProfile1 extends Fragment {
                                 finalObj.put("contents" , sb.toString());
                                 finalObj.put("Length" , contents.length);
                                 finalObj.put("collectionName" , "basicUserDetails");
-                                finalObj.put("grNumber" , profile.getGrno());
+                                finalObj.put("grNumber" , profile.getEid());
 
                                 networkUtils.emitSocket("Allinfo",finalObj);
                                 networkUtils.disconnectSocketAsync();
@@ -314,16 +334,15 @@ public class FragmentProfile1 extends Fragment {
             }
         });
 
+
+
+
+
+
+
+
+
+
+
     }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        ((EditProfileActivity)getActivity()).setActionBarTitle("Personal Details");
-        View view=inflater.inflate(R.layout.fragment_profile1, container, false);
-        return view;
-
-    }
-
 }

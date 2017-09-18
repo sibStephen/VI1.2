@@ -50,6 +50,24 @@ public class Student_profile extends RealmObject {
     String semester;
     String address, landlineNumber, area, pincode,state,city, district;
     String certificate10th, certificate12th;
+    boolean areNotificationsEnabled = true;
+    boolean subjectsFetched = false;
+
+    public boolean isSubjectsFetched() {
+        return subjectsFetched;
+    }
+
+    public void setSubjectsFetched(boolean subjectsFetched) {
+        this.subjectsFetched = subjectsFetched;
+    }
+
+    public boolean isAreNotificationsEnabled() {
+        return areNotificationsEnabled;
+    }
+
+    public void setAreNotificationsEnabled(boolean areNotificationsEnabled) {
+        this.areNotificationsEnabled = areNotificationsEnabled;
+    }
 
     public Student_profile() {
     }

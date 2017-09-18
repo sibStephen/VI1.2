@@ -10,7 +10,7 @@ import io.realm.annotations.PrimaryKey;
 public class FacultyProfileRealm extends RealmObject {
 
     @PrimaryKey
-    private String grno;
+    private String eid;
     private String div;
     int uid;
     private String branch;
@@ -51,14 +51,22 @@ public class FacultyProfileRealm extends RealmObject {
     String semester;
     String address, landlineNumber, area, pincode,state,city, district;
     String certificate10th, certificate12th;
+    boolean notificationEnabled = false;
 
-
-    public String getGrno() {
-        return grno;
+    public boolean isNotificationEnabled() {
+        return notificationEnabled;
     }
 
-    public void setGrno(String grno) {
-        this.grno = grno;
+    public void setNotificationEnabled(boolean notificationEnabled) {
+        this.notificationEnabled = notificationEnabled;
+    }
+
+    public String getEid() {
+        return eid;
+    }
+
+    public void setEid(String eid) {
+        this.eid = eid;
     }
 
     public String getDiv() {

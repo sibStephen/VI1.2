@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import college.root.vi12.AdminActivities.AdminActivity;
+import college.root.vi12.AdminActivities.TableActivity;
 import college.root.vi12.Faculty.FacultyProfileActivity;
 import college.root.vi12.StudentProfile.UserProfile;
 

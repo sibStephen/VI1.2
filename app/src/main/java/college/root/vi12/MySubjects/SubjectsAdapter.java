@@ -13,6 +13,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import college.root.vi12.R;
+import college.root.vi12.StudentProfile.Realm.Student_profile;
+import io.realm.Realm;
 
 /**
  * Created by root on 6/6/17.
@@ -24,6 +26,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Subjec
     Context context;
     ArrayList<MySubjects> list;
     String TAG = "Test";
+    Realm realm;
 
 
     public  SubjectsAdapter(ArrayList<MySubjects> list ,Context context){
@@ -48,7 +51,16 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Subjec
 
         MySubjects subjects = list.get(position);
         holder.tvSubjCode.setText(subjects.getSubjectCode());
-        holder.cbSubjects.setText(subjects.getSubjectName());
+        holder.tvSubjectname.setText(subjects.getSubjectName());
+        realm = Realm.getDefaultInstance();
+        Student_profile profile = realm.where(Student_profile.class).findFirst();
+        if (profile != null){
+            if (profile.isSubjectsFetched()){
+                holder.cbSubjects.setVisibility(View.GONE);
+                MySubjectsActivity.btnSubmitSubjects.setVisibility(View.GONE);
+            }
+        }
+
 
 
 
@@ -71,12 +83,14 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Subjec
 
         private CheckBox cbSubjects;
         private TextView tvSubjCode;
+        private  TextView tvSubjectname;
 
         public SubjectsHolder(final Context context, View itemView) {
             super(itemView);
 
             cbSubjects = (CheckBox) itemView.findViewById(R.id.cbSubjects);
             tvSubjCode = (TextView) itemView.findViewById(R.id.tvSubjCode);
+            tvSubjectname = (TextView) itemView.findViewById(R.id.tvsubjectname);
 
 
             cbSubjects.setOnClickListener(new View.OnClickListener() {

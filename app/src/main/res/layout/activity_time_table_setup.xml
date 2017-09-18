@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AdminActivities.TimeTableSetup">
+    tools:context=".AdminActivities.TableActivity">
 
 
     <ScrollView
@@ -69,6 +69,19 @@
                 android:text="C"
                 android:textStyle="bold" />
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Spinner android:id="@+id/spinner_subject_id"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10sp"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -83,19 +96,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/spinner_staff_id"/>
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:orientation="horizontal"
-                android:gravity="center">
 
-            <Spinner android:id="@+id/spinner_subject_id"
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10sp"/>
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -105,7 +106,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="8dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -143,7 +145,7 @@
                         android:layout_height="wrap_content"
                         android:text="11:15 - 12:15"
                         android:textSize="15sp"
-                        android:layout_marginTop="14sp"
+                        android:layout_marginTop="12sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -159,7 +161,7 @@
                         android:layout_height="wrap_content"
                         android:text="2:15 - 3:15"
                         android:textSize="15sp"
-                        android:layout_marginTop="15sp"
+                        android:layout_marginTop="12sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -167,7 +169,7 @@
                         android:layout_height="wrap_content"
                         android:text="3:30 - 4:30"
                         android:textSize="15sp"
-                        android:layout_marginTop="15sp"
+                        android:layout_marginTop="12sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -194,17 +196,16 @@
                     tools:layout_editor_absoluteX="8dp"
                     tools:layout_editor_absoluteY="85dp">
 
-                    <TableLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/time_table_table"
-                        tools:layout_editor_absoluteX="8dp"
-                        tools:layout_editor_absoluteY="436dp"
-                        >
 
-                        <TableRow
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="wrap_content">
+
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -212,7 +213,6 @@
                                 android:text=" Monday "
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
-
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -247,328 +247,30 @@
                                 android:text=" Saturday "
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
-                        </TableRow>
+                        </LinearLayout>
 
-                        <TableRow
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="wrap_content">
 
 
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_1"
-                                android:onClick="onCheckBoxClicked"
-                                />
 
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_2"
-                                android:onClick="onCheckBoxClicked"
-                                />
+                            <android.support.v7.widget.RecyclerView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/adminTTrecycler"/>
+                        </LinearLayout>
 
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_3"
-                                android:onClick="onCheckBoxClicked"
-                                />
 
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_4"
-                                android:onClick="onCheckBoxClicked"
-                                />
 
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_5"
-                                android:onClick="onCheckBoxClicked"
-                                />
 
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_6"
-                                android:onClick="onCheckBoxClicked"
-                                />
-                        </TableRow>
 
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                    </LinearLayout>
 
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_7"
-                                android:onClick="onCheckBoxClicked"
-                                />
 
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_8"
-                                android:onClick="onCheckBoxClicked"
-                                />
 
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_9"
-                                android:onClick="onCheckBoxClicked"
-                                />
 
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_10"
-                                android:onClick="onCheckBoxClicked"
-                                />
 
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_11"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_12"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_13"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_14"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_15"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_16"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_17"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_18"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_19"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_20"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_21"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_22"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_23"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_24"
-                                android:onClick="onCheckBoxClicked"
-                                />
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_25"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_26"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_27"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_28"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_29"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_30"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_31"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_32"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_33"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_34"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_35"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_36"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_37"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_38"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_39"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_40"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_41"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_42"
-                                android:onClick="onCheckBoxClicked"
-                                />
-                        </TableRow>
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_43"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_44"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_45"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_46"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_47"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_48"
-                                android:onClick="onCheckBoxClicked"
-                                />
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_49"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_50"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_51"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_52"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_53"
-                                android:onClick="onCheckBoxClicked"
-                                />
-
-                            <CheckBox android:text=""
-                                android:id="@+id/checkbox_54"
-                                android:onClick="onCheckBoxClicked"
-                                />
-                        </TableRow>
-                    </TableLayout>
                 </HorizontalScrollView>
             </LinearLayout>
 
@@ -577,12 +279,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Save"
-                android:id="@+id/save_Checkbox"
+                android:id="@+id/save_button"
                 android:onClick="finalize"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Submit"
+                android:text="Preview"
                 android:id="@+id/final_push"
                 android:onClick="push_to_server"/>
 

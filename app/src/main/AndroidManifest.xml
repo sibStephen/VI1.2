@@ -49,6 +49,7 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".StudentProfile.UserProfile" />
         <activity android:name=".StudentProfile.EditProfileActivity" />
+        <activity android:name=".AdminActivities.TableActivity"/>
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -75,11 +76,11 @@
             android:name=".AdminActivities.LocationEntry"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".AdminActivities.PreTimeTableSetup" />
-        <activity android:name=".AdminActivities.TimeTableSetup" />
         <activity android:name=".AdminActivities.TimeTableDisplayActivity" />
         <activity android:name=".Faculty.SearchStudentActivity" />
         <activity android:name=".Faculty.FacultyProfileActivity" />
-        <activity android:name=".Faculty.FacultySubjectsActivity"></activity>
+        <activity android:name=".Faculty.FacultySubjectsActivity" />
+        <activity android:name=".Faculty.EditFacultyActivity"></activity>
     </application>
 
 </manifest>

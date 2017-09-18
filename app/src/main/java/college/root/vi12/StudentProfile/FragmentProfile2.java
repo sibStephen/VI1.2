@@ -57,6 +57,35 @@ public class FragmentProfile2 extends Fragment {
     }
 
 
+    public void iniializeViews(View view){
+        realm = Realm.getDefaultInstance();
+        email_pri=(EditText)view.findViewById(R.id.email_pri);
+        email_sec=(EditText)view.findViewById(R.id.email_sec);
+        spReligion=(Spinner)view.findViewById(R.id.religion);
+        mother_ton=(AutoCompleteTextView)view.findViewById(R.id.actvMotherTongue);
+        birth=(EditText)view.findViewById(R.id.birth);
+        sub_caste=(EditText)view.findViewById(R.id.sub_caste);
+        uni_area=(EditText)view.findViewById(R.id.uni_area);
+        full_name=(EditText)view.findViewById(R.id.full_name);
+        pref=(EditText)view.findViewById(R.id.pref);
+        income=(EditText)view.findViewById(R.id.income);
+        aadhar=(EditText)view.findViewById(R.id.aadhar);
+        nationality=(EditText)view.findViewById(R.id.nationality);
+        blood=(EditText)view.findViewById(R.id.blood);
+        mobile=(EditText)view.findViewById(R.id.mobile);
+        mstatus=(EditText)view.findViewById(R.id.mstatus);
+        emcontact=(EditText)view.findViewById(R.id.emcontact);
+        ArrayAdapter<String> languageAdapter = new ArrayAdapter<String>
+                (getContext(),android.R.layout.select_dialog_item,language);
+
+        mother_ton.setThreshold(1);
+        mother_ton.setAdapter(languageAdapter);
+        realm = Realm.getDefaultInstance();
+
+
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,10 +94,8 @@ public class FragmentProfile2 extends Fragment {
         ((EditProfileActivity)getActivity()).setActionBarTitle("All Details");
 
 
+        iniializeViews(view);
 
-
-        RealmConfiguration config = new RealmConfiguration.Builder(getContext()).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
-        realm.setDefaultConfiguration(config);
         spReligion = (Spinner)view.findViewById(R.id.religion);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext() ,R.array.religion, android.R.layout.simple_dropdown_item_1line );
         spReligion.setAdapter(adapter);
@@ -87,33 +114,6 @@ public class FragmentProfile2 extends Fragment {
         });
 
 
-        realm = Realm.getDefaultInstance();
-        email_pri=(EditText)view.findViewById(R.id.email_pri);
-        email_sec=(EditText)view.findViewById(R.id.email_sec);
-        spReligion=(Spinner)view.findViewById(R.id.religion);
-        mother_ton=(AutoCompleteTextView)view.findViewById(R.id.actvMotherTongue);
-        birth=(EditText)view.findViewById(R.id.birth);
-        sub_caste=(EditText)view.findViewById(R.id.sub_caste);
-        uni_area=(EditText)view.findViewById(R.id.uni_area);
-        full_name=(EditText)view.findViewById(R.id.full_name);
-        pref=(EditText)view.findViewById(R.id.pref);
-        income=(EditText)view.findViewById(R.id.income);
-        aadhar=(EditText)view.findViewById(R.id.aadhar);
-        nationality=(EditText)view.findViewById(R.id.nationality);
-        blood=(EditText)view.findViewById(R.id.blood);
-        mobile=(EditText)view.findViewById(R.id.mobile);
-        mstatus=(EditText)view.findViewById(R.id.mstatus);
-        emcontact=(EditText)view.findViewById(R.id.emcontact);
-
-
-
-
-
-        ArrayAdapter<String> languageAdapter = new ArrayAdapter<String>
-                (getContext(),android.R.layout.select_dialog_item,language);
-
-        mother_ton.setThreshold(1);
-        mother_ton.setAdapter(languageAdapter);
 
         profile = new Student_profile();
         profile = realm.where(Student_profile.class).findFirst();
@@ -297,7 +297,7 @@ public class FragmentProfile2 extends Fragment {
                                 finalObj.put("grNumber" , profile.getGrno());
 
                                 CheckNetwork network = new CheckNetwork();
-                                if (!network.isNetWorkAvailable(getActivity())){
+                                if (!CheckNetwork.isNetWorkAvailable(getActivity())){
 
                                     Log.d(TAG, "onClick: No internet ");
                                     final JsontoSend jsontoSend= new JsontoSend();

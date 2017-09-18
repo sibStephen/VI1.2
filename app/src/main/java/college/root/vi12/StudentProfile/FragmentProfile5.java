@@ -46,8 +46,6 @@ public class FragmentProfile5 extends Fragment {
 
         ((EditProfileActivity)getActivity()).setActionBarTitle("Parent Details");
 
-        final RealmConfiguration config = new RealmConfiguration.Builder(getContext()).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
-        realm.setDefaultConfiguration(config);
 
 
         realm = Realm.getDefaultInstance();
@@ -124,7 +122,6 @@ public class FragmentProfile5 extends Fragment {
 
                         if(profile==null) {
                             Log.d(TAG, "save: profile is null");
-                            //     profile = realm.createObject(Student_profile.class);
                             realm.beginTransaction();
                             profile = new Student_profile();
 
@@ -149,13 +146,11 @@ public class FragmentProfile5 extends Fragment {
                                     realm.copyToRealmOrUpdate(profile);
                                 }
                             });
-//            realm.commitTransaction();
                         }
                         else {
                             Toast toast = new Toast();
                             toast.showProgressDialog(getActivity(), "Saving details....");
 
-                            //  oldgrno=profile.getGrno();
                             profile = realm.where(Student_profile.class).findFirst();
                             realm.beginTransaction();
                             profile.setFname(fname.getText().toString());

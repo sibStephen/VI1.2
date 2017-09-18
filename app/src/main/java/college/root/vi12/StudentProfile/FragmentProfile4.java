@@ -53,8 +53,6 @@ public class FragmentProfile4 extends Fragment {
         View view=inflater.inflate(R.layout.fragment_profile4, container, false);
         ((EditProfileActivity)getActivity()).setActionBarTitle("Academic Details");
 
-        RealmConfiguration config = new RealmConfiguration.Builder(getContext()).schemaVersion(4).deleteRealmIfMigrationNeeded().build();
-        realm.setDefaultConfiguration(config);
 
 
         realm = Realm.getDefaultInstance();
@@ -160,7 +158,6 @@ public class FragmentProfile4 extends Fragment {
 
                             networkUtils = new NetworkUtils();
 
-                            socket = networkUtils.initializeSocketAsync();
                             JSONObject basicUserDetails = new JSONObject();
                             basicUserDetails.put("ssc_maths" , ssc_maths.getText().toString());
                             basicUserDetails.put("ssc_science" , ssc_science.getText().toString());
@@ -201,10 +198,7 @@ public class FragmentProfile4 extends Fragment {
 
                         }  catch (JSONException e) {
                             Log.d(TAG, "onClick: json error "+e.getMessage());
-                        } catch (URISyntaxException e) {
-                            e.printStackTrace();
                         }
-
 
                     }
                 });

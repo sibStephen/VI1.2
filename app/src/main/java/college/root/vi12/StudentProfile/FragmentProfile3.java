@@ -110,17 +110,10 @@ public class FragmentProfile3 extends Fragment  implements AdapterView.OnItemSel
         realm = Realm.getDefaultInstance();
         networkUtils = new NetworkUtils() ;
 
-        try {
-            socket = networkUtils.get();
-
-            Log.d(TAG, "onCreateView: listener called");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
 
 
         CheckNetwork checkNetwork = new CheckNetwork();
-        boolean isNetWorkAvailable = checkNetwork.isNetWorkAvailable(getActivity());
+        boolean isNetWorkAvailable = CheckNetwork.isNetWorkAvailable(getActivity());
         if (!isNetWorkAvailable){
             toast = new Toast();
             toast.showToast(getActivity() , "No internet connection");

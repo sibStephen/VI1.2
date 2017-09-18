@@ -15,16 +15,12 @@ import java.util.ArrayList;
 
 import college.root.vi12.R;
 
-public class MyRecyclerViewAdapter extends RecyclerView
-        .Adapter<MyRecyclerViewAdapter
-        .DataObjectHolder> {
+public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.DataObjectHolder> {
     private static String LOG_TAG = "MyRecyclerViewAdapter";
     private ArrayList<JSONObject> mDataset;
     private static MyClickListener myClickListener;
 
-    public static class DataObjectHolder extends RecyclerView.ViewHolder
-            implements View
-            .OnClickListener {
+    public static class DataObjectHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView subject;
         TextView location;
         TextView time;
@@ -47,7 +43,7 @@ public class MyRecyclerViewAdapter extends RecyclerView
     }
 
     public void setOnItemClickListener(MyClickListener myClickListener) {
-        this.myClickListener = myClickListener;
+        MyRecyclerViewAdapter.myClickListener = myClickListener;
     }
 
     public MyRecyclerViewAdapter(ArrayList<JSONObject> myDataset) {
@@ -69,7 +65,21 @@ public class MyRecyclerViewAdapter extends RecyclerView
         JSONObject object = mDataset.get(position);
         try {
             holder.subject.setText(object.get("Subject").toString());
-            holder.time.setText(object.get("Time").toString());
+            String time = object.getString("Time");
+            int index = time.indexOf(".");
+            String hourOfLec = time.substring(0, index);
+            int hourOfLecIint = Integer.parseInt(hourOfLec);
+            String minOfLec = time.substring(index+1);
+
+            if (hourOfLecIint >= 12){
+                hourOfLecIint -= 12;
+                time = String.valueOf(hourOfLecIint) +"."+ minOfLec + " PM";
+            }else{
+                time = String.valueOf(hourOfLecIint) +"."+ minOfLec + " AM";
+
+            }
+
+            holder.time.setText(time);
             holder.location.setText(object.get("Location").toString());
             holder.staff.setText(object.get("Staff").toString());
         } catch (JSONException e) {
@@ -94,6 +104,6 @@ public class MyRecyclerViewAdapter extends RecyclerView
     }
 
     public interface MyClickListener {
-        public void onItemClick(int position, View v);
+        void onItemClick(int position, View v);
     }
 }
