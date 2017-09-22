@@ -1,4 +1,4 @@
-package college.root.vi12.StudentProfile;
+package college.root.vi12.Student.StudentProfile;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -23,14 +23,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import college.root.vi12.Miscleneous.Toast;
 import college.root.vi12.NetworkTasks.CheckNetwork;
 import college.root.vi12.NetworkTasks.JsontoSend;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
-import college.root.vi12.Miscleneous.Toast;
-import college.root.vi12.StudentProfile.Realm.Student_profile;
+import college.root.vi12.Student.Realm.Student_profile;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.socket.client.Socket;
 
 

@@ -1,4 +1,4 @@
-package college.root.vi12.MySubjects;
+package college.root.vi12.Student.MySubjects;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;

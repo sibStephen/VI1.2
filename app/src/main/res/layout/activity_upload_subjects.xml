@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:padding="16dp"
     android:background="@color/greyColor"
-    tools:context=".MySubjects.UploadSubjectsActivity">
+    tools:context=".AdminActivities.UploadSubjects.UploadSubjectsActivity">
 
 
     <LinearLayout
@@ -43,7 +43,7 @@
                 android:layout_alignParentStart="true" />
 
             <TextView
-                android:text="Upload subjects !"
+                android:text="Upload subjects"
                 android:textStyle="bold"
                 android:textSize="20dp"
                 android:layout_marginLeft="150dp"
@@ -99,26 +99,22 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/textView8"
-                app:srcCompat="@drawable/ic_add_circle_outline_black_24dp" />
-        </RelativeLayout>
+                app:srcCompat="@drawable/addbutton" />
 
+           </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"></LinearLayout>
+            android:orientation="vertical">
+
+        </LinearLayout>
 
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            android:background="@color/blue_normal"
-            android:textColor="@color/white"
-            android:id="@+id/btnSaveSubjs"
-            android:layout_marginTop="15dp"
-            />
+
+
+
 
     </LinearLayout>
 

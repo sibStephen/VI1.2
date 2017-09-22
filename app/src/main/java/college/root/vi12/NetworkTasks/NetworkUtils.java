@@ -27,7 +27,6 @@ public class NetworkUtils {
 
 
     public Socket socket;
-
     public Thread threadConnect , threadListen, threadDisconnect;
     public  String TAG = "Test";
     public  String collectionName;

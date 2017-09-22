@@ -1,4 +1,4 @@
-package college.root.vi12.AdminActivities;
+package college.root.vi12.AdminActivities.TimeTable;
 
 /**
  * Created by root on 13/9/17.

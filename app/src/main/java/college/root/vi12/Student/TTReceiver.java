@@ -1,4 +1,4 @@
-package college.root.vi12.StudentProfile;
+package college.root.vi12.Student;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -16,10 +16,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import college.root.vi12.R;
-import college.root.vi12.StudentProfile.Realm.Student_profile;
-import college.root.vi12.StudentProfile.Student_TT.Realm.TTRealmObject;
+import college.root.vi12.Student.Realm.Student_profile;
+import college.root.vi12.Student.StudentProfile.UserProfile;
+import college.root.vi12.Student.Student_TT.Realm.TTRealmObject;
 import io.realm.Realm;
-import io.realm.RealmObject;
 
 /**
  * Created by root on 1/9/17.

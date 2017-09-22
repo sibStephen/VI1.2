@@ -1,18 +1,19 @@
 package college.root.vi12.AdminActivities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import college.root.vi12.MySubjects.UploadSubjectsActivity;
+import college.root.vi12.AdminActivities.Facultyload.FacultyLoadActivity;
+import college.root.vi12.AdminActivities.TimeTable.PreTimeTableSetup;
+import college.root.vi12.AdminActivities.UploadSubjects.UploadSubjectsActivity;
 import college.root.vi12.R;
-import college.root.vi12.StudentProfile.UserProfile;
 
 public class AdminActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener{
 

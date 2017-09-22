@@ -47,9 +47,9 @@
             android:name=".HomePageActivity"
             android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".StudentProfile.UserProfile" />
-        <activity android:name=".StudentProfile.EditProfileActivity" />
-        <activity android:name=".AdminActivities.TableActivity"/>
+        <activity android:name=".Student.StudentProfile.UserProfile" />
+        <activity android:name=".Student.StudentProfile.EditProfileActivity" />
+        <activity android:name=".AdminActivities.TimeTable.TableActivity"/>
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -65,18 +65,18 @@
         </receiver>
 
         <activity android:name=".DecidingActivity" />
-        <activity android:name=".MySubjects.UploadSubjectsActivity" />
-        <activity android:name=".MySubjects.MySubjectsActivity" />
+        <activity android:name=".AdminActivities.UploadSubjects.UploadSubjectsActivity" />
+        <activity android:name=".Student.MySubjects.MySubjectsActivity" />
         <activity
             android:name=".TestActivity"
             android:theme="@style/Theme.Design.Light.NoActionBar" />
-        <activity android:name=".AdminActivities.FacultyLoadActivity" />
+        <activity android:name=".AdminActivities.Facultyload.FacultyLoadActivity" />
         <activity android:name=".AdminActivities.AdminActivity" />
         <activity
             android:name=".AdminActivities.LocationEntry"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".AdminActivities.PreTimeTableSetup" />
-        <activity android:name=".AdminActivities.TimeTableDisplayActivity" />
+        <activity android:name=".AdminActivities.TimeTable.PreTimeTableSetup" />
+        <activity android:name=".AdminActivities.TimeTable.TimeTableDisplayActivity" />
         <activity android:name=".Faculty.SearchStudentActivity" />
         <activity android:name=".Faculty.FacultyProfileActivity" />
         <activity android:name=".Faculty.FacultySubjectsActivity" />

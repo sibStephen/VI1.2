@@ -1,5 +1,5 @@
 
-package college.root.vi12.AdminActivities;
+package college.root.vi12.AdminActivities.TimeTable;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="20dp"
-    tools:context=".StudentProfile.FragmentCertificates">
+    tools:context=".Student.StudentProfile.FragmentCertificates">
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"

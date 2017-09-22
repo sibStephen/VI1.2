@@ -1,7 +1,12 @@
 package college.root.vi12.Miscleneous;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.ConnectivityManager;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,4 +35,37 @@ public class Utils {
 
         return (String[]) result.toArray(input);
     }
+
+
+    public static void toast(Context context , String msg ){
+        android.widget.Toast.makeText(context , msg , Toast.LENGTH_SHORT).show();
+
+    }
+
+
+    public static boolean arrayContainstoken(JSONArray array, String token) throws JSONException {
+
+        for (int i=0 ; i<array.length(); i++){
+            if (array.getString(i).equals(token)){
+                return true;
+            }
+        }
+
+
+        return false;
+    }
+
+
+    public static int getNumberFromWeek(String[] days, String dayOfTheWeek) {
+
+
+        for (int i=0; i<days.length ; i++){
+            if (days[i].equals(dayOfTheWeek)){
+                return  i;
+            }
+        }
+        return 0;
+
+    }
+
 }

@@ -51,7 +51,7 @@ public class FacultyProfileRealm extends RealmObject {
     String semester;
     String address, landlineNumber, area, pincode,state,city, district;
     String certificate10th, certificate12th;
-    boolean notificationEnabled = false;
+    boolean notificationEnabled = true;
 
     public boolean isNotificationEnabled() {
         return notificationEnabled;

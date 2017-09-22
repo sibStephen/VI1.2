@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="20dp"
-        tools:context="college.root.vi12.StudentProfile.FragmentProfile4">
+        tools:context="college.root.vi12.Student.StudentProfile.FragmentProfile4">
 
         <ScrollView
             android:layout_width="match_parent"

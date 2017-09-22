@@ -1,4 +1,4 @@
-package college.root.vi12.AdminActivities;
+package college.root.vi12.AdminActivities.TimeTable;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,11 +23,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Iterator;
-import java.util.List;
 
 import college.root.vi12.R;
-
-import static college.root.vi12.R.id.staff;
 
 public class TableActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 

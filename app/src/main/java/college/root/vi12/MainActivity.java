@@ -3,9 +3,9 @@ package college.root.vi12;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
@@ -16,22 +16,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-// cz.msebera.android.httpclient.NameValuePair;
-//import cz.msebera.android.httpclient.message.BasicNameValuePair;
-//import com.facebook.AccessToken;
 import com.facebook.login.widget.LoginButton;
-
-import java.net.URISyntaxException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URISyntaxException;
+
 import college.root.vi12.NetworkTasks.NetworkUtils;
-import college.root.vi12.StudentProfile.Realm.Student_profile;
+import college.root.vi12.Student.Realm.Student_profile;
 import io.realm.Realm;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+
+// cz.msebera.android.httpclient.NameValuePair;
+//import cz.msebera.android.httpclient.message.BasicNameValuePair;
+//import com.facebook.AccessToken;
 
 public class MainActivity extends AppCompatActivity {
 

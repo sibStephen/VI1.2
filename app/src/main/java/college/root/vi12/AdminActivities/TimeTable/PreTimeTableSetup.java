@@ -1,9 +1,9 @@
-package college.root.vi12.AdminActivities;
+package college.root.vi12.AdminActivities.TimeTable;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,7 +21,7 @@ import java.net.URISyntaxException;
 import college.root.vi12.NetworkTasks.CheckNetwork;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
-import college.root.vi12.StudentProfile.Realm.Student_profile;
+import college.root.vi12.Student.Realm.Student_profile;
 import io.realm.Realm;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;

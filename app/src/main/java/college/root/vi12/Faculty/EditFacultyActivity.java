@@ -1,23 +1,16 @@
 package college.root.vi12.Faculty;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Window;
 
 import college.root.vi12.R;
-import college.root.vi12.StudentProfile.EditProfileActivity;
-import college.root.vi12.StudentProfile.FragmentCertificates;
-import college.root.vi12.StudentProfile.FragmentProfile1;
-import college.root.vi12.StudentProfile.FragmentProfile2;
-import college.root.vi12.StudentProfile.FragmentProfile3;
-import college.root.vi12.StudentProfile.FragmentProfile4;
-import college.root.vi12.StudentProfile.FragmentProfile5;
 
 public class EditFacultyActivity extends AppCompatActivity {
 

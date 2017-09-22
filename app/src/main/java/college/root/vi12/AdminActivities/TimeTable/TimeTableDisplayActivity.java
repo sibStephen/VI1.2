@@ -1,9 +1,9 @@
-package college.root.vi12.AdminActivities;
+package college.root.vi12.AdminActivities.TimeTable;
 
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,13 +16,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
-import io.socket.client.IO;
-import io.socket.client.Socket;
 
 
 public class TimeTableDisplayActivity extends AppCompatActivity {

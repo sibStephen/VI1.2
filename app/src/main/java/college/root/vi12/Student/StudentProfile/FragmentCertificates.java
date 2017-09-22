@@ -1,4 +1,4 @@
-package college.root.vi12.StudentProfile;
+package college.root.vi12.Student.StudentProfile;
 
 
 import android.content.Intent;
@@ -25,10 +25,10 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import college.root.vi12.Miscleneous.Toast;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
-import college.root.vi12.Miscleneous.Toast;
-import college.root.vi12.StudentProfile.Realm.Student_profile;
+import college.root.vi12.Student.Realm.Student_profile;
 import io.realm.Realm;
 import io.socket.client.Socket;
 

@@ -3,9 +3,9 @@ package college.root.vi12;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -26,8 +26,6 @@ import college.root.vi12.Miscleneous.EncryptPassword;
 import college.root.vi12.Miscleneous.IPAddess;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import io.realm.Realm;
-import io.socket.client.Ack;
-import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
@@ -239,6 +237,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Log.d(TAG, "call: register success..");
                                 progress.dismiss();
                                 startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                finish();
                                 
                             }else {
                                 progress.dismiss();

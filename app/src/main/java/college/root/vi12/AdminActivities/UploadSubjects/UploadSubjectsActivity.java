@@ -1,10 +1,10 @@
-package college.root.vi12.MySubjects;
+package college.root.vi12.AdminActivities.UploadSubjects;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,9 +28,9 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
+import college.root.vi12.Miscleneous.Toast;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
-import college.root.vi12.Miscleneous.Toast;
 
 public class UploadSubjectsActivity extends AppCompatActivity {
 
@@ -70,14 +70,13 @@ public class UploadSubjectsActivity extends AppCompatActivity {
 
 
         container = (LinearLayout) findViewById(R.id.container);
-        btnSave = (Button)findViewById(R.id.btnSaveSubjs);
 
         initializeViews();
 
         networkUtils = new NetworkUtils();
         toast = new Toast();
 
-        btnSave.setVisibility(View.INVISIBLE);
+//        btnSave.setVisibility(View.INVISIBLE);
 
         mimageBtnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,38 +99,13 @@ public class UploadSubjectsActivity extends AppCompatActivity {
                 };
                 // imgBtnRemove.setOnClickListener(thisListener);
                 container.addView(addView);
-                btnSave.setVisibility(View.VISIBLE);
 
 
             }
         });
 
 
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(UploadSubjectsActivity.this);
-                builder.setTitle("Save Subject group?");
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        dialogInterface.dismiss();
-                    }
-                });
-
-                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        listAllAddView();
-
-                    }
-                });
-                builder.show();
-                }
-        });
     }
 
     @Override
@@ -151,11 +125,28 @@ public class UploadSubjectsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.add:
+            case R.id.saveButton:
 
+                // save code
 
+                AlertDialog.Builder builder = new AlertDialog.Builder(UploadSubjectsActivity.this);
+                builder.setTitle("Save Subject group?");
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
+                        dialogInterface.dismiss();
+                    }
+                });
 
+                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        listAllAddView();
+
+                    }
+                });
+                builder.show();
                 break;
         }
                 return super.onOptionsItemSelected(item);

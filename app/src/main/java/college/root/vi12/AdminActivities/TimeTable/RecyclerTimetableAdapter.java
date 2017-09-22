@@ -1,8 +1,7 @@
-package college.root.vi12.AdminActivities;
+package college.root.vi12.AdminActivities.TimeTable;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.support.v4.content.res.TypedArrayUtils;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,9 +12,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import java.util.LinkedList;
-import java.util.List;
 
 import college.root.vi12.Miscleneous.Utils;
 import college.root.vi12.R;
