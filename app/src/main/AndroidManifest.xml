@@ -49,7 +49,7 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".Student.StudentProfile.UserProfile" />
         <activity android:name=".Student.StudentProfile.EditProfileActivity" />
-        <activity android:name=".AdminActivities.TimeTable.TableActivity"/>
+        <activity android:name=".AdminActivities.TimeTable.TableActivity" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -78,9 +78,18 @@
         <activity android:name=".AdminActivities.TimeTable.PreTimeTableSetup" />
         <activity android:name=".AdminActivities.TimeTable.TimeTableDisplayActivity" />
         <activity android:name=".Faculty.SearchStudentActivity" />
-        <activity android:name=".Faculty.FacultyProfileActivity" />
-        <activity android:name=".Faculty.FacultySubjectsActivity" />
-        <activity android:name=".Faculty.EditFacultyActivity"></activity>
+        <activity android:name=".Faculty.FacultyProfile.FacultyProfileActivity" />
+        <activity android:name=".Faculty.FacultySubjects.FacultySubjectsActivity" />
+        <activity android:name=".Faculty.FacultyProfile.EditFacultyActivity" />
+        <activity android:name=".Faculty.FacultyLogin.FacultyLogin"/>
+        <activity android:name=".Faculty.FacultyLogin.FacultyRegistrationActivity"/>
+
+
+        <service
+            android:name=".Faculty.Background_Services.FacultyFetchUpdateService"
+            android:exported="false" />
+
+        <activity android:name=".Faculty.FacultySubjects.RechedulingActivity"></activity>
     </application>
 
 </manifest>

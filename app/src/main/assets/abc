@@ -1,0 +1,20 @@
+{
+  "FacultyMap": [
+
+    {
+      "eid": "E013",
+      "Name": "Shailesh Thaware"
+    },
+    {
+      "eid": "E012",
+      "Name": "Shubham Purandare"
+    },
+    {
+      "eid": "E011",
+      "Name": "Harsh Kulkarni"
+    }
+
+
+  ]
+
+}

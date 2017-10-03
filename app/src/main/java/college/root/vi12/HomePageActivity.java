@@ -11,7 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import college.root.vi12.AdminActivities.AdminActivity;
-import college.root.vi12.Faculty.FacultyProfileActivity;
+import college.root.vi12.Faculty.FacultyProfile.FacultyProfileActivity;
+import college.root.vi12.Miscleneous.Utils;
 import college.root.vi12.Student.StudentProfile.UserProfile;
 
 public class HomePageActivity extends AppCompatActivity {
@@ -23,8 +24,10 @@ public class HomePageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+        Utils.isConnectionEstablished();
 
-    mbottomnav = (BottomNavigationView)findViewById(R.id.bottomnav);
+
+        mbottomnav = (BottomNavigationView)findViewById(R.id.bottomnav);
 
 
         mbottomnav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {

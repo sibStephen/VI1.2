@@ -13,7 +13,6 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import college.root.vi12.Miscleneous.Utils;
 import college.root.vi12.R;
 
 import static android.content.ContentValues.TAG;
@@ -78,7 +77,7 @@ public class RecyclerTimetableAdapter extends RecyclerView.Adapter<RecyclerTimet
                     final Dialog dialog = new Dialog(context);
                     dialog.setContentView(R.layout.dialogforlocation);
                     dialog.setCancelable(true);
-                    getAvailableLocations(position);
+                    //getAvailableLocations(position);
                     spinner_location = (Spinner) dialog.findViewById(R.id.spinner_location);
                     spinner_location.setAdapter(TableActivity.adapter_location);
                     Button button = (Button) dialog.findViewById(R.id.save);
@@ -127,19 +126,6 @@ public class RecyclerTimetableAdapter extends RecyclerView.Adapter<RecyclerTimet
 
     }
 
-    private void getAvailableLocations(int position) {
-
-        for (int i=position ; i<TableActivity.numberOfObjects ; i+=9){
-
-            if (tthelpers[i] != null){
-                String loc = tthelpers[i].getLocation();
-                 TableActivity.temp_room = Utils.removeElements(TableActivity.temp_room , loc);
-                Log.d(TAG, "getAvailableLocations: location "+loc +" removed from list");
-            }
-        }
-
-
-    }
 
 
 

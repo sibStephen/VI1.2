@@ -1,4 +1,4 @@
-package college.root.vi12.Faculty;
+package college.root.vi12.Faculty.FacultyProfile;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -34,15 +34,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import college.root.vi12.AdminActivities.TimeTable.TimeTableDisplayActivity;
-import college.root.vi12.Faculty.Realm.FacultyProfileRealm;
-import college.root.vi12.Faculty.Realm.FacultySubjRealmObj;
+import college.root.vi12.Faculty.Background_Services.FacultyFetchUpdateService;
+import college.root.vi12.Faculty.FacultyLogin.FacultyLogin;
+import college.root.vi12.Faculty.FacultySubjects.FacultySubjRealmObj;
+import college.root.vi12.Faculty.FacultySubjects.FacultySubjectsActivity;
 import college.root.vi12.Faculty.Realm.FacultyTTRealmObject;
 import college.root.vi12.Miscleneous.Toast;
 import college.root.vi12.Miscleneous.Utils;
 import college.root.vi12.NetworkTasks.CheckNetwork;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
-import college.root.vi12.Student.StudentProfile.EditProfileActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.socket.client.Socket;
@@ -56,7 +57,7 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
     Uri imageuri;
     Realm realm;
     FacultyProfileRealm userProfile;
-    TextView tvname, tvsurname, tvyear, tvdiv, tvbranch;
+    TextView tvname, tvsurname, tvbranch;
     CircleImageView profilePic;
     int GALLERY_REQUEST = 1;
     FacultyProfileRealm profile;
@@ -64,8 +65,12 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
     NetworkUtils networkUtils;
     Toast toast;
     FacultyTTRealmObject realmObject;
+    public static JSONObject currentLecObject = null;
     TextView tvFacdiv, tvFacyear, tvFaclec, tvFactime, tvFacLoc,tvFacdivnext, tvFacyearnext, tvFaclecnext,
             tvFactimenext, tvFacLocnext, tvFacDayNext;
+
+
+
 
 
     @Override
@@ -73,6 +78,21 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_faculty_profile);
 
+        realm = Realm.getDefaultInstance();
+
+        profile = realm.where(FacultyProfileRealm.class).findFirst();
+        if(profile == null){
+
+            Log.d(TAG, "onCreate: profile is null so creating new");
+            startActivity(new Intent(this , FacultyLogin.class));
+
+
+        }
+
+
+
+        startService(new Intent(this , FacultyFetchUpdateService.class));
+        Log.d(TAG, "onCreate: service called from onCreate");
 
         SharedPreferences sharedPreferences = getSharedPreferences("flag", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -93,26 +113,21 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
 
         initializeViews();
 
-      //  loadCurrentLectureUpdates();
         loadNextLectureUpdates();
-
-
 
         loadCurrentLecture();
 
         Log.d(TAG, "onCreate: calling TTnotif");
-      //  TTNotification();
 
         userProfile = realm.where(FacultyProfileRealm.class).findFirst();
-        // realm.beginTransaction();
 
         if (userProfile == null) {
             Log.d(TAG, "onCreate: user profile is null ");
         } else {
             tvname.setText(userProfile.getName());
             tvsurname.setText(userProfile.getSurname());
-            tvyear.setText(userProfile.getYear());
-            tvdiv.setText(userProfile.getDiv());
+           // tvyear.setText(userProfile.getYear());
+            //tvdiv.setText(userProfile.getDiv());
             Log.d(TAG, "onCreate: name is " + userProfile.getName());
             Log.d(TAG, "onCreate: surname is " + userProfile.getSurname());
 
@@ -135,8 +150,11 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
             profile = new FacultyProfileRealm();
 
 
+
         }
     }
+
+
 
         @Override
         public boolean onCreateOptionsMenu(Menu menu) {
@@ -297,31 +315,33 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
                             String time = currentObject.getString("Time");
                             Log.d(TAG, "loadCurrentLecture: time is "+time);
                             int index = time.indexOf(".");
-                            String hourOfLec = time.substring(0, index);
-                            String minOfLec = time.substring(index+1);
-                            int hourOfLecIint = Integer.parseInt(hourOfLec);
-                            int nextHour = hourOfLecIint+1;
-                            String nextHourString = String.valueOf(nextHour);
-                            int currentHourInt =  (Integer.parseInt(currentHour ));
-                            if (hourOfLecIint > currentHourInt  ){
+                            if(index != -1){
+                                String hourOfLec = time.substring(0, index);
+                                String minOfLec = time.substring(index+1);
+                                int hourOfLecIint = Integer.parseInt(hourOfLec);
+                                int currentHourInt =  (Integer.parseInt(currentHour ));
+                                if (hourOfLecIint > currentHourInt  ){
 
 
-                                tvFacdivnext.setText(currentObject.getString("Div"));
-                                if (hourOfLecIint > 12){
-                                    hourOfLecIint -= 12;
-                                    time = String.valueOf(hourOfLecIint) +"."+ minOfLec + " PM";
-                                }else{
-                                    time = String.valueOf(hourOfLecIint) +"."+ minOfLec + " AM";
+                                    tvFacdivnext.setText(currentObject.getString("Div"));
+                                    if (hourOfLecIint > 12){
+                                        hourOfLecIint -= 12;
+                                        time = String.valueOf(hourOfLecIint) +"."+ minOfLec + " PM";
+                                    }else{
+                                        time = String.valueOf(hourOfLecIint) +"."+ minOfLec + " AM";
 
-                                }
-                                tvFactimenext.setText(time);
-                                tvFaclecnext.setText(currentObject.getString("Subject"));
-                                tvFacLocnext.setText(currentObject.getString("Location"));
-                                tvFacyearnext.setText(currentObject.getString("Year"));
-                                tvFacDayNext.setText(days[cDay]);
-                                Log.d(TAG, "TTNotification: current lecture is"+currentObject);
-                                stillContinue = false;
-                               displayNotification(currentObject);
+                                    }
+                                    tvFactimenext.setText(time);
+                                    tvFaclecnext.setText(currentObject.getString("Subject"));
+                                    tvFacLocnext.setText(currentObject.getString("Location"));
+                                    tvFacyearnext.setText(currentObject.getString("Year"));
+                                    tvFacDayNext.setText(days[cDay]);
+                                    Log.d(TAG, "TTNotification: current lecture is"+currentObject);
+                                    stillContinue = false;
+                                    displayNotification(currentObject);
+                            }
+
+
                                 break;
                             }else{
                                 Log.d(TAG, "TTNotification: No lecture in this slot");
@@ -409,7 +429,7 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
 
             if( id == R.id.profile) {
 
-                Intent intent = new Intent(FacultyProfileActivity.this , EditProfileActivity.class);
+                Intent intent = new Intent(FacultyProfileActivity.this , EditFacultyActivity.class);
                 startActivity(intent);
 
             }
@@ -437,6 +457,19 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
         }
 
 
+        public void getFacultySubjects() throws URISyntaxException, JSONException {
+            Socket soc_Subj ;
+            soc_Subj = networkUtils.get();
+            final JSONObject obj1 = new JSONObject();
+            obj1.put("GrNumber","ComputerTESem2C");
+
+            obj1.put("collectionName" , "FacultyAllocation");
+
+            soc_Subj.emit("getAllData", obj1.toString());
+            soc_Subj.on("Result", staffListener );
+
+
+        }
 
     public void loadLocalTT(){
 
@@ -591,6 +624,8 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
 
                                         Log.d(TAG, "loadCurrentLecture: mins matched");
 
+                                        currentLecObject = currentObject;
+
                                         tvFaclec.setText(currentObject.getString("Subject"));
                                         tvFacLoc.setText(currentObject.getString("Location"));
                                         if (hourOfLecIint > 12){
@@ -695,6 +730,14 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
 
 
 
+        Emitter.Listener staffListener = new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+
+
+
+            }
+        };
 
 
         Emitter.Listener TTResultListener = new Emitter.Listener() {
@@ -749,6 +792,9 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
 
             }
         };
+
+
+
 
 
     }

@@ -1,4 +1,4 @@
-package college.root.vi12.Faculty;
+package college.root.vi12.Faculty.FacultySubjects;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

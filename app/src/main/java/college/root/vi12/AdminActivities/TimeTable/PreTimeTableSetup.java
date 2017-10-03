@@ -146,7 +146,12 @@ public class PreTimeTableSetup extends AppCompatActivity implements OnItemSelect
                 time_table_setup_intent.putExtra("SubjectObject" , subjetObject.toString());
                 time_table_setup_intent.putExtra("RoomObject" , roomObject.toString());
                 time_table_setup_intent.putExtra("StaffObject" , staffObject.toString());
-                time_table_setup_intent.putExtra("ttObject", ttJsonObject.toString());
+                if (ttJsonObject != null){
+                    time_table_setup_intent.putExtra("ttObject", ttJsonObject.toString());
+                }else {
+                    time_table_setup_intent.putExtra("ttObject", "NoData");
+
+                }
                 dialog.dismiss();
                 startActivity(time_table_setup_intent);
 

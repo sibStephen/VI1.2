@@ -1,4 +1,4 @@
-package college.root.vi12.Faculty;
+package college.root.vi12.Faculty.FacultySubjects;
 
 /**
  * Created by root on 6/9/17.

@@ -8,6 +8,15 @@ public class FacultyLoadHelper {
 
     String facultyName;
     String subjectName;
+    String FacultyCode;
+
+    public String getFacultyCode() {
+        return FacultyCode;
+    }
+
+    public void setFacultyCode(String facultyCode) {
+        FacultyCode = facultyCode;
+    }
 
     public String getFacultyName() {
         return facultyName;

@@ -33,7 +33,7 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
     String TAG = "Test";
     ArrayList<JSONObject> j1;
     NetworkUtils networkUtils;
-    String user= null;
+    public static String user= null;
     Button btnConfirm;
    static TextView tvday;
 
@@ -57,10 +57,15 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
             user = getIntent().getStringExtra("User");
             if(user.equals("Admin")){
                 btnConfirm.setVisibility(View.VISIBLE);
+
             }else {
                 btnConfirm.setVisibility(View.GONE);
 
             }
+            if (user.equals("Faculty")){
+
+            }
+
 
 
             obj = new JSONObject(str);
@@ -75,7 +80,7 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
         mLayoutManager = new GridLayoutManager(this,9,GridLayoutManager.HORIZONTAL,false);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new MyRecyclerViewAdapter(j1);
+        mAdapter = new MyRecyclerViewAdapter(j1 , TimeTableDisplayActivity.this);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
 
@@ -124,22 +129,12 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mAdapter = new MyRecyclerViewAdapter(j1);
+        mAdapter = new MyRecyclerViewAdapter(j1 , TimeTableDisplayActivity.this);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        ((MyRecyclerViewAdapter) mAdapter).setOnItemClickListener(new MyRecyclerViewAdapter
-                .MyClickListener() {
-            @Override
-            public void onItemClick(int position, View v) {
-                Log.i(LOG_TAG, " Clicked on Item " + position);
-            }
-        });
-    }
+
 
     public void confirm(View view) throws JSONException {
         AlertDialog.Builder builder = new AlertDialog.Builder(TimeTableDisplayActivity.this);

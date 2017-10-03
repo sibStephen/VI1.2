@@ -2,6 +2,7 @@ package college.root.vi12.AdminActivities.Facultyload;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.Iterator;
 
@@ -52,6 +56,52 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
     boolean SubjectsLoaded = true;
     RecyclerView.LayoutManager manager;
     int numOfObjects = 0;
+    JSONArray arrayOfFaculty;
+
+
+
+    public String loadJSONFromAsset() {
+        String json = null;
+        Log.d(TAG, "loadJSONFromAsset: loading file....");
+        String str = null;
+
+        try {
+
+            AssetManager assetManager = getAssets();
+
+            InputStream in = assetManager.open("abc.txt");
+            InputStreamReader isr = new InputStreamReader(in);
+            int charRead;
+            char [] inputBuffer = new char[100];
+
+            while((charRead = isr.read(inputBuffer))>0)
+            {
+                String readString = String.copyValueOf(inputBuffer,0,charRead);
+                str += readString;
+            }
+
+        //    getAssets().list("/app");
+           /* InputStream is = getAssets().open("FacultyMap.json");
+
+            int size = is.available();
+
+            byte[] buffer = new byte[size];
+
+            is.read(buffer);
+
+            is.close();
+
+            json = new String(buffer, "UTF-8");
+            Log.d(TAG, "loadJSONFromAsset: obtained json is "+json);*/
+
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return str;
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -60,6 +110,7 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
 
         setContentView(R.layout.activity_faculty_load);
 
+        Utils.loadHashMap();
          dialog = new ProgressDialog(FacultyLoadActivity.this);
 
         networkUtils = new NetworkUtils();
@@ -115,7 +166,7 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
 
         autocomplete_staff = (AutoCompleteTextView) findViewById(R.id.autocomplete_staff);
         ArrayAdapter<String> staff_adapter;
-        staff = new String[]{"Harsh kulkarni", "harshal", "shashi", "shubham purandare"};
+        staff = new String[]{ "Shailesh Thaware", "Shubham Purandare"};
         staff_adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, staff);
         autocomplete_staff.setHint("Enter faculty name");
         autocomplete_staff.setThreshold(1);
@@ -132,10 +183,15 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
                         helpers[i] = new FacultyLoadHelper();
                         helpers[i].setFacultyName(fac);
                         helpers[i].setSubjectName(input_subject);
+                        helpers[i].setFacultyCode(Utils.mapOfFaculty.get(fac));
+                        Log.d(TAG, "onItemClick: code is "+Utils.mapOfFaculty.get(fac));
+
                         break;
                     }else {
                         if(helpers[i].getSubjectName().equals(input_subject)){
                             helpers[i].setFacultyName(fac);
+                            helpers[i].setFacultyCode(Utils.mapOfFaculty.get(fac));
+                            Log.d(TAG, "onItemClick: code is "+Utils.mapOfFaculty.get(fac));
                             break;
                         }
                     }
@@ -190,7 +246,7 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
             Log.d(TAG, "onItemSelected: fetching subjects ");
             dialog.setTitle("Fetching Subjects... ");
             dialog.show();
-            String id = input_year+input_branch+input_semester;
+            String id = input_branch+input_year+input_semester;
             Socket soc_Subj;
             try {
                 soc_Subj = networkUtils.get();
@@ -336,7 +392,7 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
 
                                         JSONObject j =new JSONObject();
                                         j.put("Subject", helpers[i].getSubjectName());
-                                        j.put("Faculty", helpers[i].getFacultyName());
+                                        j.put("Faculty", helpers[i].getFacultyCode());
                                         store_data.put(j);
                                     }
 

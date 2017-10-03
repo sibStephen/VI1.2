@@ -1,4 +1,4 @@
-package college.root.vi12.Faculty;
+package college.root.vi12.Faculty.FacultyProfile;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -31,7 +31,7 @@ public class EditFacultyActivity extends AppCompatActivity {
 
 
         viewPager=(ViewPager)findViewById(R.id.facview);
-        viewPager.setAdapter(new EditFacultyActivity.CustomAdapter(getSupportFragmentManager(),getApplicationContext()));
+        viewPager.setAdapter(new EditFacultyActivity.CustomAdapter(getSupportFragmentManager(), EditFacultyActivity.this));
         tabLayout=(TabLayout)findViewById(R.id.FactabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -57,8 +57,8 @@ public class EditFacultyActivity extends AppCompatActivity {
 
 
     private class CustomAdapter extends FragmentPagerAdapter {
-        private String fragments []={"MY INFO","DETAILS","RESIDENTIAL INFO","ACADEMIC DETAILS","PARENT INFO", "Certificates"};
-        public CustomAdapter(FragmentManager supportFragmentManager, Context applicationContext) {
+        private String fragments []={"MY INFO"/*"DETAILS","RESIDENTIAL INFO","ACADEMIC DETAILS","PARENT INFO", "Certificates"*/};
+        CustomAdapter(FragmentManager supportFragmentManager, Context applicationContext) {
             super(supportFragmentManager);
         }
 

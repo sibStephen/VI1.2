@@ -1,8 +1,8 @@
-package college.root.vi12.Faculty;
+package college.root.vi12.Faculty.FacultySubjects;
 
 import android.app.ProgressDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,7 +14,6 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
-import college.root.vi12.Faculty.Realm.FacultySubjRealmObj;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
 import io.realm.Realm;

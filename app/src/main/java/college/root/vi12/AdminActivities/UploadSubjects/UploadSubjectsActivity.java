@@ -1,5 +1,6 @@
 package college.root.vi12.AdminActivities.UploadSubjects;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -22,6 +22,7 @@ import android.widget.Spinner;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,17 +30,17 @@ import java.util.Iterator;
 import java.util.List;
 
 import college.root.vi12.Miscleneous.Toast;
+import college.root.vi12.Miscleneous.Utils;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
-public class UploadSubjectsActivity extends AppCompatActivity {
+public class UploadSubjectsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
 
-    AutoCompleteTextView textIn;
-    Button buttonAdd, btnSave;
     LinearLayout container;
     String TAG ="Test";
-    ImageButton imgBtnAdd;
     ImageButton imgBtnRemove;
     Spinner spDept , spYear,  spSemester;
     List<String> department;
@@ -49,6 +50,8 @@ public class UploadSubjectsActivity extends AppCompatActivity {
     NetworkUtils networkUtils ;
     Toast toast;
     ImageButton mimageBtnAdd;
+    ProgressDialog dialog;
+
 
 
     private static final String[] NUMBER = new String[]{
@@ -61,9 +64,6 @@ public class UploadSubjectsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_subjects);
 
-        adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line, NUMBER);
-
 
 
 
@@ -72,11 +72,14 @@ public class UploadSubjectsActivity extends AppCompatActivity {
         container = (LinearLayout) findViewById(R.id.container);
 
         initializeViews();
+        spDept.setOnItemSelectedListener(this);
+        spSemester.setOnItemSelectedListener(this);
+        spYear.setOnItemSelectedListener(this);
 
         networkUtils = new NetworkUtils();
         toast = new Toast();
 
-//        btnSave.setVisibility(View.INVISIBLE);
+
 
         mimageBtnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +120,26 @@ public class UploadSubjectsActivity extends AppCompatActivity {
     }
 
 
+    public void addViews(final String name , final String code){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                LayoutInflater layoutInflater =
+                        (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final View addView = layoutInflater.inflate(R.layout.row, null);
+                AutoCompleteTextView textOut = (AutoCompleteTextView)addView.findViewById(R.id.actvnewsubj);
+                AutoCompleteTextView textCode = (AutoCompleteTextView)addView.findViewById(R.id.actvnewCode);
+
+                textOut.setAdapter(adapter);
+
+                container.addView(addView);
+
+                textOut.setText(name);
+                textCode.setText(code);
+            }
+        });
+
+    }
 
 
 
@@ -244,12 +267,17 @@ public class UploadSubjectsActivity extends AppCompatActivity {
     }// end of function
 
 
+
+
     public void initializeViews(){
 
         mimageBtnAdd = (ImageButton) findViewById(R.id.imgBtnAdd);
 
+        dialog = new ProgressDialog(UploadSubjectsActivity.this);
+        dialog.setTitle("Please wait.....");
 
         department = new ArrayList<String>();
+        department.add(" ");
         department.add("Computer");
         department.add("Mechanical");
         department.add("E&TC");
@@ -257,6 +285,7 @@ public class UploadSubjectsActivity extends AppCompatActivity {
         department.add("IT");
 
         Year = new ArrayList<String>();
+        Year.add(" ");
         Year.add("FE");
         Year.add("SE");
         Year.add("TE");
@@ -264,6 +293,7 @@ public class UploadSubjectsActivity extends AppCompatActivity {
         Year.add("ME");
 
         Semester = new ArrayList<>();
+        Semester.add(" ");
         Semester.add("Sem1");
         Semester.add("Sem2");
 
@@ -271,6 +301,10 @@ public class UploadSubjectsActivity extends AppCompatActivity {
         spDept = (Spinner)findViewById(R.id.spDept);
         spYear = (Spinner)findViewById(R.id.spYear);
         spSemester = (Spinner)findViewById(R.id.spSem);
+
+        adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, NUMBER);
+
 
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,department );
@@ -291,50 +325,107 @@ public class UploadSubjectsActivity extends AppCompatActivity {
         spSemester.setAdapter(adapterSem);
 
 
-        spSemester.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                semester = adapterView.getItemAtPosition(position).toString();
-                Log.d(TAG, "onItemSelected: Semester is selected with "+semester);
 
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        spYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                branch  = adapterView.getItemAtPosition(position).toString();
-                Log.d(TAG, "onItemSelected: Branch is selected with "+branch);
-
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-
-        spDept.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                year = adapterView.getItemAtPosition(position).toString();
-                Log.d(TAG, "onItemSelected: year is selected with "+year);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
 
     }
+    private void fetchSubjects() throws URISyntaxException, JSONException {
 
+            //   dialog.show();
+
+        Socket soc_Subj ;
+        soc_Subj = networkUtils.get();
+        final JSONObject obj1 = new JSONObject();
+        obj1.put("GrNumber",year+branch+semester);
+
+        obj1.put("collectionName" , "Subjects");
+
+        soc_Subj.emit("getAllData", obj1.toString());
+        soc_Subj.on("Result", subjectListener );
+
+
+    }
+    Emitter.Listener subjectListener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+
+            if (!args[0].equals("0") ){
+
+                try {
+                    final org.json.JSONArray[] array = {(org.json.JSONArray) args[0]};
+
+                    final JSONObject obj = (JSONObject) array[0].get(0);
+                    int i=0;
+                    // count[0] = obj.getString("SubjectCount");
+                    String  count = obj.getString("SubjectCount");
+                    Log.d(TAG, "run: count is "+obj.getString("SubjectCount"));
+                    Log.d(TAG, "run: count variavle is "+count);
+                    Log.d(TAG, "run: String array of name declared with count "+count);
+
+
+                    Iterator<?> keys = obj.keys();
+                    Log.d(TAG, "run: kes are "+keys);
+
+                    while( keys.hasNext() ) {
+                        String key = (String) keys.next();
+                        Log.d(TAG, "run: key is " + key);
+                        Log.d(TAG, "run: and value of key is " + obj.getString(key));
+
+                        if (key.equals("_id") || key.equals("SubjectCount")) {
+                            // do not store it in name array
+                        } else {
+
+                            addViews(key , obj.getString(key));
+
+                        }
+                    }
+                //    dialog.dismiss();
+
+
+
+
+                        } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Utils.toast(UploadSubjectsActivity.this , "Subjects not yet loaded...");
+                 //       dialog.dismiss();
+
+                    }
+                });
+            }
+
+        }
+            };
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+        Log.d(TAG, "onItemSelected: called...");
+        year = spYear.getSelectedItem().toString();
+        branch = spDept.getSelectedItem().toString();
+        semester = spSemester.getSelectedItem().toString();
+        Log.d(TAG, "onItemSelected: branch is "+branch);
+        Log.d(TAG, "onItemSelected: sem is "+semester);
+        Log.d(TAG, "onItemSelected: year is "+year);
+        if (!year.equals(" ") && !semester.equals(" ") && !branch.equals(" ")){
+
+            try {
+                fetchSubjects();
+            }  catch (JSONException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }

@@ -27,12 +27,11 @@ public class NetworkUtils {
 
 
     public Socket socket;
-    public Thread threadConnect , threadListen, threadDisconnect;
     public  String TAG = "Test";
     public  String collectionName;
     public  JSONObject object;
-    public String ipaddress = "http://192.168.1.41:8083/";
-    Toast toast;
+    public static  String ipaddress = "http://192.168.1.34:8083/";
+    private Toast toast;
 
 
     public NetworkUtils() {
@@ -74,18 +73,18 @@ public class NetworkUtils {
 
 
     public void disconnectSocketAsync(){
-        threadDisconnect = new Thread(new Runnable() {
+        Thread threadDisconnect = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     socket.disconnect();
-                    if (socket.connected()){
+                    if (socket.connected()) {
 
                         Log.d(TAG, "run: socket still connected");
-                    }else {
+                    } else {
                         Log.d(TAG, "disconnectSocket: socket disconnected");
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
 
@@ -97,19 +96,23 @@ public class NetworkUtils {
 
 
     public Socket get() throws URISyntaxException {
-        socket = IO.socket(ipaddress);
+
+            socket = IO.socket(ipaddress);
+
         Log.d(TAG, "run: socket created successfully");
        if (!socket.connected()){
            socket.connect();
+           Log.d(TAG, "get: connection trying..");
 
        }
+
         return socket;
 
     }
 
 
     public  Socket initializeSocketAsync() throws URISyntaxException {
-        threadConnect = new Thread(new Runnable() {
+        Thread threadConnect = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -117,14 +120,14 @@ public class NetworkUtils {
                     Log.d(TAG, "run: socket created successfully");
                     Log.d(TAG, "run: socket connected successfully");
 
-                    if (socket.connected()){
+                    if (socket.connected()) {
                         Log.d(TAG, "run: socket is connected ");
-                    }else {
+                    } else {
                         Log.d(TAG, "run: socket is not connected..");
                     }
 
                 } catch (URISyntaxException e) {
-                    Log.d(TAG, "run: Error "+e.getMessage());
+                    Log.d(TAG, "run: Error " + e.getMessage());
                 }
 
 
@@ -167,6 +170,8 @@ public void emitSocket(final String collectionName , final JSONObject object){
     });
 
     thread.start();
+
+
 }
 
 
@@ -175,30 +180,30 @@ public  void listener(final String name  , final Activity activity , final Conte
     Log.d(TAG, "listener: Listener was called ");
 
 
-    threadListen = new Thread(new Runnable() {
+    Thread threadListen = new Thread(new Runnable() {
         @Override
         public void run() {
 
             try {
-                socket=  get();
+                socket = get();
 
                 socket.on(name, new Emitter.Listener() {
                     @Override
                     public void call(Object... args) {
 
 
-                        int result = (int)args[0];
+                        int result = (int) args[0];
                         Log.d(TAG, "call: in listener thread");
-                        Log.d(TAG, "call: value returned is "+result);
-                        if (result == 1){
+                        Log.d(TAG, "call: value returned is " + result);
+                        if (result == 1) {
 
                             toast = new Toast();
 //                            toast1.dismissProgressDialog(activity);
-                            toast.showToast(activity , "Details saved successfully ");
+                            toast.showToast(activity, "Details saved successfully ");
 
 
                             Log.d(TAG, "call: results saved successfully on to server");
-                        }else {
+                        } else {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -211,11 +216,10 @@ public  void listener(final String name  , final Activity activity , final Conte
                         }
                     }
                 });
-            } catch (URISyntaxException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-                Log.d(TAG, "run: error "+e.getMessage());
+                Log.d(TAG, "run: error " + e.getMessage());
             }
-
 
 
         }

@@ -1,4 +1,4 @@
-package college.root.vi12.Faculty;
+package college.root.vi12.Faculty.FacultyProfile;
 
 
 import android.content.ContentResolver;
@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import college.root.vi12.Faculty.Realm.FacultyProfileRealm;
 import college.root.vi12.Miscleneous.Toast;
 import college.root.vi12.NetworkTasks.CheckNetwork;
 import college.root.vi12.NetworkTasks.NetworkUtils;
@@ -63,44 +62,18 @@ public class FragmentFacultyProfile extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-
-
-
-
         return inflater.inflate(R.layout.fragment_fragment_faculty_profile, container, false);
     }
 
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public  void initializeViews(View view){
 
         realm = Realm.getDefaultInstance();
 
         networkUtils = new NetworkUtils() ;
 
-
-
-        //getActivity().getString(R.array.religion);
-        try {
-            socket = networkUtils.get();
-
-            Log.d(TAG, "onCreateView: listener called");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-
-        CheckNetwork checkNetwork = new CheckNetwork();
-        boolean isNetWorkAvailable = CheckNetwork.isNetWorkAvailable(getActivity());
-        if (!isNetWorkAvailable){
-            toast = new Toast();
-            toast.showToast(getActivity() , "No internet connection");
-        }
-
-
-
         realm = Realm.getDefaultInstance();
+
         name=(EditText)view.findViewById(R.id.facetname);
         surname=(EditText)view.findViewById(R.id.facetsurname);
         spBranch = (Spinner)view.findViewById(R.id.facspBranch);
@@ -168,15 +141,35 @@ public class FragmentFacultyProfile extends Fragment {
                 android.R.layout.simple_spinner_item,listOfYear);
         yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spYear.setAdapter(yearAdapter);
+        profile = new FacultyProfileRealm();
 
 
 
         save=(Button)view.findViewById(R.id.facsave);
+    }
 
-        profile = new FacultyProfileRealm();
-        profile = realm.where(FacultyProfileRealm.class).findFirst();
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
+
+
+
+
+        boolean isNetWorkAvailable = CheckNetwork.isNetWorkAvailable(getActivity());
+        if (!isNetWorkAvailable){
+            toast = new Toast();
+            toast.showToast(getActivity() , "No internet connection");
+        }
+
+
+
+        initializeViews(view);
+
         if(profile != null){
             name.setText(profile.getName());
+            Log.d(TAG, "onViewCreated: name is "+profile.getName());
             surname.setText(profile.getSurname());
             pos =  branchAdapter.getPosition(profile.getBranch());
             spBranch.setSelection(pos);
@@ -225,6 +218,7 @@ public class FragmentFacultyProfile extends Fragment {
                             realm.beginTransaction();
                             profile = new FacultyProfileRealm();
                             profile.setUid(0);
+                            profile.setEid("E103");
                             profile.setName(name.getText().toString());
                             profile.setSurname(surname.getText().toString());
                             profile.setYear(spYear.getSelectedItem().toString());

@@ -73,6 +73,7 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
     Toast toast;
     String ttID;
     Context context ;
+    public static JSONObject currentLecObject = null;
     TTRealmObject realmObject ;
     TextView  tvStlec, tvSttime, tvStLoc, tvStlecnext,
             tvSttimenext, tvStLocnext, tvStFaculty,tvStFacultynext , tvStdayNext;
@@ -146,7 +147,7 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
     }
 
-    @Override
+  @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
 
@@ -279,7 +280,7 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
     }
 
-        @RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
     protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -547,6 +548,8 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
                                 if (Integer.parseInt(currentMins)>= Integer.parseInt(minOfLec)) {
 
 
+                                    currentLecObject = currentObject;
+                                    Log.d(TAG, "loadCurrentLecture: current object is"+currentObject);
                                     tvStlec.setText(currentObject.getString("Subject"));
                                     tvStLoc.setText(currentObject.getString("Location"));
                                     if (hourOfLecIint > 12){
@@ -577,6 +580,9 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
                                     tvSttime.setText(time);
                                     tvStFaculty.setText(currentObject.getString("Staff"));
                                     Log.d(TAG, "TTNotification: current lecture is" + currentObject);
+                                    currentLecObject = currentObject;
+                                    Log.d(TAG, "loadCurrentLecture: current object is"+currentObject);
+
                                     break;
                                 }
 

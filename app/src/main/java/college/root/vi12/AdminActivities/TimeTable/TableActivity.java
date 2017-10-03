@@ -158,21 +158,22 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
 
         ttObject = new JSONObject();
         String tt = getIntent().getStringExtra("ttObject");
-        if (tt != null){
-            try {
-                ttObject = new JSONObject(tt);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            if (ttObject != null){
-
+        if (tt != null && !tt.equals("NoData")){
                 try {
-                    loadPreviousEntryOfTT(ttObject);
+                    ttObject = new JSONObject(tt);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                if (ttObject != null){
 
-            }
+                    try {
+                        loadPreviousEntryOfTT(ttObject);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
 
         }else {
 
