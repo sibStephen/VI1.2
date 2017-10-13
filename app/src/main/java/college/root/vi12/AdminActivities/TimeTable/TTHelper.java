@@ -11,6 +11,15 @@ public class TTHelper {
     String time;
     String subject;
     String faculty;
+    String facultyEID;
+
+    public String getFacultyEID() {
+        return facultyEID;
+    }
+
+    public void setFacultyEID(String facultyEID) {
+        this.facultyEID = facultyEID;
+    }
 
     public String getSubject() {
         return subject;

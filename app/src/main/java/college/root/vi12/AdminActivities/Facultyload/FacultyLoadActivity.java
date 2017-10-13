@@ -56,7 +56,6 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
     boolean SubjectsLoaded = true;
     RecyclerView.LayoutManager manager;
     int numOfObjects = 0;
-    JSONArray arrayOfFaculty;
 
 
 
@@ -110,8 +109,51 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
 
         setContentView(R.layout.activity_faculty_load);
 
+        initialize();
+
+            autocomplete_staff.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String fac = autocomplete_staff.getText().toString();
+                Log.d(TAG, "onItemClick: numofobjs are "+numOfObjects);
+                for (int i=0 ; i<numOfObjects ; i++){
+                    if (helpers[i] == null){
+                        // object not yet created
+                        helpers[i] = new FacultyLoadHelper();
+                        helpers[i].setFacultyName(fac);
+                        helpers[i].setSubjectName(input_subject);
+                        helpers[i].setFacultyCode(Utils.mapOfFaculty.get(fac));
+                        Log.d(TAG, "onItemClick: code is "+Utils.mapOfFaculty.get(fac));
+
+                        break;
+                    }else {
+                        if(helpers[i].getSubjectName().equals(input_subject)){
+                            helpers[i].setFacultyName(fac);
+                            helpers[i].setFacultyCode(Utils.mapOfFaculty.get(fac));
+                            Log.d(TAG, "onItemClick: code is "+Utils.mapOfFaculty.get(fac));
+                            break;
+                        }
+                    }
+
+                }
+                adapter = new FacultyAllocationAdapter(FacultyLoadActivity.this , helpers);
+                recylerFacAllocation.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+                autocomplete_staff.setText("");
+                Utils.toast(FacultyLoadActivity.this , "Faculty saved...");
+
+
+            }
+        });
+
+
+    }
+
+    private void initialize() {
+
         Utils.loadHashMap();
-         dialog = new ProgressDialog(FacultyLoadActivity.this);
+        dialog = new ProgressDialog(FacultyLoadActivity.this);
 
         networkUtils = new NetworkUtils();
         recylerFacAllocation = (RecyclerView) findViewById(R.id.recyclerFacultyAllocation);
@@ -166,47 +208,11 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
 
         autocomplete_staff = (AutoCompleteTextView) findViewById(R.id.autocomplete_staff);
         ArrayAdapter<String> staff_adapter;
-        staff = new String[]{ "Shailesh Thaware", "Shubham Purandare"};
+        staff = new String[]{ "Shailesh Thaware", "shubham purandare"};
         staff_adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, staff);
         autocomplete_staff.setHint("Enter faculty name");
         autocomplete_staff.setThreshold(1);
         autocomplete_staff.setAdapter(staff_adapter);
-        autocomplete_staff.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                String fac = autocomplete_staff.getText().toString();
-                Log.d(TAG, "onItemClick: numofobjs are "+numOfObjects);
-                for (int i=0 ; i<numOfObjects ; i++){
-                    if (helpers[i] == null){
-                        // object not yet created
-                        helpers[i] = new FacultyLoadHelper();
-                        helpers[i].setFacultyName(fac);
-                        helpers[i].setSubjectName(input_subject);
-                        helpers[i].setFacultyCode(Utils.mapOfFaculty.get(fac));
-                        Log.d(TAG, "onItemClick: code is "+Utils.mapOfFaculty.get(fac));
-
-                        break;
-                    }else {
-                        if(helpers[i].getSubjectName().equals(input_subject)){
-                            helpers[i].setFacultyName(fac);
-                            helpers[i].setFacultyCode(Utils.mapOfFaculty.get(fac));
-                            Log.d(TAG, "onItemClick: code is "+Utils.mapOfFaculty.get(fac));
-                            break;
-                        }
-                    }
-
-                }
-                adapter = new FacultyAllocationAdapter(FacultyLoadActivity.this , helpers);
-                recylerFacAllocation.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-                autocomplete_staff.setText("");
-                Utils.toast(FacultyLoadActivity.this , "Faculty saved...");
-
-
-            }
-        });
-
 
     }
 
@@ -392,7 +398,8 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
 
                                         JSONObject j =new JSONObject();
                                         j.put("Subject", helpers[i].getSubjectName());
-                                        j.put("Faculty", helpers[i].getFacultyCode());
+                                        j.put("FacultyCode", helpers[i].getFacultyCode());
+                                        j.put("FacultyName" ,helpers[i].getFacultyName());
                                         store_data.put(j);
                                     }
 
@@ -469,7 +476,9 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
                     for (int i=0 ; i<array.length() ; i++){
                         JSONObject obj1 = array.getJSONObject(i);
                         helpers[i] = new FacultyLoadHelper();
-                        helpers[i].setFacultyName(obj1.getString("Faculty"));
+                        Utils.loadHashMap();
+                        String name = Utils.mapFacultyID.get(obj1.getString("Faculty"));
+                        helpers[i].setFacultyName(name);
                         helpers[i].setSubjectName(obj1.getString("Subject"));
                         Log.d(TAG, "call: obj is "+obj1);
 

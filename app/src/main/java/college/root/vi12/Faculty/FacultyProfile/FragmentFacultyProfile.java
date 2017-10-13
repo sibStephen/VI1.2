@@ -3,6 +3,7 @@ package college.root.vi12.Faculty.FacultyProfile;
 
 import android.content.ContentResolver;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,12 +21,12 @@ import android.widget.Spinner;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import college.root.vi12.Faculty.FacultyLogin.FacultyLogin;
 import college.root.vi12.Miscleneous.Toast;
 import college.root.vi12.NetworkTasks.CheckNetwork;
 import college.root.vi12.NetworkTasks.NetworkUtils;
@@ -36,8 +37,8 @@ import io.socket.client.Socket;
 public class FragmentFacultyProfile extends Fragment {
 
     Realm realm;
-    EditText name,surname,year,div,branch,grno , etSem;
-    Button save,back;
+    EditText name,surname;
+    Button save;
     FacultyProfileRealm profile;
     Uri imageuri;
     String TAG = "Test";
@@ -152,11 +153,6 @@ public class FragmentFacultyProfile extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
-
-
-
         boolean isNetWorkAvailable = CheckNetwork.isNetWorkAvailable(getActivity());
         if (!isNetWorkAvailable){
             toast = new Toast();
@@ -166,6 +162,7 @@ public class FragmentFacultyProfile extends Fragment {
 
 
         initializeViews(view);
+        profile = realm.where(FacultyProfileRealm.class).findFirst();
 
         if(profile != null){
             name.setText(profile.getName());
@@ -214,26 +211,7 @@ public class FragmentFacultyProfile extends Fragment {
                         profile = realm.where(FacultyProfileRealm.class).findFirst();
                         if(profile==null) {
                             Log.d(TAG, "save: profile is null");
-                            //     profile = realm.createObject(Student_profile.class);
-                            realm.beginTransaction();
-                            profile = new FacultyProfileRealm();
-                            profile.setUid(0);
-                            profile.setEid("E103");
-                            profile.setName(name.getText().toString());
-                            profile.setSurname(surname.getText().toString());
-                            profile.setYear(spYear.getSelectedItem().toString());
-                            profile.setDiv(spDiv.getSelectedItem().toString());
-                            profile.setBranch(spBranch.getSelectedItem().toString());
-                            profile.setImagePath(String.valueOf(imageuri));
-                            profile.setSemester(spSem.getSelectedItem().toString());
-                            realm.commitTransaction();
-
-                            realm.executeTransaction(new Realm.Transaction() {
-                                @Override
-                                public void execute(Realm realm) {
-                                    realm.copyToRealmOrUpdate(profile);
-                                }
-                            });
+                           startActivity(new Intent(getActivity() , FacultyLogin.class));
                         }
                         else
                         {
@@ -249,8 +227,8 @@ public class FragmentFacultyProfile extends Fragment {
                             myyear = spYear.getSelectedItem().toString();
                             sem = spSem.getSelectedItem().toString();
 
-                            profile.setName(name.getText().toString());
-                            profile.setSurname(surname.getText().toString());
+                            profile.setName(myname);
+                            profile.setSurname(mysurname);
                             profile.setYear(myyear);
                             profile.setDiv(mydiv);
                             profile.setBranch(mybranch);
@@ -264,6 +242,7 @@ public class FragmentFacultyProfile extends Fragment {
                                 }
                             });
                             // send data to d server
+                            sendToServer();
                             Log.d(TAG, "onClick: name is "+myname);
                             Log.d(TAG, "onClick: gr number  is "+mygrno);
                             Log.d(TAG, "onClick: branch is "+mybranch);
@@ -272,54 +251,12 @@ public class FragmentFacultyProfile extends Fragment {
                             Log.d(TAG, "onClick: surname  is "+mysurname);
 
 
-                            try {
-                                socket = networkUtils.initializeSocketAsync();
-                                JSONObject basicUserDetails = new JSONObject();
-                                basicUserDetails.put("my_name" , myname);
-                                basicUserDetails.put("surname" , mysurname);
-                                basicUserDetails.put("branch" , mybranch);
-                                basicUserDetails.put("year" , myyear);
-                                basicUserDetails.put("GRNumber" , mygrno);
-                                basicUserDetails.put("div" , mydiv);
-                                basicUserDetails.put("sem" , sem);
-                                basicUserDetails.put("Timestamp",networkUtils.getLocalIpAddress()+" "+ new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(Calendar.getInstance().getTime() ));
 
-
-
-
-
-                                String[] contents = {"my_name" , "surname" , "branch", "year"
-                                        , "div","sem","Timestamp" };
-                                StringBuilder sb = new StringBuilder();
-                                for (int j=0 ; j<contents.length; j++){
-                                    Log.d(TAG, "onClick: "+contents[j]);
-                                    sb.append(contents[j]+",");
-                                }
-                                JSONObject finalObj = new JSONObject();
-                                finalObj.put("obj" , basicUserDetails.toString());
-                                finalObj.put("contents" , sb.toString());
-                                finalObj.put("Length" , contents.length);
-                                finalObj.put("collectionName" , "basicUserDetails");
-                                finalObj.put("grNumber" , profile.getEid());
-
-                                networkUtils.emitSocket("Allinfo",finalObj);
-                                networkUtils.disconnectSocketAsync();
-                                networkUtils.listener("Allinfo" , getActivity() , getContext(), toast); //success  listener
-
-
-
-
-
-
-
-                            }  catch (JSONException e) {
-                                Log.d(TAG, "onClick: json error "+e.getMessage());
-                            } catch (URISyntaxException e) {
-                                e.printStackTrace();
-                            }
 
                         }
                     }
+
+
                 });
                 builder.show();
 
@@ -338,4 +275,51 @@ public class FragmentFacultyProfile extends Fragment {
 
 
     }
+
+    private void sendToServer() {
+
+        try {
+            JSONObject basicUserDetails = new JSONObject();
+            basicUserDetails.put("my_name" , myname);
+            basicUserDetails.put("surname" , mysurname);
+            basicUserDetails.put("branch" , mybranch);
+            basicUserDetails.put("year" , myyear);
+            basicUserDetails.put("GRNumber" , mygrno);
+            basicUserDetails.put("div" , mydiv);
+            basicUserDetails.put("sem" , sem);
+            basicUserDetails.put("Timestamp",networkUtils.getLocalIpAddress()+" "+ new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(Calendar.getInstance().getTime() ));
+
+
+
+
+
+            String[] contents = {"my_name" , "surname" , "branch", "year"
+                    , "div","sem","Timestamp" };
+            StringBuilder sb = new StringBuilder();
+            for (int j=0 ; j<contents.length; j++){
+                Log.d(TAG, "onClick: "+contents[j]);
+                sb.append(contents[j]+",");
+            }
+            JSONObject finalObj = new JSONObject();
+            finalObj.put("obj" , basicUserDetails.toString());
+            finalObj.put("contents" , sb.toString());
+            finalObj.put("Length" , contents.length);
+            finalObj.put("collectionName" , "basicUserDetails");
+            finalObj.put("grNumber" , profile.getEid());
+
+            networkUtils.emitSocket("Allinfo",finalObj);
+            networkUtils.disconnectSocketAsync();
+            networkUtils.listener("Allinfo" , getActivity() , getContext(), toast); //success  listener
+
+
+
+
+
+
+
+        }  catch (JSONException e) {
+            Log.d(TAG, "onClick: json error "+e.getMessage());
+        }
+    }
+
 }

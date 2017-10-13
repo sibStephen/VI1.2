@@ -10,11 +10,11 @@ import io.realm.annotations.PrimaryKey;
 public class LoggedIn extends RealmObject {
 
     @PrimaryKey
-    int id;
+    private int id;
 
-    boolean isLoggedIn = false;
+    private boolean isLoggedIn = false;
 
-    public boolean isLoggedIn() {
+    boolean isLoggedIn() {
         return isLoggedIn;
     }
 
@@ -26,7 +26,7 @@ public class LoggedIn extends RealmObject {
         this.id = id;
     }
 
-    public void setLoggedIn(boolean loggedIn) {
+    void setLoggedIn(boolean loggedIn) {
         isLoggedIn = loggedIn;
     }
 }

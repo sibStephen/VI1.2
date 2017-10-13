@@ -36,11 +36,6 @@ public class RechedulingActivity extends AppCompatActivity {
         setDataToViews();
         initializeRealmStuff();
 
-
-
-
-
-
     }
 
     private void initializeRealmStuff() {
@@ -91,6 +86,7 @@ public class RechedulingActivity extends AppCompatActivity {
                     object.put("RequestType" , "LecRescheduleResponse");
                     utils.emitSocket("RespondToReq" , object);
                     Utils.toast(RechedulingActivity.this , "Request accepted...");
+                    finish();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -120,8 +116,10 @@ public class RechedulingActivity extends AppCompatActivity {
                     o.put("isAccepted", "0");
                     o.put("EID" , profile.getEid());
                     o.put("RequestType" , "LecRescheduleResponse");
-
                     utils.emitSocket("RespondToReq" , o);
+                    Utils.toast(RechedulingActivity.this , "Request accepted...");
+                    finish();
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -30,7 +30,7 @@ public class NetworkUtils {
     public  String TAG = "Test";
     public  String collectionName;
     public  JSONObject object;
-    public static  String ipaddress = "http://192.168.1.34:8083/";
+    public static  String ipaddress = "http://192.168.1.103:8083/";
     private Toast toast;
 
 

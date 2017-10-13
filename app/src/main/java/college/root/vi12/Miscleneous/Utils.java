@@ -35,9 +35,13 @@ public class Utils {
 
    public static HashMap<String , String> mapOfFaculty = new HashMap<>();
 
+    public static HashMap<String , String> mapFacultyID = new HashMap<>();
+
     static boolean  isConnected = false;
 
     private static String TAG = "connection";
+    public static String[] days = {"Monday" , "Tuesday" , "Wednesday" , "Thursday" , "Friday" , "Saturday"};
+
 
     public Utils() throws URISyntaxException {
     }
@@ -46,6 +50,8 @@ public class Utils {
     public static void loadHashMap(){
         mapOfFaculty.put("Shailesh Thaware" , "E103");
         mapOfFaculty.put("shubham purandare" , "E104");
+        mapFacultyID.put("E103" , "shubham purandare");
+        mapFacultyID.put("E104" , "Shailesh Thaware");
 
     }
 

@@ -13,6 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import college.root.vi12.Miscleneous.Utils;
 import college.root.vi12.R;
 
 import static android.content.ContentValues.TAG;
@@ -98,6 +99,7 @@ public class RecyclerTimetableAdapter extends RecyclerView.Adapter<RecyclerTimet
                             tthelpers[position].setLocation(loc);
                             tthelpers[position].setFaculty(TableActivity.faculty);
                             tthelpers[position].setSubject(TableActivity.subject_selected);
+                            tthelpers[position].setFacultyEID(Utils.mapOfFaculty.get(TableActivity.faculty));
                             Log.d(TAG, "onCheckedChanged: faculty is "+TableActivity.faculty);
                             Log.d(TAG, "onClick: day is "+tthelpers[position].getDay());
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -16,7 +15,7 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_clear_black_24dp"
+        app:srcCompat="@drawable/cancelbutton"
         android:layout_marginRight="29dp"
         android:layout_marginEnd="29dp"
         android:id="@+id/imgBtnremove"
@@ -25,13 +24,12 @@
         android:layout_alignParentEnd="true" />
 
     <AutoCompleteTextView
-        android:layout_width="120dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/actvnewCode"
         android:hint="Enter code.."
         android:inputType="text"
-
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/imgBtnremove"
-        android:layout_toStartOf="@+id/imgBtnremove" />
+        android:layout_toEndOf="@+id/actvnewsubj"
+        android:layout_marginStart="22dp" />
 </RelativeLayout>

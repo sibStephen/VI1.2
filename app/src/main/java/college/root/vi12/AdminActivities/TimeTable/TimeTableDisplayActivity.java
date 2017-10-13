@@ -102,29 +102,44 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
                 Log.d(TAG, "onCreate: checking for "+days.get(j));
                 array =  obj.getJSONArray(days.get(j));
                 count= array.length();
-                for (int i=0;i<array.length();i++) {
-                    jobj = array.getJSONObject(i);
-                    j1.add(jobj);
-                    count++;
-                    Log.d("array", "onCreate: " + j1);
-                }
-                Log.d(TAG, "onCreate: day is "+days.get(j) + " size is "+array.length());
-                if(count<8)
-                {
-                    Log.d(TAG, "onCreate: insideif count is "+count);
-                    while(count < 8)
-                    {
-                        Log.d(TAG, "onCreate: inside while");
-                        jobj.put("Subject", "No lecture");
-                        jobj.put("Time", "Nill");
-                        jobj.put("Staff", "No Staff");
-                        jobj.put("Location","No Location");
+                if (count == 0){
+                    // empty array....
+                    Log.d(TAG, "onCreate: array is empty hence adding 7 empty entries");
+                    for (int i=0;i<TableActivity.time.length;i++){
+                        jobj.put("Subject", "");
+                        jobj.put("Time", "");
+                        jobj.put("Staff", "");
+                        jobj.put("Location","");
                         j1.add(jobj);
-                        count++;
-                        Log.d(TAG, "onCreate: now length is "+j1.size());
+                    }
+                }else {
+                    for (int i=0;i<array.length();i++) {
+                        jobj = array.getJSONObject(i);
+                        j1.add(jobj);
+                       // count++;
+                        Log.d("array", "onCreate: " + j1);
+                    }
+                    Log.d(TAG, "onCreate: day is "+days.get(j) + " size is "+array.length());
+                    if(count<8)
+                    {
+                        Log.d(TAG, "onCreate: inside if count is "+count);
+                        while(count < 8)
+                        {
+                            Log.d(TAG, "onCreate: inside while");
+                            jobj.put("Subject", "");
+                            jobj.put("Time", "");
+                            jobj.put("Staff", "");
+                            jobj.put("Location","");
+                            jobj.put("Div" , "");
+                            jobj.put("Year" , "");
+                            j1.add(jobj);
+                            count++;
+                            Log.d(TAG, "onCreate: now length is "+j1.size());
 
+                        }
                     }
                 }
+
             }
         } catch (JSONException e) {
             e.printStackTrace();

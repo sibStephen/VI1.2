@@ -86,6 +86,7 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
             Log.d(TAG, "onCreate: profile is null so creating new");
             startActivity(new Intent(this , FacultyLogin.class));
 
+            finish();
 
         }
 
@@ -263,7 +264,7 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
 
         private void loadNextLectureUpdates() {
 
-            String[] days = {"Monday" , "Tuesday" , "Wednesday" , "Thrusday" , "Friday", "Saturday"};
+            String[] days = {"Monday" , "Tuesday" , "Wednesday" , "Thursday" , "Friday", "Saturday"};
             int today = 0;
             boolean stillContinue = true;
             FacultyTTRealmObject ttobject;
@@ -506,6 +507,7 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
         JSONArray jsonArray = new JSONArray();
         Socket socket;
         networkUtils = new NetworkUtils();
+        profile = realm.where(FacultyProfileRealm.class).findFirst();
 
         if (realmSubjects != null){
 
@@ -535,6 +537,7 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
                 Log.d(TAG, "onNavigationItemSelected: array of tokens is "+jsonArray);
                 JSONObject object = new JSONObject();
                 object.put("ArrayOftokens", jsonArray);
+                object.put("Name" , profile.getName()+" "+profile.getSurname());
                 socket = networkUtils.get();
                 socket.emit("fetchFacultyTT", object.toString());
                 Log.d(TAG, "onNavigationItemSelected: data sent");

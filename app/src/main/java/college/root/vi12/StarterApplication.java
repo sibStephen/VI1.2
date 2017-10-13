@@ -9,16 +9,13 @@ import android.util.Log;
 
 import com.facebook.stetho.Stetho;
 import com.parse.Parse;
-import com.parse.ParseACL;
-import com.parse.ParseObject;
-import com.parse.ParseUser;
-import com.parse.interceptors.ParseStethoInterceptor;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
 
+import college.root.vi12.Miscleneous.Utils;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -61,7 +58,10 @@ public class StarterApplication extends Application {
                 .withLimit(1000)
                 .databaseNamePattern(Pattern.compile(".+\\.realm"))
                 .build();
+
+        Utils.loadHashMap();
     }
+
 
 
 

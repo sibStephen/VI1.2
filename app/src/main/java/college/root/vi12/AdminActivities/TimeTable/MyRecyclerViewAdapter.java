@@ -29,16 +29,32 @@ import college.root.vi12.Student.StudentProfile.UserProfile;
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.DataObjectHolder> {
     private static String TAG = "MyRecyclerViewAdapter";
     private ArrayList<JSONObject> mDataset;
-    Context context;
+    private Context context;
+
+    private void addConstraints(DataObjectHolder holder, JSONObject object) throws JSONException {
 
 
-    public void addConstraints(DataObjectHolder holder , JSONObject object){
+        if (TimeTableDisplayActivity.user.equals("Faculty")){
+            // faculty logged in
+            holder.tvYear.setVisibility(View.VISIBLE);
+            holder.tvDiv.setVisibility(View.VISIBLE);
+            holder.tvDiv.setText(object.getString("Div"));
+            holder.tvYear.setText(object.getString("Year"));
+            holder.staff.setVisibility(View.GONE);
+
+
+
+        }
 
         if (TimeTableDisplayActivity.user.equals("Admin") ||
                 TimeTableDisplayActivity.user.equals("Student")) {
             holder.reschedule.setVisibility(View.GONE);
-        } else {
+        } else if (!object.getString("Time").equals("")){
+            Log.d(TAG, "addConstraints: show reschedule option");
             holder.reschedule.setVisibility(View.VISIBLE);
+
+        }else {
+            holder.reschedule.setVisibility(View.GONE);
 
         }
         if (TimeTableDisplayActivity.user.equals("Faculty")
@@ -59,7 +75,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         }
     }
 
-    public  void setDay(int position){
+    private void setDay(int position){
         switch (position / 8){
             case 0:
                 TimeTableDisplayActivity.tvday.setText("Monday");
@@ -113,7 +129,12 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
 
         final JSONObject object = mDataset.get(position);
-        addConstraints(holder , object);
+        try {
+            addConstraints(holder , object);
+            object.put("Day" , Utils.days[position]);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         setDay(position);
 
@@ -222,16 +243,17 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         return mDataset.size();
     }
 
-    public static class DataObjectHolder extends RecyclerView.ViewHolder {
+    static class DataObjectHolder extends RecyclerView.ViewHolder {
         TextView subject;
         TextView location;
         TextView time;
         TextView staff;
         CardView cardView;
+        TextView tvDiv , tvYear;
 
         TextView reschedule;
 
-        public DataObjectHolder(View itemView) {
+        DataObjectHolder(View itemView) {
             super(itemView);
             subject = (TextView) itemView.findViewById(R.id.subject);
             time = (TextView) itemView.findViewById(R.id.time);
@@ -239,6 +261,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             staff = (TextView) itemView.findViewById(R.id.staff);
             reschedule = (TextView) itemView.findViewById(R.id.tvreschedule);
             cardView = (CardView) itemView.findViewById(R.id.card_view);
+            tvDiv =  (TextView) itemView.findViewById(R.id.tvDiv);
+            tvYear =  (TextView) itemView.findViewById(R.id.tvyear);
+
+
             //   Log.i(LOG_TAG, "Adding Listener");
             //   itemView.setOnClickListener(this);
         }

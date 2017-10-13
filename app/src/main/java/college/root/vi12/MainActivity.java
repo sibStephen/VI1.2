@@ -30,9 +30,6 @@ import io.realm.Realm;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-// cz.msebera.android.httpclient.NameValuePair;
-//import cz.msebera.android.httpclient.message.BasicNameValuePair;
-//import com.facebook.AccessToken;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -258,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
 
                                             loggedIn = realm.where(LoggedIn.class).findFirst();
                                             if (loggedIn == null){
-                                                Log.d(TAG, "call: adding loggedin class for the first tym");
+                                                Log.d(TAG, "call: adding logged in class for the first tym");
 
                                                 realm.beginTransaction();
                                                 loggedIn = new LoggedIn();

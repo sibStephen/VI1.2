@@ -113,6 +113,31 @@
                 card_view:layout_constraintHorizontal_bias="1.0"
                 card_view:layout_constraintVertical_bias="0.203" />
 
+            <TextView
+                android:id="@+id/tvyear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Year"
+                android:visibility="gone"
+                android:layout_marginRight="8dp"
+                card_view:layout_constraintRight_toRightOf="parent"
+                android:layout_marginLeft="8dp"
+                card_view:layout_constraintLeft_toLeftOf="parent"
+                card_view:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="33dp"
+                card_view:layout_constraintHorizontal_bias="0.277" />
+
+            <TextView
+                android:id="@+id/tvDiv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Div"
+                android:visibility="gone"
+                card_view:layout_constraintRight_toLeftOf="@+id/tvreschedule"
+                android:layout_marginRight="32dp"
+                card_view:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="33dp" />
+
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

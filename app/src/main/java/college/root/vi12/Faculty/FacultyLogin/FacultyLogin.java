@@ -221,7 +221,7 @@ public class FacultyLogin extends AppCompatActivity
                                         String username = userData.getString("username");
                                         String password = userData.getString("password");
                                         String email = userData.getString("email");
-                                        String eid = userData.getString("eid");
+                                        String eid = userData.getString("_id");
 
                                         //ArrayList<String> arrayList = (ArrayList<String>) userData.get("Contents");
 

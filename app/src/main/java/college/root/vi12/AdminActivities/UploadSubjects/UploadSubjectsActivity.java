@@ -64,11 +64,6 @@ public class UploadSubjectsActivity extends AppCompatActivity implements Adapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_subjects);
 
-
-
-
-
-
         container = (LinearLayout) findViewById(R.id.container);
 
         initializeViews();
@@ -91,16 +86,16 @@ public class UploadSubjectsActivity extends AppCompatActivity implements Adapter
                 AutoCompleteTextView textOut = (AutoCompleteTextView)addView.findViewById(R.id.actvnewsubj);
                 textOut.setAdapter(adapter);
                 //textOut.setText(textIn.getText().toString());
-                imgBtnRemove = (ImageButton)findViewById(R.id.imgBtnremove);
-                final View.OnClickListener thisListener = new View.OnClickListener(){
+                imgBtnRemove = (ImageButton)addView.findViewById(R.id.imgBtnremove);
+                imgBtnRemove.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ((LinearLayout)addView.getParent()).removeView(addView);
 
-                         listAllAddView();
+
                     }
-                };
-                // imgBtnRemove.setOnClickListener(thisListener);
+                });
+
                 container.addView(addView);
 
 
@@ -131,6 +126,16 @@ public class UploadSubjectsActivity extends AppCompatActivity implements Adapter
                 AutoCompleteTextView textCode = (AutoCompleteTextView)addView.findViewById(R.id.actvnewCode);
 
                 textOut.setAdapter(adapter);
+                imgBtnRemove = (ImageButton)addView.findViewById(R.id.imgBtnremove);
+                imgBtnRemove.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((LinearLayout)addView.getParent()).removeView(addView);
+
+
+                    }
+                });
+
 
                 container.addView(addView);
 
@@ -394,6 +399,8 @@ public class UploadSubjectsActivity extends AppCompatActivity implements Adapter
                     public void run() {
                         Utils.toast(UploadSubjectsActivity.this , "Subjects not yet loaded...");
                  //       dialog.dismiss();
+
+                        container.removeAllViews();
 
                     }
                 });

@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+import college.root.vi12.Faculty.FacultyProfile.FacultyProfileRealm;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
 import io.realm.Realm;
@@ -34,6 +35,7 @@ public class FacultySubjectsActivity extends AppCompatActivity {
     ArrayList<FacultySubj> subjArrayList;
     RecyclerView mrecyclerView;
     ProgressDialog dialog;
+    FacultyProfileRealm profileRealm;
 
 
 
@@ -41,6 +43,8 @@ public class FacultySubjectsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_faculty_subjects);
+
+        initialize();
 
         Socket socket ;
         mrecyclerView = (RecyclerView) findViewById(R.id.facultySubRecycler);
@@ -62,7 +66,7 @@ public class FacultySubjectsActivity extends AppCompatActivity {
         JSONObject object = new JSONObject();
         Log.d(TAG, "onCreate: called.....");
         try {
-            object.put("Name", name);
+            object.put("EID", profileRealm.getEid());
             object.put("Sem" , sem);
             object.put("Branch", branch);
 
@@ -78,6 +82,12 @@ public class FacultySubjectsActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    private void initialize() {
+
+        realm = Realm.getDefaultInstance();
+        profileRealm = realm.where(FacultyProfileRealm.class).findFirst();
     }
 
 

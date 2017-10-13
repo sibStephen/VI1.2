@@ -31,8 +31,8 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
     RecyclerView recyclerView;
     RecyclerView.LayoutManager mLayoutManager;
     Spinner spinner_subject,spinner_staff;
-    String[] days = {"Monday" , "Tuesday" , "Wednesday", "Thursday", "Friday", "Saturday"};
-    String[] time = {"8.00", "9.00","10.15", "11.15",  "13.15", "14.15", "15.30", "16.30", "17.45" };
+    static String[] days = {"Monday" , "Tuesday" , "Wednesday", "Thursday", "Friday", "Saturday"};
+    static  String[] time = {"8.00", "9.00","10.15", "11.15",  "13.15", "14.15", "15.30", "16.30", "17.45" };
     TTHelper[] ttHelpers;
     static int numberOfObjects = 54;
     static String faculty = "";
@@ -70,6 +70,7 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
         tv_sem.setText(extras.getString("Sem"));
         tv_division.setText(extras.getString("Division"));
 
+        numberOfObjects = days.length * time.length;
 
         selection[0]=extras.getString("Branch");
         selection[1]=extras.getString("Year");
@@ -157,7 +158,7 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
         adapter_location.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         ttObject = new JSONObject();
-        String tt = getIntent().getStringExtra("ttObject");
+        final String tt = getIntent().getStringExtra("ttObject");
         if (tt != null && !tt.equals("NoData")){
                 try {
                     ttObject = new JSONObject(tt);
@@ -210,6 +211,7 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
                                     object.put("Subject" , ttHelpers[i].getSubject());
                                     object.put("Time" , ttHelpers[i].getTime());
                                     object.put("Location" , ttHelpers[i].getLocation());
+                                    object.put("StaffEID",ttHelpers[i].getFacultyEID() );
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -321,7 +323,7 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
             for (int i=0 ; i <array.length() ; i++){
                 JSONObject obj = array.getJSONObject(i);
                 if (obj.getString("Subject").equals(subject_selected) ){
-                    staff[k++] = obj.getString("Faculty");
+                    staff[k++] = obj.getString("FacultyName");
 
 
                 }
