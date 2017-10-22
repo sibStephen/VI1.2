@@ -2,6 +2,7 @@ package college.root.vi12.Faculty.FacultyProfile;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -46,6 +47,7 @@ import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
@@ -53,10 +55,13 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
     {
 
 
+
+    public static JSONObject currentLecObject = null;
     DrawerLayout drawer;
     Uri imageuri;
     Realm realm;
     FacultyProfileRealm userProfile;
+    ProgressDialog dialog;
     TextView tvname, tvsurname, tvbranch;
     CircleImageView profilePic;
     int GALLERY_REQUEST = 1;
@@ -65,13 +70,79 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
     NetworkUtils networkUtils;
     Toast toast;
     FacultyTTRealmObject realmObject;
-    public static JSONObject currentLecObject = null;
     TextView tvFacdiv, tvFacyear, tvFaclec, tvFactime, tvFacLoc,tvFacdivnext, tvFacyearnext, tvFaclecnext,
             tvFactimenext, tvFacLocnext, tvFacDayNext;
+        Emitter.Listener staffListener = new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
 
 
 
+            }
+        };
+        Emitter.Listener TTResultListener = new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
 
+                JSONObject object = (JSONObject) args[0];
+
+                Log.d(TAG, "call: object is "+object);
+
+
+                realmObject = new FacultyTTRealmObject();
+                RealmConfiguration configuration = new RealmConfiguration.Builder(FacultyProfileActivity.this).deleteRealmIfMigrationNeeded().schemaVersion(4).build();
+                Realm.setDefaultConfiguration(configuration);
+
+                Realm realm = Realm.getDefaultInstance();
+                realmObject = realm.where(FacultyTTRealmObject.class).findFirst();
+                if (realmObject == null){
+                    profile = realm.where(FacultyProfileRealm.class).findFirst();
+
+                    realmObject = new FacultyTTRealmObject();
+                    realm = Realm.getDefaultInstance();
+                    realmObject.setId(profile.getEid());
+                    realmObject.setJsonTT(object.toString());
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realm.copyToRealmOrUpdate(realmObject);
+
+                        }
+                    });
+
+
+
+                }else{
+                    realm.beginTransaction();
+                   // realmObject.setId("123");
+                    realmObject.setJsonTT(object.toString());
+                    realm.commitTransaction();
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realm.copyToRealmOrUpdate(realmObject);
+
+                        }
+                    });
+
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dismiss();
+                    }
+                });
+                Intent i1 = new Intent(FacultyProfileActivity.this,TimeTableDisplayActivity.class);
+                i1.putExtra("object",object.toString());
+                i1.putExtra("id",realmObject.getId());
+                i1.putExtra("User" , "Faculty");
+                startActivity(i1);
+
+
+
+            }
+        };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +162,8 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
         }
 
 
+        dialog = new ProgressDialog(FacultyProfileActivity.this);
+        dialog.setTitle("Please Wait...");
 
         startService(new Intent(this , FacultyFetchUpdateService.class));
         Log.d(TAG, "onCreate: service called from onCreate");
@@ -155,8 +228,6 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
         }
     }
 
-
-
         @Override
         public boolean onCreateOptionsMenu(Menu menu) {
             MenuInflater inflater = getMenuInflater();
@@ -170,7 +241,6 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
             return true;
 
         }
-
 
         public  void initializeMenu(MenuItem item){
             realm  = Realm.getDefaultInstance();
@@ -391,8 +461,6 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
 
         }
 
-
-
         private void initializeViews() {
 
             profilePic = (CircleImageView) findViewById(R.id.facultyprofilepic);
@@ -422,7 +490,6 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
 
 
         }
-
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -456,7 +523,6 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
             drawer.closeDrawer(GravityCompat.START);
             return true;
         }
-
 
         public void getFacultySubjects() throws URISyntaxException, JSONException {
             Socket soc_Subj ;
@@ -501,6 +567,7 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
 
     public void loadTTFromServer(){
 
+        dialog.show();
         FacultySubjRealmObj realmSubjects ;
         Realm realm = Realm.getDefaultInstance();
         realmSubjects = realm.where(FacultySubjRealmObj.class).findFirst();
@@ -514,8 +581,8 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
             String str1 = realmSubjects.getJsonSubjObj();
             try {
                 JSONObject subjJson = new JSONObject(str1);
-                String dept = "Computer";
-                String sem = "Sem2";
+                String dept = profile.getBranch();
+                String sem = profile.getSemester();
 
                 String[] objects = {"SE", "TE", "BE"};
                 for (String str :  objects ) {
@@ -537,7 +604,7 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
                 Log.d(TAG, "onNavigationItemSelected: array of tokens is "+jsonArray);
                 JSONObject object = new JSONObject();
                 object.put("ArrayOftokens", jsonArray);
-                object.put("Name" , profile.getName()+" "+profile.getSurname());
+                object.put("Name" , profile.getEid());
                 socket = networkUtils.get();
                 socket.emit("fetchFacultyTT", object.toString());
                 Log.d(TAG, "onNavigationItemSelected: data sent");
@@ -565,7 +632,6 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, GALLERY_REQUEST);
     }
-
 
         private void loadCurrentLecture() {
 
@@ -693,7 +759,6 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
 
         }
 
-
         public void displayNotification(JSONObject currentObject) throws JSONException {
 
 
@@ -729,72 +794,6 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
 
 
         }
-
-
-
-
-        Emitter.Listener staffListener = new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-
-
-
-            }
-        };
-
-
-        Emitter.Listener TTResultListener = new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-
-                JSONObject object = (JSONObject) args[0];
-
-                Log.d(TAG, "call: object is "+object);
-
-
-                realmObject = new FacultyTTRealmObject();
-                realm = Realm.getDefaultInstance();
-                realmObject = realm.where(FacultyTTRealmObject.class).findFirst();
-                if (realmObject == null){
-
-                    realmObject = new FacultyTTRealmObject();
-                    realmObject.setId("123");
-                    realmObject.setJsonTT(object.toString());
-                    realm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            realm.copyToRealmOrUpdate(realmObject);
-
-                        }
-                    });
-
-
-
-                }else{
-                    realm.beginTransaction();
-                    realmObject.setId("123");
-                    realmObject.setJsonTT(object.toString());
-                    realm.commitTransaction();
-                    realm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            realm.copyToRealmOrUpdate(realmObject);
-
-                        }
-                    });
-
-                }
-
-                Intent i1 = new Intent(FacultyProfileActivity.this,TimeTableDisplayActivity.class);
-                i1.putExtra("object",object.toString());
-                i1.putExtra("id","123");
-                i1.putExtra("User" , "Faculty");
-                startActivity(i1);
-
-
-
-            }
-        };
 
 
 

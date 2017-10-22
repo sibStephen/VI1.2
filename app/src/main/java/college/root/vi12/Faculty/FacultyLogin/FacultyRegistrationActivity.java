@@ -239,8 +239,10 @@ public class FacultyRegistrationActivity extends AppCompatActivity
                                     progress.dismiss();
 
                                 }
-                            });startActivity(new Intent(FacultyRegistrationActivity.this, FacultyLogin.class));
+                            });
+                            startActivity(new Intent(FacultyRegistrationActivity.this, FacultyLogin.class));
 
+                            finish();
                         } else {
                             runOnUiThread(new Runnable() {
                                 @Override

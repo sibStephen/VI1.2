@@ -21,26 +21,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 import college.root.vi12.Faculty.FacultyProfile.FacultyProfileActivity;
+import college.root.vi12.Faculty.FacultyProfile.FacultyProfileRealm;
 import college.root.vi12.Miscleneous.Utils;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
 import college.root.vi12.Student.StudentProfile.UserProfile;
+import io.realm.Realm;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.DataObjectHolder> {
     private static String TAG = "MyRecyclerViewAdapter";
     private ArrayList<JSONObject> mDataset;
     private Context context;
 
-    private void addConstraints(DataObjectHolder holder, JSONObject object) throws JSONException {
+    public MyRecyclerViewAdapter(ArrayList<JSONObject> mDataset ,Context context) {
+        this.mDataset = mDataset;
+        this.context = context;
+    }
+
+    private void addConstraints(DataObjectHolder holder, JSONObject object)  {
 
 
         if (TimeTableDisplayActivity.user.equals("Faculty")){
             // faculty logged in
             holder.tvYear.setVisibility(View.VISIBLE);
             holder.tvDiv.setVisibility(View.VISIBLE);
-            holder.tvDiv.setText(object.getString("Div"));
-            holder.tvYear.setText(object.getString("Year"));
-            holder.staff.setVisibility(View.GONE);
+            try {
+                holder.tvDiv.setText(object.getString("Div"));
+                holder.tvYear.setText(object.getString("Year"));
+                holder.staff.setVisibility(View.GONE);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
 
@@ -49,13 +61,17 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         if (TimeTableDisplayActivity.user.equals("Admin") ||
                 TimeTableDisplayActivity.user.equals("Student")) {
             holder.reschedule.setVisibility(View.GONE);
-        } else if (!object.getString("Time").equals("")){
-            Log.d(TAG, "addConstraints: show reschedule option");
-            holder.reschedule.setVisibility(View.VISIBLE);
+        } else try {
+            if (!object.getString("Time").equals("")){
+                Log.d(TAG, "addConstraints: show reschedule option");
+                holder.reschedule.setVisibility(View.VISIBLE);
 
-        }else {
-            holder.reschedule.setVisibility(View.GONE);
+            }else {
+                holder.reschedule.setVisibility(View.GONE);
 
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         if (TimeTableDisplayActivity.user.equals("Faculty")
                 &&FacultyProfileActivity.currentLecObject != null  &&
@@ -108,12 +124,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         }
     }
 
-
-    public MyRecyclerViewAdapter(ArrayList<JSONObject> mDataset ,Context context) {
-        this.mDataset = mDataset;
-        this.context = context;
-    }
-
     @Override
     public DataObjectHolder onCreateViewHolder(ViewGroup parent,
                                                int viewType) {
@@ -129,12 +139,15 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
 
         final JSONObject object = mDataset.get(position);
-        try {
+        addConstraints(holder , object);
+
+        /*  try {
             addConstraints(holder , object);
             object.put("Day" , Utils.days[position]);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        */
 
         setDay(position);
 
@@ -181,18 +194,25 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                         String code = Utils.mapOfFaculty.get(nameOfFac);
                         Log.d(TAG, "onClick: code of "+nameOfFac +" is "+code);
                         JSONObject obj = new JSONObject();
-                        try {
-                            object.put("RequestFacEID" , "E103");
-                            //TODO: replace eid with actual EID of requesting faculty
-                            object.put("RequestType" ,"LecRescheduleRequest");
-                            obj.put("code" , code);
-                            obj.put("requestObject", object);
-                            NetworkUtils utils = new NetworkUtils();
-                            utils.emitSocket("ValidateTTRescheduling" , obj);
-                            Utils.toast(context , "Request sent to "+nameOfFac);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        Realm realm = Realm.getDefaultInstance();
+                        FacultyProfileRealm profileRealm = realm.where(FacultyProfileRealm.class).findFirst();
+                        if (profileRealm != null){
+
+                            try {
+
+                                object.put("RequestFacEID" , profileRealm.getEid());
+                                //TODO: replace eid with actual EID of requesting faculty
+                                object.put("RequestType" ,"LecRescheduleRequest");
+                                obj.put("code" , code);
+                                obj.put("requestObject", object);
+                                NetworkUtils utils = new NetworkUtils();
+                                utils.emitSocket("ValidateTTRescheduling" , obj);
+                                Utils.toast(context , "Request sent to "+nameOfFac);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
+
                         dialog.dismiss();
 
                     }

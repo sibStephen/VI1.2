@@ -14,7 +14,7 @@ import college.root.vi12.R;
  * Created by root on 21/9/17.
  */
 
-public class FacultyAllocationAdapter extends RecyclerView.Adapter<FacultyAllocationAdapter.FacultyAllocationViewwHolder> {
+public class FacultyAllocationAdapter extends RecyclerView.Adapter<FacultyAllocationAdapter.FacultyAllocationViewHolder> {
 
    private Context context;
     private String TAG =  "Test";
@@ -33,13 +33,13 @@ public class FacultyAllocationAdapter extends RecyclerView.Adapter<FacultyAlloca
 
 
     @Override
-    public FacultyAllocationViewwHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FacultyAllocationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(context).inflate(R.layout.facultyallocation, parent , false);
-        return new FacultyAllocationAdapter.FacultyAllocationViewwHolder(context , v);
+        return new FacultyAllocationViewHolder(context , v);
     }
 
     @Override
-    public void onBindViewHolder(FacultyAllocationViewwHolder holder, int position) {
+    public void onBindViewHolder(FacultyAllocationViewHolder holder, int position) {
 
         if (helpers[position] != null){
             Log.d(TAG, "onBindViewHolder: helpers length is "+helpers.length);
@@ -61,12 +61,12 @@ public class FacultyAllocationAdapter extends RecyclerView.Adapter<FacultyAlloca
         }
     }
 
-    public  class FacultyAllocationViewwHolder extends RecyclerView.ViewHolder{
+    public  class FacultyAllocationViewHolder extends RecyclerView.ViewHolder{
 
         TextView tvSubjectName;
         TextView tvFacultyName;
 
-        public FacultyAllocationViewwHolder(Context context , View itemView) {
+        public FacultyAllocationViewHolder(Context context , View itemView) {
             super(itemView);
 
             tvFacultyName = (TextView) itemView.findViewById(R.id.tvSubjectNameFac);

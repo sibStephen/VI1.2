@@ -24,18 +24,16 @@ import college.root.vi12.R;
 
 public class TimeTableDisplayActivity extends AppCompatActivity {
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    public static String user= null;
+   static TextView tvday;
     private static String LOG_TAG = "CardViewActivity";
     JSONObject obj ;
     String id;
     String TAG = "Test";
     ArrayList<JSONObject> j1;
     NetworkUtils networkUtils;
-    public static String user= null;
     Button btnConfirm;
-   static TextView tvday;
+    ArrayList<String> days;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +60,7 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
                 btnConfirm.setVisibility(View.GONE);
 
             }
-            if (user.equals("Faculty")){
 
-            }
 
 
 
@@ -75,18 +71,18 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
         }
 
         Log.d(TAG, "onCreate: "+obj);
-        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new GridLayoutManager(this,9,GridLayoutManager.HORIZONTAL,false);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 9, GridLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new MyRecyclerViewAdapter(j1 , TimeTableDisplayActivity.this);
+        RecyclerView.Adapter mAdapter = new MyRecyclerViewAdapter(j1, TimeTableDisplayActivity.this);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
 
         // mRecyclerView.setAdapter(mAdapter);
 
-        ArrayList<String> days = new ArrayList<>();
+        days = new ArrayList<>();
         days.add("Monday");
         days.add("Tuesday");
         days.add("Wednesday");
@@ -96,7 +92,7 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
 
         JSONArray array;
         try {
-            int count=0;
+            int count;
             for(int j=0;j<days.size();j++){
                 JSONObject jobj = new JSONObject();
                 Log.d(TAG, "onCreate: checking for "+days.get(j));
@@ -120,10 +116,10 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
                         Log.d("array", "onCreate: " + j1);
                     }
                     Log.d(TAG, "onCreate: day is "+days.get(j) + " size is "+array.length());
-                    if(count<8)
+                    if(count<9)
                     {
                         Log.d(TAG, "onCreate: inside if count is "+count);
-                        while(count < 8)
+                        while(count < 9)
                         {
                             Log.d(TAG, "onCreate: inside while");
                             jobj.put("Subject", "");

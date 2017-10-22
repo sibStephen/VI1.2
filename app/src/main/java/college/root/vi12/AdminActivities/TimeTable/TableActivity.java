@@ -24,21 +24,24 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
+import college.root.vi12.Miscleneous.Utils;
 import college.root.vi12.R;
 
 public class TableActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
+    static String[] days = {"Monday" , "Tuesday" , "Wednesday", "Thursday", "Friday", "Saturday"};
+    static  String[] time = {"8.00", "9.00","10.15", "11.15",  "13.15", "14.15", "15.30", "16.30", "17.45" };
+    static int numberOfObjects = 54;
+    static String faculty = "";
+    static  ArrayAdapter<String> adapter_location;
+    static String[] temp_room;
+    static String subject_selected = " ";
+    static int timeSlots = 9;
+    final String subject[]= new String[10];
     RecyclerView recyclerView;
     RecyclerView.LayoutManager mLayoutManager;
     Spinner spinner_subject,spinner_staff;
-    static String[] days = {"Monday" , "Tuesday" , "Wednesday", "Thursday", "Friday", "Saturday"};
-    static  String[] time = {"8.00", "9.00","10.15", "11.15",  "13.15", "14.15", "15.30", "16.30", "17.45" };
     TTHelper[] ttHelpers;
-    static int numberOfObjects = 54;
-    static String faculty = "";
-    final String subject[]= new String[10];
-    static  ArrayAdapter<String> adapter_location;
-    static String[] temp_room;
     Button btnSave;
     String TAG = "Test";
     JSONArray mon , tue, wed , thrus, fri ,sat;
@@ -48,10 +51,7 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
     ArrayAdapter<String> adapter_staff;
     JSONArray array1;
     JSONObject roomObject,subjectObject, staffObject, ttObject;
-    static String subject_selected = " ";
     String[] staff = new String[5];
-    static int timeSlots = 9;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -383,6 +383,7 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
                     ttHelpers[token].setLocation(dayObject.getString("Location"));
                     ttHelpers[token].setSubject(dayObject.getString("Subject"));
                     ttHelpers[token].setFaculty(dayObject.getString("Staff"));
+                    ttHelpers[token].setFacultyEID(Utils.mapOfFaculty.get(dayObject.getString("Staff")));
                     ttHelpers[token].setDay(days[i]);
                 }
             }

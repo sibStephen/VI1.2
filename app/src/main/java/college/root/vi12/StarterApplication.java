@@ -32,6 +32,7 @@ public class StarterApplication extends Application {
         super.onCreate();
 
         getKeyHash();
+        Utils.loadHashMap();
         // Enable Local Datastore.
         Parse.enableLocalDatastore(this);
 

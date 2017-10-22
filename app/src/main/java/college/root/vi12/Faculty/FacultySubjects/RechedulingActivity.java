@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,14 +20,16 @@ import college.root.vi12.R;
 import io.realm.Realm;
 
 public class RechedulingActivity extends AppCompatActivity {
-    TextView tvSubj , tvFac , tvTime , tvLoc;
+    TextView tvSubj , tvFac , tvTime , tvLoc , tvYear , tvDiv , tvRescSubj;
     Button btnAccept , btnDecline;
     String TAG = "Test";
     Realm realm;
     FacultyProfileRealm profile;
     NetworkUtils utils;
     JSONObject object;
+    FacultySubjRealmObj subjectRealm;
 
+    String rescheduledSubject = " ";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,13 +51,23 @@ public class RechedulingActivity extends AppCompatActivity {
 
         String data =  getIntent().getStringExtra("jsondata");
         try {
-           object = new JSONObject(data);
+            object = new JSONObject(data);
 
-            Log.d(TAG, "onCreate: object is "+object);
+            Log.d(TAG, "onCreate: object is " + object);
             tvFac.setText(object.getString("Staff"));
             tvSubj.setText(object.getString("Subject"));
             tvLoc.setText(object.getString("Location"));
             tvTime.setText(object.getString("Time"));
+            tvDiv.setText(object.getString("Div"));
+            tvYear.setText(object.getString("Year"));
+            getReschedulingSubject(object);
+            if (!rescheduledSubject.equals(" ")){
+                tvRescSubj.setText(rescheduledSubject);
+
+            }else {
+                tvRescSubj.setText("No Corresponding lecture found...");
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }}
@@ -67,6 +80,9 @@ public class RechedulingActivity extends AppCompatActivity {
         tvTime = (TextView) findViewById(R.id.tvresctime);
         btnAccept = (Button) findViewById(R.id.btnrescAccept);
         btnDecline = (Button) findViewById(R.id.btnDecclineReq);
+        tvDiv = (TextView) findViewById(R.id.tvRescDiv);
+        tvYear = (TextView) findViewById(R.id.tvRescYear);
+        tvRescSubj = (TextView) findViewById(R.id.tvrescsubfac);
         utils = new NetworkUtils();
     }
 
@@ -81,7 +97,7 @@ public class RechedulingActivity extends AppCompatActivity {
                 try {
                     object.put("RescFaculty" , profile.getName()+ " "+profile.getSurname());
                     object.put("RescFacEID" , profile.getEid());
-                    object.put("RescSubject" , "Rescheduled Subject");
+                    object.put("RescSubject" , rescheduledSubject);
                     object.put("isAccepted" , "1");
                     object.put("RequestType" , "LecRescheduleResponse");
                     utils.emitSocket("RespondToReq" , object);
@@ -135,5 +151,37 @@ public class RechedulingActivity extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    private  void getReschedulingSubject(JSONObject object){
+
+        try {
+            String year = object.getString("Year");
+            String div = object.getString("Div");
+            Realm realm = Realm.getDefaultInstance();
+            profile = realm.where(FacultyProfileRealm.class).findFirst();
+            if (profile != null){
+                subjectRealm = realm.where(FacultySubjRealmObj.class).findFirst();
+                if (subjectRealm != null){
+                    String str = subjectRealm.getJsonSubjObj();
+                    JSONObject facObj = new JSONObject(str);
+                    JSONArray array = facObj.getJSONArray(year);
+                    for (int i=0; i<array.length() ; i++){
+                       JSONObject eachObject = array.getJSONObject(i);
+                        if (eachObject.getString("Div").equals(div)){
+                            Log.d(TAG, "getReschedulingSubject: match found");
+                            rescheduledSubject = eachObject.getString("Subject");
+
+                        }
+                    }
+                }
+            }else {
+                Utils.somethingIsNull(RechedulingActivity.this , "Faculty");
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 }

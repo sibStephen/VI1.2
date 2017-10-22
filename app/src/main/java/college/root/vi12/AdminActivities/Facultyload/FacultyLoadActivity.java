@@ -56,8 +56,144 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
     boolean SubjectsLoaded = true;
     RecyclerView.LayoutManager manager;
     int numOfObjects = 0;
+    Emitter.Listener facultyListener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
 
 
+            if (args[0].equals("0")){
+                Log.d(TAG, "call: no data found");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dismiss();
+                        Utils.toast(FacultyLoadActivity.this , "Previous entry of faculty allocation not  found");
+
+                    }
+                });
+            }else{
+
+                JSONArray array = (JSONArray) args[0];
+                try {
+                    JSONObject facultyObj = array.getJSONObject(0);
+
+                    array = facultyObj.getJSONArray("object");
+                    Log.d(TAG, "call: array is "+array);
+                    helpers = new FacultyLoadHelper[array.length()];
+                    for (int i=0 ; i<array.length() ; i++){
+                        JSONObject obj1 = array.getJSONObject(i);
+                        helpers[i] = new FacultyLoadHelper();
+                        String name = Utils.mapFacultyID.get(obj1.getString("FacultyCode"));
+                        helpers[i].setFacultyName(name);
+                        helpers[i].setSubjectName(obj1.getString("Subject"));
+                        Log.d(TAG, "call: obj is "+obj1);
+
+
+                    }
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter = new FacultyAllocationAdapter(FacultyLoadActivity.this , helpers);
+                            recylerFacAllocation.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
+
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    };
+    private Emitter.Listener subjectListener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+
+
+            if (args[0].equals("0")){
+                Log.d(TAG, "call: no data found");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dismiss();
+                        Toast.makeText(FacultyLoadActivity.this, "Subjects not found", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+            }else{
+                Log.d("obj",args[0].toString());
+                final org.json.JSONArray[] array = {(org.json.JSONArray) args[0]};
+                Log.d(TAG, "call: array is " + array);
+
+                try {
+                    final JSONObject obj = (JSONObject) array[0].get(0);
+                    Log.d(TAG, "call: obj is " + obj);
+                    subjetObject = obj;
+                    Iterator<?> keys = obj.keys();
+                    Log.d(TAG, "run: kes are "+keys);
+                    numOfObjects = Integer.parseInt( subjetObject.getString("SubjectCount"));
+                    helpers = new FacultyLoadHelper[numOfObjects];
+                    Log.d(TAG, "call: num of obj set");
+                    subject = new String[ Integer.parseInt( subjetObject.getString("SubjectCount")) ];
+
+                    int i=0;
+                    while( keys.hasNext() ) {
+                        String key = (String) keys.next();
+                        Log.d(TAG, "run: key is "+key);
+                        Log.d(TAG, "run: and value of key is "+obj.getString(key));
+
+                        if (key.equals("_id") || key.equals("SubjectCount")){
+                            // do not store it in name array
+                        }else {
+                            subject[i] = key;  // store the subject names in string array
+                            i++;
+
+                        }
+                    }// end of while loop
+                    fetchPreviousEntry();
+                    dialog.dismiss();
+                    Log.d(TAG, "call: subject array is "+subject);
+
+
+                }catch (Exception e){
+
+                }
+
+//            subject_adapter.notifyDataSetChanged();
+                SubjectsLoaded = false;
+                setSubjects();
+
+            }
+
+
+
+
+        }
+
+        private void fetchPreviousEntry() {
+            String id = input_branch+input_year+input_semester+input_division;
+            Socket soc_Subj;
+            try {
+                soc_Subj = networkUtils.get();
+                final JSONObject obj1 = new JSONObject();
+                obj1.put("GrNumber",id);
+                obj1.put("collectionName" , "FacultyAllocation");
+
+                soc_Subj.emit("getAllData", obj1.toString());
+                soc_Subj.on("Result", facultyListener );
+
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+
+        }
+    };
 
     public String loadJSONFromAsset() {
         String json = null;
@@ -234,6 +370,7 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
         });
 
 }
+
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
     {
@@ -275,97 +412,6 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
 
     }
 
-    private Emitter.Listener subjectListener = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-
-
-            if (args[0].equals("0")){
-                Log.d(TAG, "call: no data found");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        dialog.dismiss();
-                        Toast.makeText(FacultyLoadActivity.this, "Subjects not found", Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-            }else{
-                Log.d("obj",args[0].toString());
-                final org.json.JSONArray[] array = {(org.json.JSONArray) args[0]};
-                Log.d(TAG, "call: array is " + array);
-
-                try {
-                    final JSONObject obj = (JSONObject) array[0].get(0);
-                    Log.d(TAG, "call: obj is " + obj);
-                    subjetObject = obj;
-                    Iterator<?> keys = obj.keys();
-                    Log.d(TAG, "run: kes are "+keys);
-                    numOfObjects = Integer.parseInt( subjetObject.getString("SubjectCount"));
-                    helpers = new FacultyLoadHelper[numOfObjects];
-                    Log.d(TAG, "call: num of obj set");
-                    subject = new String[ Integer.parseInt( subjetObject.getString("SubjectCount")) ];
-
-                    int i=0;
-                    while( keys.hasNext() ) {
-                        String key = (String) keys.next();
-                        Log.d(TAG, "run: key is "+key);
-                        Log.d(TAG, "run: and value of key is "+obj.getString(key));
-
-                        if (key.equals("_id") || key.equals("SubjectCount")){
-                            // do not store it in name array
-                        }else {
-                            subject[i] = key;  // store the subject names in string array
-                            i++;
-
-                        }
-                    }// end of while loop
-                    fetchPreviousEntry();
-                    dialog.dismiss();
-                    Log.d(TAG, "call: subject array is "+subject);
-
-
-                }catch (Exception e){
-
-                }
-
-//            subject_adapter.notifyDataSetChanged();
-                SubjectsLoaded = false;
-                setSubjects();
-
-            }
-
-
-
-
-        }
-
-        private void fetchPreviousEntry() {
-            String id = input_branch+input_year+input_semester+input_division;
-            Socket soc_Subj;
-            try {
-                soc_Subj = networkUtils.get();
-                final JSONObject obj1 = new JSONObject();
-                obj1.put("GrNumber",id);
-                obj1.put("collectionName" , "FacultyAllocation");
-
-                soc_Subj.emit("getAllData", obj1.toString());
-                soc_Subj.on("Result", facultyListener );
-
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-
-        }
-    };
-
-
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -373,7 +419,6 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
         return true;
 
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -447,60 +492,6 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-    Emitter.Listener facultyListener = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-
-
-            if (args[0].equals("0")){
-                Log.d(TAG, "call: no data found");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        dialog.dismiss();
-                        Utils.toast(FacultyLoadActivity.this , "Previous entry of faculty allocation not  found");
-
-                    }
-                });
-            }else{
-
-                JSONArray array = (JSONArray) args[0];
-                try {
-                    JSONObject facultyObj = array.getJSONObject(0);
-
-                    array = facultyObj.getJSONArray("object");
-                    Log.d(TAG, "call: array is "+array);
-                    helpers = new FacultyLoadHelper[array.length()];
-                    for (int i=0 ; i<array.length() ; i++){
-                        JSONObject obj1 = array.getJSONObject(i);
-                        helpers[i] = new FacultyLoadHelper();
-                        Utils.loadHashMap();
-                        String name = Utils.mapFacultyID.get(obj1.getString("Faculty"));
-                        helpers[i].setFacultyName(name);
-                        helpers[i].setSubjectName(obj1.getString("Subject"));
-                        Log.d(TAG, "call: obj is "+obj1);
-
-
-                    }
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter = new FacultyAllocationAdapter(FacultyLoadActivity.this , helpers);
-                            recylerFacAllocation.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
-
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-    };
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView)

@@ -39,6 +39,9 @@ import io.socket.emitter.Emitter;
 public class UploadSubjectsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
 
+    private static final String[] NUMBER = new String[]{
+            "EOS" , "PCDP" , "CN" , "DSPA" , "SE"
+    };
     LinearLayout container;
     String TAG ="Test";
     ImageButton imgBtnRemove;
@@ -51,13 +54,66 @@ public class UploadSubjectsActivity extends AppCompatActivity implements Adapter
     Toast toast;
     ImageButton mimageBtnAdd;
     ProgressDialog dialog;
-
-
-
-    private static final String[] NUMBER = new String[]{
-            "EOS" , "PCDP" , "CN" , "DSPA" , "SE"
-    };
     ArrayAdapter<String> adapter;
+    Emitter.Listener subjectListener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+
+            if (!args[0].equals("0") ){
+
+                try {
+                    final org.json.JSONArray[] array = {(org.json.JSONArray) args[0]};
+
+                    final JSONObject obj = (JSONObject) array[0].get(0);
+                    int i=0;
+                    // count[0] = obj.getString("SubjectCount");
+                    String  count = obj.getString("SubjectCount");
+                    Log.d(TAG, "run: count is "+obj.getString("SubjectCount"));
+                    Log.d(TAG, "run: count variavle is "+count);
+                    Log.d(TAG, "run: String array of name declared with count "+count);
+
+
+                    Iterator<?> keys = obj.keys();
+                    Log.d(TAG, "run: kes are "+keys);
+
+                    while( keys.hasNext() ) {
+                        String key = (String) keys.next();
+                        Log.d(TAG, "run: key is " + key);
+                        Log.d(TAG, "run: and value of key is " + obj.getString(key));
+
+                        if (key.equals("_id") || key.equals("SubjectCount")) {
+                            // do not store it in name array
+                        } else {
+
+                            addViews(key , obj.getString(key));
+
+                        }
+                    }
+                //    dialog.dismiss();
+
+
+
+
+                        } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Utils.toast(UploadSubjectsActivity.this , "Subjects not yet loaded...");
+                 //       dialog.dismiss();
+
+                        container.removeAllViews();
+
+                    }
+                });
+            }
+
+        }
+            };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +170,6 @@ public class UploadSubjectsActivity extends AppCompatActivity implements Adapter
 
     }
 
-
     public void addViews(final String name , final String code){
         runOnUiThread(new Runnable() {
             @Override
@@ -146,9 +201,6 @@ public class UploadSubjectsActivity extends AppCompatActivity implements Adapter
 
     }
 
-
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -157,6 +209,7 @@ public class UploadSubjectsActivity extends AppCompatActivity implements Adapter
 
                 // save code
 
+               if( Utils.isNetWorkAvailable(UploadSubjectsActivity.this)){
                 AlertDialog.Builder builder = new AlertDialog.Builder(UploadSubjectsActivity.this);
                 builder.setTitle("Save Subject group?");
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -170,17 +223,24 @@ public class UploadSubjectsActivity extends AppCompatActivity implements Adapter
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        listAllAddView();
+                        listAllAddView(true);
+                        Utils.toast(UploadSubjectsActivity.this , "Subject Group saved successfully ..");
+                        container.removeAllViews();
 
                     }
                 });
                 builder.show();
+
+            }else {
+                   Utils.toast(UploadSubjectsActivity.this, "No Internet connection..");
+               }
+
                 break;
         }
                 return super.onOptionsItemSelected(item);
     }
 
-    private void listAllAddView() {
+    private void listAllAddView(boolean hasSaveButtonCalled) {
 
         JSONObject subjectGroup = new JSONObject();
 
@@ -263,16 +323,16 @@ public class UploadSubjectsActivity extends AppCompatActivity implements Adapter
 
 
 
-        networkUtils.emitSocket("Allinfo",finalObj);
-        networkUtils.listener("Allinfo" , UploadSubjectsActivity.this ,getApplicationContext()
-                , toast); //success  listener
+        if(hasSaveButtonCalled){
+            networkUtils.emitSocket("Allinfo",finalObj);
+            networkUtils.listener("Allinfo" , UploadSubjectsActivity.this ,getApplicationContext()
+                    , toast); //success  listener
+
+        }
 
 
 
     }// end of function
-
-
-
 
     public void initializeViews(){
 
@@ -333,6 +393,7 @@ public class UploadSubjectsActivity extends AppCompatActivity implements Adapter
 
 
     }
+
     private void fetchSubjects() throws URISyntaxException, JSONException {
 
             //   dialog.show();
@@ -340,7 +401,7 @@ public class UploadSubjectsActivity extends AppCompatActivity implements Adapter
         Socket soc_Subj ;
         soc_Subj = networkUtils.get();
         final JSONObject obj1 = new JSONObject();
-        obj1.put("GrNumber",year+branch+semester);
+        obj1.put("GrNumber",branch+year+semester);
 
         obj1.put("collectionName" , "Subjects");
 
@@ -349,65 +410,6 @@ public class UploadSubjectsActivity extends AppCompatActivity implements Adapter
 
 
     }
-    Emitter.Listener subjectListener = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-
-            if (!args[0].equals("0") ){
-
-                try {
-                    final org.json.JSONArray[] array = {(org.json.JSONArray) args[0]};
-
-                    final JSONObject obj = (JSONObject) array[0].get(0);
-                    int i=0;
-                    // count[0] = obj.getString("SubjectCount");
-                    String  count = obj.getString("SubjectCount");
-                    Log.d(TAG, "run: count is "+obj.getString("SubjectCount"));
-                    Log.d(TAG, "run: count variavle is "+count);
-                    Log.d(TAG, "run: String array of name declared with count "+count);
-
-
-                    Iterator<?> keys = obj.keys();
-                    Log.d(TAG, "run: kes are "+keys);
-
-                    while( keys.hasNext() ) {
-                        String key = (String) keys.next();
-                        Log.d(TAG, "run: key is " + key);
-                        Log.d(TAG, "run: and value of key is " + obj.getString(key));
-
-                        if (key.equals("_id") || key.equals("SubjectCount")) {
-                            // do not store it in name array
-                        } else {
-
-                            addViews(key , obj.getString(key));
-
-                        }
-                    }
-                //    dialog.dismiss();
-
-
-
-
-                        } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-
-            }else {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Utils.toast(UploadSubjectsActivity.this , "Subjects not yet loaded...");
-                 //       dialog.dismiss();
-
-                        container.removeAllViews();
-
-                    }
-                });
-            }
-
-        }
-            };
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

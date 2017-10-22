@@ -3,6 +3,7 @@ package college.root.vi12.Student.StudentProfile;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -58,6 +59,7 @@ import io.socket.emitter.Emitter;
 
 public class UserProfile extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static JSONObject currentLecObject = null;
     DrawerLayout drawer;
     Uri imageuri;
     Realm realm;
@@ -73,11 +75,93 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
     Toast toast;
     String ttID;
     Context context ;
-    public static JSONObject currentLecObject = null;
     TTRealmObject realmObject ;
     TextView  tvStlec, tvSttime, tvStLoc, tvStlecnext,
             tvSttimenext, tvStLocnext, tvStFaculty,tvStFacultynext , tvStdayNext;
 
+    ProgressDialog dialog;
+    private Emitter.Listener ttlistener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+
+
+
+            if (args[0].equals("0")){
+                Log.d(TAG, "call: no data found");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        android.widget.Toast.makeText(UserProfile.this, "No previous TT entry found", android.widget.Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+            }  else {
+
+
+                Log.d(TAG, "call: Result is " + args[0]);
+                JSONArray array = (JSONArray) args[0];
+
+                Log.d(TAG, "call: array is " + array);
+                try {
+                    JSONObject obj = array.getJSONObject(0);
+                    Log.d(TAG, "call: obj is " + obj);
+
+
+                    realm = Realm.getDefaultInstance();
+                    realmObject = realm.where(TTRealmObject.class).findFirst();
+                    if (realmObject == null) {
+
+                        realmObject = new TTRealmObject();
+                        realmObject.setId(obj.getString("_id"));
+                        realmObject.setJsonTTObject(obj.toString());
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+
+                                realm.copyToRealmOrUpdate(realmObject);
+                            }
+                        });
+
+                    } else {
+
+                        realm.beginTransaction();
+                        realmObject.setId(obj.getString("_id"));
+                        realmObject.setJsonTTObject(obj.toString());
+                        realm.commitTransaction();
+
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+
+                                realm.copyToRealmOrUpdate(realmObject);
+                            }
+                        });
+
+
+                    }
+
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.dismiss();
+                        }
+                    });
+                    Intent i1 = new Intent(UserProfile.this, TimeTableDisplayActivity.class);
+
+                    i1.putExtra("object", realmObject.getJsonTTObject());
+                    i1.putExtra("id", ttID);
+                    i1.putExtra("User", "Student");
+
+                    startActivity(i1);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    };
 
     private void initializeViews() {
 
@@ -110,6 +194,7 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -123,7 +208,6 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
         return true;
 
     }
-
 
     public  void initializeMenu(MenuItem item){
         if (profile != null){
@@ -299,6 +383,8 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
             manager.setRepeating(AlarmManager.RTC_WAKEUP , calendar.getTimeInMillis() , AlarmManager.INTERVAL_HOUR, pendingIntent);
             context = UserProfile.this;
 
+        dialog = new ProgressDialog(UserProfile.this);
+        dialog.setTitle("Please Wait a moment..");
             initializeViews();
             loadCurrentLecture();
             try {
@@ -493,7 +579,6 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
-
     private void loadCurrentLecture() {
 
 
@@ -617,6 +702,7 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, GALLERY_REQUEST);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -648,7 +734,6 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
     }
 
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -672,147 +757,76 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
 
 
 
+
             if(CheckNetwork.isNetWorkAvailable(this)){
+                dialog.show();
+                loadTTFromServer();
                 // if network available .... fetch recent TT
 
-                realm = Realm.getDefaultInstance();
-
-                profile = realm.where(Student_profile.class).findFirst();
-
-                if (profile==null)
-                {
-                    Log.d(TAG, "onNavigationItemSelected: profile is null");
-                }
-                ttID = profile.getBranch()+profile.getYear()+profile.getSemester()+profile.getDiv();
-
-                NetworkUtils networkUtils = new NetworkUtils();
-
-                try {
-                    socket = networkUtils.get();
-                    JSONObject object = new JSONObject();
-                    object.put("GrNumber", ttID );
-                    object.put("collectionName", "Load_Time_Table");
-                    //  networkUtils.emitSocket("getAllData" , object);
-
-                    socket.emit("getAllData" , object.toString());
-                    socket.on("Result" , ttlistener);
-
-
-
-
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
 
             }else{
+
+                loadLocalTT();
                 // else load the local TT
 
-                Intent i1 = new Intent(UserProfile.this,TimeTableDisplayActivity.class);
-                realm = Realm.getDefaultInstance();
-                realmObject  = realm.where(TTRealmObject.class).findFirst();
-
-                if (realmObject != null){
-                    i1.putExtra("object",realmObject.getJsonTTObject());
-                    i1.putExtra("id",ttID);
-                    i1.putExtra("User" , "Student");
-                    startActivity(i1);
-
-                  }else{
-                    Log.d(TAG, "onNavigationItemSelected: realmobject is null");
                 }
-                }
-
-
-
-
-           // startActivity(new Intent(this , TimeTableDisplayActivity.class));
         }
 
             drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
+    private void loadTTFromServer() {
 
 
-   private Emitter.Listener ttlistener = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
+        realm = Realm.getDefaultInstance();
 
+        profile = realm.where(Student_profile.class).findFirst();
 
-
-            if (args[0].equals("0")){
-                Log.d(TAG, "call: no data found");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        android.widget.Toast.makeText(UserProfile.this, "No previous TT entry found", android.widget.Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-            }  else {
-
-
-                Log.d(TAG, "call: Result is " + args[0]);
-                JSONArray array = (JSONArray) args[0];
-
-                Log.d(TAG, "call: array is " + array);
-                try {
-                    JSONObject obj = array.getJSONObject(0);
-                    Log.d(TAG, "call: obj is " + obj);
-
-
-                    realm = Realm.getDefaultInstance();
-                    realmObject = realm.where(TTRealmObject.class).findFirst();
-                    if (realmObject == null) {
-
-                        realmObject = new TTRealmObject();
-                        realmObject.setId(obj.getString("_id"));
-                        realmObject.setJsonTTObject(obj.toString());
-                        realm.executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-
-                                realm.copyToRealmOrUpdate(realmObject);
-                            }
-                        });
-
-                    } else {
-
-                        realm.beginTransaction();
-                        realmObject.setId(obj.getString("_id"));
-                        realmObject.setJsonTTObject(obj.toString());
-                        realm.commitTransaction();
-
-                        realm.executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-
-                                realm.copyToRealmOrUpdate(realmObject);
-                            }
-                        });
-
-
-                    }
-
-
-                    Intent i1 = new Intent(UserProfile.this, TimeTableDisplayActivity.class);
-
-                    i1.putExtra("object", realmObject.getJsonTTObject());
-                    i1.putExtra("id", ttID);
-                    i1.putExtra("User", "Student");
-
-                    startActivity(i1);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
+        if (profile==null)
+        {
+            Log.d(TAG, "onNavigationItemSelected: profile is null");
         }
-    };
+        ttID = profile.getBranch()+profile.getYear()+profile.getSemester()+profile.getDiv();
 
+        NetworkUtils networkUtils = new NetworkUtils();
+
+        try {
+            socket = networkUtils.get();
+            JSONObject object = new JSONObject();
+            object.put("GrNumber", ttID );
+            object.put("collectionName", "Load_Time_Table");
+            //  networkUtils.emitSocket("getAllData" , object);
+
+            socket.emit("getAllData" , object.toString());
+            socket.on("Result" , ttlistener);
+
+
+
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadLocalTT() {
+
+        Intent i1 = new Intent(UserProfile.this,TimeTableDisplayActivity.class);
+        realm = Realm.getDefaultInstance();
+        realmObject  = realm.where(TTRealmObject.class).findFirst();
+
+        if (realmObject != null){
+            i1.putExtra("object",realmObject.getJsonTTObject());
+            i1.putExtra("id",ttID);
+            i1.putExtra("User" , "Student");
+            startActivity(i1);
+
+        }else{
+            Log.d(TAG, "onNavigationItemSelected: realmobject is null");
+        }
+    }
 
     public void displayNotification(JSONObject currentObject) throws JSONException {
 

@@ -36,8 +36,45 @@ public class FacultySubjectsActivity extends AppCompatActivity {
     RecyclerView mrecyclerView;
     ProgressDialog dialog;
     FacultyProfileRealm profileRealm;
+    Emitter.Listener facultySubjListner = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+
+            Log.d(TAG, "call:  "+args[0]);
+            realm = Realm.getDefaultInstance();
+            profileRealm = realm.where(FacultyProfileRealm.class).findFirst();
+            JSONObject obj = (JSONObject) args[0];
+            realmObj = new FacultySubjRealmObj();
+            realmObj.setEid(profileRealm.getEid());
+            realmObj.setJsonSubjObj(obj.toString());
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+
+                    realm.copyToRealmOrUpdate(realmObj);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    updateUI();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        });
 
 
+                }
+            });
+
+
+
+
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,47 +126,6 @@ public class FacultySubjectsActivity extends AppCompatActivity {
         realm = Realm.getDefaultInstance();
         profileRealm = realm.where(FacultyProfileRealm.class).findFirst();
     }
-
-
-    Emitter.Listener facultySubjListner = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-
-            Log.d(TAG, "call:  "+args[0]);
-
-            JSONObject obj = (JSONObject) args[0];
-            realm = Realm.getDefaultInstance();
-            realmObj = new FacultySubjRealmObj();
-            realmObj.setEid("EID1");
-            realmObj.setJsonSubjObj(obj.toString());
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-
-                    realm.copyToRealmOrUpdate(realmObj);
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    updateUI();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-                        });
-
-
-                }
-            });
-
-
-
-
-
-        }
-    };
 
     private void updateUI() throws JSONException {
 
@@ -200,4 +196,8 @@ public class FacultySubjectsActivity extends AppCompatActivity {
 
 
     }
+
+
+
+
 }

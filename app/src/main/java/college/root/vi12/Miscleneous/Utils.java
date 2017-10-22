@@ -2,6 +2,7 @@ package college.root.vi12.Miscleneous;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,7 +16,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import college.root.vi12.Faculty.FacultyLogin.FacultyLogin;
 import college.root.vi12.Faculty.FacultyProfile.FacultyProfileRealm;
+import college.root.vi12.MainActivity;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import io.realm.Realm;
 import io.socket.client.IO;
@@ -36,11 +39,9 @@ public class Utils {
    public static HashMap<String , String> mapOfFaculty = new HashMap<>();
 
     public static HashMap<String , String> mapFacultyID = new HashMap<>();
-
-    static boolean  isConnected = false;
-
-    private static String TAG = "connection";
     public static String[] days = {"Monday" , "Tuesday" , "Wednesday" , "Thursday" , "Friday" , "Saturday"};
+    static boolean  isConnected = false;
+    private static String TAG = "connection";
 
 
     public Utils() throws URISyntaxException {
@@ -181,6 +182,18 @@ public class Utils {
         }
     }
 
+    public static void somethingIsNull(Activity activity ,  String user){
+        toast(activity , "Please login again...");
+
+        if (user.equals("Faculty")){
+            activity.startActivity(new Intent(activity  , FacultyLogin.class));
+        }else
+        if (user.equals("Student")){
+            activity.startActivity(new Intent(activity  , MainActivity.class));
+        }
+
+        activity.finish();
+    }
 
 
 }

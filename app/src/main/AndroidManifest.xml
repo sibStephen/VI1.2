@@ -76,7 +76,8 @@
             android:name=".AdminActivities.LocationEntry"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".AdminActivities.TimeTable.PreTimeTableSetup" />
-        <activity android:name=".AdminActivities.TimeTable.TimeTableDisplayActivity" />
+        <activity android:name=".AdminActivities.TimeTable.TimeTableDisplayActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".Faculty.SearchStudentActivity" />
         <activity android:name=".Faculty.FacultyProfile.FacultyProfileActivity" />
         <activity android:name=".Faculty.FacultySubjects.FacultySubjectsActivity" />
