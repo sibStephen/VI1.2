@@ -76,21 +76,25 @@
             android:name=".AdminActivities.LocationEntry"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".AdminActivities.TimeTable.PreTimeTableSetup" />
-        <activity android:name=".AdminActivities.TimeTable.TimeTableDisplayActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".AdminActivities.TimeTable.TimeTableDisplayActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Faculty.SearchStudentActivity" />
         <activity android:name=".Faculty.FacultyProfile.FacultyProfileActivity" />
         <activity android:name=".Faculty.FacultySubjects.FacultySubjectsActivity" />
         <activity android:name=".Faculty.FacultyProfile.EditFacultyActivity" />
-        <activity android:name=".Faculty.FacultyLogin.FacultyLogin"/>
-        <activity android:name=".Faculty.FacultyLogin.FacultyRegistrationActivity"/>
-
+        <activity android:name=".Faculty.FacultyLogin.FacultyLogin" />
+        <activity android:name=".Faculty.FacultyLogin.FacultyRegistrationActivity" />
 
         <service
             android:name=".Faculty.Background_Services.FacultyFetchUpdateService"
             android:exported="false" />
 
-        <activity android:name=".Faculty.FacultySubjects.RechedulingActivity"></activity>
+        <activity android:name=".Faculty.FacultySubjects.RechedulingActivity" />
+
+        <service
+            android:name=".Student.BackgroundServices.StudentIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

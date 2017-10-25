@@ -96,6 +96,7 @@ public class RecyclerTimetableAdapter extends RecyclerView.Adapter<RecyclerTimet
                             tthelpers[position] = new TTHelper();
                             tthelpers[position].setDay(days[day]);
                             tthelpers[position].setTime(time[schedule]);
+                            tthelpers[position].setSubjectCode(TableActivity.mapOfSubjects.get(TableActivity.subject_selected));
                             tthelpers[position].setLocation(loc);
                             tthelpers[position].setFaculty(TableActivity.faculty);
                             tthelpers[position].setSubject(TableActivity.subject_selected);

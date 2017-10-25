@@ -29,7 +29,7 @@ public class RechedulingActivity extends AppCompatActivity {
     JSONObject object;
     FacultySubjRealmObj subjectRealm;
 
-    String rescheduledSubject = " ";
+    String rescheduledSubject = " ", rescheduledSubjectCode=" ";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +100,7 @@ public class RechedulingActivity extends AppCompatActivity {
                     object.put("RescSubject" , rescheduledSubject);
                     object.put("isAccepted" , "1");
                     object.put("RequestType" , "LecRescheduleResponse");
+                    object.put("RescSubjCode", rescheduledSubjectCode);
                     utils.emitSocket("RespondToReq" , object);
                     Utils.toast(RechedulingActivity.this , "Request accepted...");
                     finish();
@@ -171,7 +172,7 @@ public class RechedulingActivity extends AppCompatActivity {
                         if (eachObject.getString("Div").equals(div)){
                             Log.d(TAG, "getReschedulingSubject: match found");
                             rescheduledSubject = eachObject.getString("Subject");
-
+                            rescheduledSubjectCode = eachObject.getString("SubjectCode");
                         }
                     }
                 }

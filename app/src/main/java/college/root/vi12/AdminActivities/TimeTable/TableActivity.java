@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Iterator;
 
 import college.root.vi12.Miscleneous.Utils;
@@ -29,6 +30,7 @@ import college.root.vi12.R;
 
 public class TableActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
+    public static  HashMap<String, String> mapOfSubjects;
     static String[] days = {"Monday" , "Tuesday" , "Wednesday", "Thursday", "Friday", "Saturday"};
     static  String[] time = {"8.00", "9.00","10.15", "11.15",  "13.15", "14.15", "15.30", "16.30", "17.45" };
     static int numberOfObjects = 54;
@@ -109,6 +111,7 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
             Iterator<?> keys = subjectObject.keys();
             Log.d(TAG, "run: kes are "+keys);
 
+            mapOfSubjects = new HashMap<>();
             int i=0;
             while( keys.hasNext() ) {
                 String key = (String) keys.next();
@@ -120,6 +123,7 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
                 } else {
 
                     subject[i] = key;
+                    mapOfSubjects.put(key ,subjectObject.getString(key) );
                     i++;
 
 
@@ -212,6 +216,7 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
                                     object.put("Time" , ttHelpers[i].getTime());
                                     object.put("Location" , ttHelpers[i].getLocation());
                                     object.put("StaffEID",ttHelpers[i].getFacultyEID() );
+                                    object.put("SubjCode", ttHelpers[i].getSubjectCode());
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -383,6 +388,7 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
                     ttHelpers[token].setLocation(dayObject.getString("Location"));
                     ttHelpers[token].setSubject(dayObject.getString("Subject"));
                     ttHelpers[token].setFaculty(dayObject.getString("Staff"));
+                    ttHelpers[token].setSubjectCode(mapOfSubjects.get(subject_selected));
                     ttHelpers[token].setFacultyEID(Utils.mapOfFaculty.get(dayObject.getString("Staff")));
                     ttHelpers[token].setDay(days[i]);
                 }

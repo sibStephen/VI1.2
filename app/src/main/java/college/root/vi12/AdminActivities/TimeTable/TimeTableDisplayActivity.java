@@ -98,6 +98,7 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
                 Log.d(TAG, "onCreate: checking for "+days.get(j));
                 array =  obj.getJSONArray(days.get(j));
                 count= array.length();
+                Log.d(TAG, "onCreate: count is "+count);
                 if (count == 0){
                     // empty array....
                     Log.d(TAG, "onCreate: array is empty hence adding 7 empty entries");
@@ -116,11 +117,12 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
                         Log.d("array", "onCreate: " + j1);
                     }
                     Log.d(TAG, "onCreate: day is "+days.get(j) + " size is "+array.length());
-                    if(count<9)
+                    if(count<TableActivity.time.length)
                     {
                         Log.d(TAG, "onCreate: inside if count is "+count);
-                        while(count < 9)
+                        while(count < TableActivity.time.length)
                         {
+                            jobj = new JSONObject();
                             Log.d(TAG, "onCreate: inside while");
                             jobj.put("Subject", "");
                             jobj.put("Time", "");
@@ -161,15 +163,16 @@ public class TimeTableDisplayActivity extends AppCompatActivity {
                 }
 
                 try {
-                    obj.put("obj",obj.toString());
-                    obj.put("contents",sb.toString());
-                    obj.put("Length",contents.length);
-                    obj.put("collectionName","Load_Time_Table");
-                    obj.put("grNumber",id);
+                    JSONObject finalObject = new JSONObject();
+                    finalObject.put("obj",obj.toString());
+                    finalObject.put("contents",sb.toString());
+                    finalObject.put("Length",contents.length);
+                    finalObject.put("collectionName","Load_Time_Table");
+                    finalObject.put("grNumber",id);
                     Log.d("final obj",obj.toString());
 
                     networkUtils = new NetworkUtils();
-                    networkUtils.emitSocket("Allinfo" , obj);
+                    networkUtils.emitSocket("Allinfo" , finalObject);
                     Toast.makeText(TimeTableDisplayActivity.this , "TimeTable saved ...", Toast.LENGTH_SHORT).show();
                     finish();
 

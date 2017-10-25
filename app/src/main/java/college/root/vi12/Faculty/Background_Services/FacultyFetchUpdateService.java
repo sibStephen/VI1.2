@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
+import college.root.vi12.Faculty.FacultyProfile.FacultyProfileActivity;
 import college.root.vi12.Faculty.FacultyProfile.FacultyProfileRealm;
 import college.root.vi12.Faculty.FacultySubjects.RechedulingActivity;
 import college.root.vi12.NetworkTasks.NetworkUtils;
@@ -24,94 +25,17 @@ import io.socket.emitter.Emitter;
 
 public class FacultyFetchUpdateService extends IntentService {
 
+    private static final String ACTION_FOO = "college.root.vi12.Faculty.action.FOO";
+    private static final String ACTION_BAZ = "college.root.vi12.Faculty.action.BAZ";
+    private static final String EXTRA_PARAM1 = "college.root.vi12.Faculty.extra.PARAM1";
+    private static final String EXTRA_PARAM2 = "college.root.vi12.Faculty.extra.PARAM2";
     Realm realm;
     FacultyProfileRealm profile;
     NetworkUtils networkUtils;
     Socket socketsend;
     String TAG = "Test";
     Context context = this;
-
-    private static final String ACTION_FOO = "college.root.vi12.Faculty.action.FOO";
-    private static final String ACTION_BAZ = "college.root.vi12.Faculty.action.BAZ";
-
-    private static final String EXTRA_PARAM1 = "college.root.vi12.Faculty.extra.PARAM1";
-    private static final String EXTRA_PARAM2 = "college.root.vi12.Faculty.extra.PARAM2";
-
-    public FacultyFetchUpdateService() {
-        super("MyIntentService");
-    }
-
-    public static void startActionFoo(Context context, String param1, String param2) {
-
-        Intent intent = new Intent(context, FacultyFetchUpdateService.class);
-
-        intent.setAction(ACTION_FOO);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
-    }
-
-
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_FOO.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionFoo(param1, param2);
-            } else if (ACTION_BAZ.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionBaz(param1, param2);
-            }
-        }
-
-        Log.d(TAG, "onHandleIntent: Intent is received here");
-        startBackgroundService();
-
-
-
-    }
-
-
-    private void handleActionFoo(String param1, String param2) {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    private void handleActionBaz(String param1, String param2) {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-
-
-    private void startBackgroundService() {
-
-        try {
-            realm = Realm.getDefaultInstance();
-            profile = realm.where(FacultyProfileRealm.class).findFirst();
-
-            if (profile != null){
-                networkUtils = new NetworkUtils();
-                JSONObject object = new JSONObject();
-                socketsend = networkUtils.get();
-                Log.d(TAG, "onBind: EID is "+profile.getEid());
-                object.put("Code" , profile.getEid());
-                Log.d(TAG, "startBackgroundService: the object is "+object);
-                socketsend.emit("LookForUpdates" , object.toString());
-                socketsend.on("updates" , lookForUpdatesListener );
-            }else {
-                Log.d(TAG, "startBackgroundService: profile is null");
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
-
-
+    String user = "";
     Emitter.Listener lookForUpdatesListener = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
@@ -155,7 +79,9 @@ public class FacultyFetchUpdateService extends IntentService {
                                     .setSmallIcon(R.drawable.note)
                                     .setContentTitle("Lecture Reschedule")
                                     .setContentText("Click here for details....")
+                                   .setAutoCancel(true)
                                     .setContentIntent(pendingIntent);
+
                             NotificationCompat.InboxStyle inboxStyle =
                                     new NotificationCompat.InboxStyle();
 
@@ -179,7 +105,7 @@ public class FacultyFetchUpdateService extends IntentService {
                     }else if (finalObject.getString("RequestType").equals("LecRescheduleResponse")){
                         // its a response of the requested faculty on lec rescheduling
 
-                        Intent intent1 = new Intent(context , RechedulingActivity.class);
+                        Intent intent1 = new Intent(context , FacultyProfileActivity.class);
                         intent1.putExtra("jsondata" , finalObject.toString());
                         intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         PendingIntent pendingIntent= PendingIntent.getActivity(context , 100, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -197,6 +123,7 @@ public class FacultyFetchUpdateService extends IntentService {
                                 .setSmallIcon(R.drawable.note)
                                 .setContentTitle("Lecture Response")
                                 .setContentText("Drag to see....")
+                                .setAutoCancel(true)
                                 .setContentIntent(pendingIntent);
                         NotificationCompat.InboxStyle inboxStyle =
                                 new NotificationCompat.InboxStyle();
@@ -226,4 +153,75 @@ public class FacultyFetchUpdateService extends IntentService {
 
         }
     };
+
+    public FacultyFetchUpdateService() {
+        super("MyIntentService");
+
+    }
+
+    public static void startActionFoo(Context context, String param1, String param2) {
+
+        Intent intent = new Intent(context, FacultyFetchUpdateService.class);
+
+        intent.setAction(ACTION_FOO);
+        intent.putExtra(EXTRA_PARAM1, param1);
+        intent.putExtra(EXTRA_PARAM2, param2);
+        context.startService(intent);
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        if (intent != null) {
+            final String action = intent.getAction();
+            if (ACTION_FOO.equals(action)) {
+                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
+                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
+                handleActionFoo(param1, param2);
+            } else if (ACTION_BAZ.equals(action)) {
+                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
+                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
+                handleActionBaz(param1, param2);
+            }
+        }
+
+        Log.d(TAG, "onHandleIntent: Intent is received here");
+        startBackgroundService();
+
+
+
+    }
+
+    private void handleActionFoo(String param1, String param2) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    private void handleActionBaz(String param1, String param2) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    private void startBackgroundService() {
+
+        try {
+            realm = Realm.getDefaultInstance();
+            profile = realm.where(FacultyProfileRealm.class).findFirst();
+
+            if (profile != null){
+                networkUtils = new NetworkUtils();
+                JSONObject object = new JSONObject();
+                socketsend = networkUtils.get();
+                Log.d(TAG, "onBind: EID is "+profile.getEid());
+                object.put("Code" , profile.getEid());
+                Log.d(TAG, "startBackgroundService: the object is "+object);
+                socketsend.emit("LookForUpdates" , object.toString());
+                socketsend.on("updates" , lookForUpdatesListener );
+            }else {
+                Log.d(TAG, "startBackgroundService: profile is null");
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
 }

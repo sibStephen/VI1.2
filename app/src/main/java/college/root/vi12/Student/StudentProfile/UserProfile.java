@@ -44,6 +44,7 @@ import college.root.vi12.NetworkTasks.CheckNetwork;
 import college.root.vi12.NetworkTasks.JsontoSend;
 import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
+import college.root.vi12.Student.BackgroundServices.StudentIntentService;
 import college.root.vi12.Student.MySubjects.MySubjectsActivity;
 import college.root.vi12.Student.Realm.Student_profile;
 import college.root.vi12.Student.Student_TT.Realm.TTRealmObject;
@@ -439,6 +440,8 @@ public class UserProfile extends AppCompatActivity implements NavigationView.OnN
             }
 
         }
+
+        startService(new Intent(UserProfile.this , StudentIntentService.class));
 
     }
 

@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import college.root.vi12.Miscleneous.Utils;
@@ -56,6 +57,8 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
     boolean SubjectsLoaded = true;
     RecyclerView.LayoutManager manager;
     int numOfObjects = 0;
+    HashMap<String , String> mapOfSubjects;
+
     Emitter.Listener facultyListener = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
@@ -67,6 +70,7 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
                     @Override
                     public void run() {
                         dialog.dismiss();
+                        helpers = new FacultyLoadHelper[numOfObjects];
                         Utils.toast(FacultyLoadActivity.this , "Previous entry of faculty allocation not  found");
 
                     }
@@ -137,6 +141,9 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
                     helpers = new FacultyLoadHelper[numOfObjects];
                     Log.d(TAG, "call: num of obj set");
                     subject = new String[ Integer.parseInt( subjetObject.getString("SubjectCount")) ];
+                    Log.d(TAG, "call: num");
+
+                    mapOfSubjects = new HashMap<>();
 
                     int i=0;
                     while( keys.hasNext() ) {
@@ -147,6 +154,7 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
                         if (key.equals("_id") || key.equals("SubjectCount")){
                             // do not store it in name array
                         }else {
+                            mapOfSubjects.put(key , obj.getString(key));
                             subject[i] = key;  // store the subject names in string array
                             i++;
 
@@ -326,7 +334,7 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
 
 
         spinner_semester = (Spinner) findViewById(R.id.spinner_semester);
-        semester = new String[]{" ", "Sem1 ", "Sem2"};
+        semester = new String[]{" ", "Sem1", "Sem2"};
         ArrayAdapter<String> semester_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, semester);
         spinner_semester.setAdapter(semester_adapter);
         semester_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -441,11 +449,20 @@ public class FacultyLoadActivity extends AppCompatActivity implements AdapterVie
 
                                     for (int i=0; i<helpers.length; i++){
 
-                                        JSONObject j =new JSONObject();
-                                        j.put("Subject", helpers[i].getSubjectName());
-                                        j.put("FacultyCode", helpers[i].getFacultyCode());
-                                        j.put("FacultyName" ,helpers[i].getFacultyName());
-                                        store_data.put(j);
+                                        if(helpers != null){
+                                            Log.d(TAG, "onClick: "+helpers[i].getFacultyName());
+                                            Log.d(TAG, "onClick: "+helpers[i].getFacultyCode());
+                                            Log.d(TAG, "onClick: "+helpers[i].getSubjectName());
+
+
+                                            JSONObject j =new JSONObject();
+                                            j.put("Subject", helpers[i].getSubjectName());
+                                            j.put("FacultyCode", helpers[i].getFacultyCode());
+                                            j.put("FacultyName" ,helpers[i].getFacultyName());
+                                            j.put("SubjectCode" , mapOfSubjects.get(helpers[i].getSubjectName()));
+                                            store_data.put(j);
+                                        }
+
                                     }
 
                                     JSONObject facultyObject = new JSONObject();

@@ -44,14 +44,22 @@ public class FacultySubjectsActivity extends AppCompatActivity {
             realm = Realm.getDefaultInstance();
             profileRealm = realm.where(FacultyProfileRealm.class).findFirst();
             JSONObject obj = (JSONObject) args[0];
-            realmObj = new FacultySubjRealmObj();
-            realmObj.setEid(profileRealm.getEid());
-            realmObj.setJsonSubjObj(obj.toString());
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
 
-                    realm.copyToRealmOrUpdate(realmObj);
+            realmObj = realm.where(FacultySubjRealmObj.class).findFirst();
+
+            if (realmObj == null){
+
+                realmObj = new FacultySubjRealmObj();
+                realmObj.setEid(profileRealm.getEid());
+                realmObj.setJsonSubjObj(obj.toString());
+
+                Log.d(TAG, "call: subject realm object is null");
+                realm = Realm.getDefaultInstance();
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+
+                        realm.copyToRealmOrUpdate(realmObj);
 
                         runOnUiThread(new Runnable() {
                             @Override
@@ -66,8 +74,41 @@ public class FacultySubjectsActivity extends AppCompatActivity {
                         });
 
 
-                }
-            });
+                    }
+                });
+            }else {
+
+                Log.d(TAG, "call: subject realm object is not null");
+
+                realm.beginTransaction();
+                realmObj.setJsonSubjObj(obj.toString());
+                realm.commitTransaction();
+
+                realm = Realm.getDefaultInstance();
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+
+                        realm.copyToRealmOrUpdate(realmObj);
+
+                        Log.d(TAG, "execute: realm saved....");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    updateUI();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        });
+
+
+                    }
+                });
+            }
+
 
 
 
@@ -178,6 +219,7 @@ public class FacultySubjectsActivity extends AppCompatActivity {
                 subjObj.setYear(str);
                 subjObj.setDiv(obj.getString("Div"));
                 subjObj.setSubject(obj.getString("Subject"));
+                subjObj.setSubjectCode(obj.getString("SubjCode"));
                 SubjArrayList.add(subjObj);
                 Log.d(TAG, "parseJson: list size now is "+SubjArrayList.size());
                 FacultySubAdapter adapter = new FacultySubAdapter(SubjArrayList , FacultySubjectsActivity.this);

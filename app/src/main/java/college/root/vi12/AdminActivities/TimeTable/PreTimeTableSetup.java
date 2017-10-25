@@ -17,6 +17,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import college.root.vi12.NetworkTasks.CheckNetwork;
 import college.root.vi12.NetworkTasks.NetworkUtils;
@@ -28,16 +30,16 @@ import io.socket.emitter.Emitter;
 
 
 public class PreTimeTableSetup extends AppCompatActivity implements OnItemSelectedListener{
+    final String branch[]={" ","Computer","Mechanical","E&TC","Civil" , "IT", "Others"};
+    final String year[]={" ","FE","SE","TE","BE"};
+    final String sem[]={" ","Sem1","Sem2"};
+    final String division[]={" ","A","B","C"};
     Spinner spinner_branch,spinner_year,spinner_sem,spinner_division;
     String select_branch="",select_year="",select_sem="",select_division="";
     ArrayAdapter<String> adapter_branch;
     ArrayAdapter<String> adapter_year;
     ArrayAdapter<String> adapter_sem;
     ArrayAdapter<String> adapter_division;
-    final String branch[]={" ","Computer","Mechanical","E&TC","Civil" , "IT", "Others"};
-    final String year[]={" ","FE","SE","TE","BE"};
-    final String sem[]={" ","Sem1","Sem2"};
-    final String division[]={" ","A","B","C"};
     Socket socket_loc;
     Realm realm;
     NetworkUtils networkUtils;
@@ -48,6 +50,185 @@ public class PreTimeTableSetup extends AppCompatActivity implements OnItemSelect
     JSONObject staffObject = null;
     ProgressDialog dialog;
     JSONObject ttJsonObject = null;
+    Emitter.Listener ttlistener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+
+            if (args[0].equals("0")){
+                Log.d(TAG, "call: no data found");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dismiss();
+                        Toast.makeText(PreTimeTableSetup.this, "No previous TT entry found", Toast.LENGTH_SHORT).show();
+                        next();
+
+                    }
+                });
+            }else{
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        Toast.makeText(PreTimeTableSetup.this, "Previous TT entry found", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+                JSONArray array = (JSONArray) args[0];
+
+                try {
+                    ttJsonObject = array.getJSONObject(0);
+
+
+                    next();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        }
+    };
+    private Emitter.Listener staffListener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+
+            Log.d("obj",args[0].toString());
+
+            if (args[0].equals("0")){
+                Log.d(TAG, "call: no data found");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dismiss();
+
+                        Toast.makeText(PreTimeTableSetup.this, "Sorry, could not find corresponding data", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+            }else{
+                final org.json.JSONArray[] array = {(org.json.JSONArray) args[0]};
+                Log.d(TAG, "call: array is " + array);
+
+                try {
+                    final JSONObject obj2 = (JSONObject) array[0].get(0);
+                    Log.d(TAG, "call: obj2 is "+obj2);
+                    staffObject = obj2;
+                    Log.d(TAG, "call: staff is "+staffObject);
+
+                    //next();
+
+                    loadTimeTable();
+
+
+                }catch (Exception e){
+
+                }
+
+
+            }
+
+
+            }
+
+
+    };
+    private Emitter.Listener subjectListener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.d("obj",args[0].toString());
+
+            if (args[0].equals("0")){
+                Log.d(TAG, "call: no data found");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dismiss();
+
+                        Toast.makeText(PreTimeTableSetup.this, "Sorry, could not find corresponding data", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+            }else{
+
+                final org.json.JSONArray[] array = {(org.json.JSONArray) args[0]};
+                Log.d(TAG, "call: array is " + array);
+
+                try {
+                    final JSONObject obj = (JSONObject) array[0].get(0);
+                    Log.d(TAG, "call: obj is " + obj);
+                    subjetObject = obj;
+
+                }catch (Exception e){
+
+                }
+
+                try {
+                    goToStaffListener();
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+
+
+        }
+    };
+    private Emitter.Listener roomListener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.d("obj", args[0].toString());
+
+            if (args[0].equals("0")){
+                Log.d(TAG, "call: no data found");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dismiss();
+
+                        Toast.makeText(PreTimeTableSetup.this, "Sorry, could not find corresponding data", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+            }else{
+                final org.json.JSONArray[] array = {(org.json.JSONArray) args[0]};
+                Log.d(TAG, "call: array is " + array);
+
+                try {
+                    final JSONObject obj = (JSONObject) array[0].get(0);
+                    Log.d(TAG, "call: obj is " + obj);
+                    roomObject = obj;
+
+
+                    // more work
+                    try {
+                        gotoSubjectListener();
+
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+        }
+        };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +245,12 @@ public class PreTimeTableSetup extends AppCompatActivity implements OnItemSelect
         profile = realm.where(Student_profile.class).findFirst();
 
        // id = profile.getYear() + profile.getBranch() + profile.getSemester();
+
+        initialize();
+
+    }
+
+    private void initialize() {
 
         spinner_branch = (Spinner)findViewById(R.id.spinner_branch_id);
         spinner_sem = (Spinner)findViewById(R.id.spinner_sem_id);
@@ -117,7 +304,7 @@ public class PreTimeTableSetup extends AppCompatActivity implements OnItemSelect
 
 
                 final JSONObject obj = new JSONObject();
-                obj.put("GrNumber","2017");
+                obj.put("GrNumber", new SimpleDateFormat("yyyy").format(Calendar.getInstance().getTime()));
                 obj.put("collectionName","RoomAllocation");
 
                 socket_loc = networkUtils.get();
@@ -160,61 +347,12 @@ public class PreTimeTableSetup extends AppCompatActivity implements OnItemSelect
 
        }
 
-    private Emitter.Listener roomListener = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            Log.d("obj", args[0].toString());
-
-            if (args[0].equals("0")){
-                Log.d(TAG, "call: no data found");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        dialog.dismiss();
-
-                        Toast.makeText(PreTimeTableSetup.this, "Sorry, could not find corresponding data", Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-
-            }else{
-                final org.json.JSONArray[] array = {(org.json.JSONArray) args[0]};
-                Log.d(TAG, "call: array is " + array);
-
-                try {
-                    final JSONObject obj = (JSONObject) array[0].get(0);
-                    Log.d(TAG, "call: obj is " + obj);
-                    roomObject = obj;
-
-
-                    // more work
-                    try {
-                        gotoSubjectListener();
-
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-
-        }
-        };
-
-
-
     private void gotoSubjectListener() throws URISyntaxException, JSONException {
 
         Socket soc_Subj ;
         soc_Subj = networkUtils.get();
         final JSONObject obj1 = new JSONObject();
-        obj1.put("GrNumber",select_year+select_branch+select_sem);
+        obj1.put("GrNumber",select_branch+select_year+select_sem);
 
         obj1.put("collectionName" , "Subjects");
 
@@ -225,55 +363,6 @@ public class PreTimeTableSetup extends AppCompatActivity implements OnItemSelect
 
 
     }
-
-    private Emitter.Listener subjectListener = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            Log.d("obj",args[0].toString());
-
-            if (args[0].equals("0")){
-                Log.d(TAG, "call: no data found");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        dialog.dismiss();
-
-                        Toast.makeText(PreTimeTableSetup.this, "Sorry, could not find corresponding data", Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-
-            }else{
-
-                final org.json.JSONArray[] array = {(org.json.JSONArray) args[0]};
-                Log.d(TAG, "call: array is " + array);
-
-                try {
-                    final JSONObject obj = (JSONObject) array[0].get(0);
-                    Log.d(TAG, "call: obj is " + obj);
-                    subjetObject = obj;
-
-                }catch (Exception e){
-
-                }
-
-                try {
-                    goToStaffListener();
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-
-
-
-        }
-    };
 
     private void goToStaffListener() throws JSONException, URISyntaxException {
         Socket soc_Subj ;
@@ -289,52 +378,6 @@ public class PreTimeTableSetup extends AppCompatActivity implements OnItemSelect
 
 
     }
-    private Emitter.Listener staffListener = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-
-            Log.d("obj",args[0].toString());
-
-            if (args[0].equals("0")){
-                Log.d(TAG, "call: no data found");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        dialog.dismiss();
-
-                        Toast.makeText(PreTimeTableSetup.this, "Sorry, could not find corresponding data", Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-            }else{
-                final org.json.JSONArray[] array = {(org.json.JSONArray) args[0]};
-                Log.d(TAG, "call: array is " + array);
-
-                try {
-                    final JSONObject obj2 = (JSONObject) array[0].get(0);
-                    Log.d(TAG, "call: obj2 is "+obj2);
-                    staffObject = obj2;
-                    Log.d(TAG, "call: staff is "+staffObject);
-
-                    //next();
-
-                    loadTimeTable();
-
-
-                }catch (Exception e){
-
-                }
-
-
-            }
-
-
-            }
-
-
-    };
-
-
 
     private void loadTimeTable() throws URISyntaxException, JSONException {
 
@@ -350,49 +393,6 @@ public class PreTimeTableSetup extends AppCompatActivity implements OnItemSelect
 
 
     }
-
-
-    Emitter.Listener ttlistener = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-
-            if (args[0].equals("0")){
-                Log.d(TAG, "call: no data found");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        dialog.dismiss();
-                        Toast.makeText(PreTimeTableSetup.this, "No previous TT entry found", Toast.LENGTH_SHORT).show();
-                        next();
-
-                    }
-                });
-            }else{
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        Toast.makeText(PreTimeTableSetup.this, "Previous TT entry found", Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-
-                JSONArray array = (JSONArray) args[0];
-
-                try {
-                    ttJsonObject = array.getJSONObject(0);
-
-
-                    next();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-        }
-    };
 
 
         }
