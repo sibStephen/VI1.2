@@ -16,8 +16,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.login.widget.LoginButton;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     ProgressDialog progress;
 
     Realm realm;
-    LoginButton loginButton;
     Thread threadLogin;
     Socket socket;
     Student_profile profile;
@@ -377,14 +374,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setviews(){
-        btnLogin =  (Button)findViewById(R.id.button);
-        tvReg = (TextView)findViewById(R.id.tvReg);
-        tvHome = (TextView)findViewById(R.id.textView);
-        etUser = (EditText)findViewById(R.id.etEmail);
-        etPass = (EditText)findViewById(R.id.etPass);
-      //  btnFb = (Button)findViewById(R.id.fbButton);
-        loginButton = (LoginButton)findViewById(R.id.fbLoginButton);
-        cbShowPass = (CheckBox)findViewById(R.id.cbShowPass);
+        btnLogin = findViewById(R.id.button);
+        tvReg = findViewById(R.id.tvReg);
+        tvHome = findViewById(R.id.textView);
+        etUser = findViewById(R.id.etEmail);
+        etPass = findViewById(R.id.etPass);
+        cbShowPass = findViewById(R.id.cbShowPass);
 
     }
 

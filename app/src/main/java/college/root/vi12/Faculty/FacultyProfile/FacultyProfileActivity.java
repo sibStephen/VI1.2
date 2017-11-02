@@ -47,7 +47,6 @@ import college.root.vi12.NetworkTasks.NetworkUtils;
 import college.root.vi12.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
@@ -90,8 +89,6 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
 
 
                 realmObject = new FacultyTTRealmObject();
-                RealmConfiguration configuration = new RealmConfiguration.Builder(FacultyProfileActivity.this).deleteRealmIfMigrationNeeded().schemaVersion(4).build();
-                Realm.setDefaultConfiguration(configuration);
 
                 Realm realm = Realm.getDefaultInstance();
                 realmObject = realm.where(FacultyTTRealmObject.class).findFirst();
@@ -171,13 +168,13 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
         SharedPreferences sharedPreferences = getSharedPreferences("flag", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        drawer = (DrawerLayout) findViewById(R.id.facultydrawerLayout);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.facultyToolbar);
+        drawer = findViewById(R.id.facultydrawerLayout);
+        Toolbar toolbar = findViewById(R.id.facultyToolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.app_name, R.string.app_name);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.facultynav_view);
+        NavigationView navigationView = findViewById(R.id.facultynav_view);
         assert navigationView != null;
         boolean flag = sharedPreferences.getBoolean("flag", true);
         Log.d("FLAG:", String.valueOf(flag));
@@ -463,23 +460,23 @@ public class FacultyProfileActivity extends AppCompatActivity implements Navigat
 
         private void initializeViews() {
 
-            profilePic = (CircleImageView) findViewById(R.id.facultyprofilepic);
-            tvname = (TextView) findViewById(R.id.facultyname);
-            tvsurname = (TextView) findViewById(R.id.facultySurname);
-            tvbranch = (TextView) findViewById(R.id.facultybranch);
+            profilePic = findViewById(R.id.facultyprofilepic);
+            tvname = findViewById(R.id.facultyname);
+            tvsurname = findViewById(R.id.facultySurname);
+            tvbranch = findViewById(R.id.facultybranch);
 
-            tvFacdiv = (TextView)findViewById(R.id.tvFacDiv);
-            tvFacyear = (TextView)findViewById(R.id.tvfacyear);
-            tvFaclec = (TextView)findViewById(R.id.tvFacLec);
-            tvFactime = (TextView)findViewById(R.id.tvfactime);
-            tvFacLoc = (TextView)findViewById(R.id.tvFacloc);
+            tvFacdiv = findViewById(R.id.tvFacDiv);
+            tvFacyear = findViewById(R.id.tvfacyear);
+            tvFaclec = findViewById(R.id.tvFacLec);
+            tvFactime = findViewById(R.id.tvfactime);
+            tvFacLoc = findViewById(R.id.tvFacloc);
 
-            tvFacdivnext = (TextView)findViewById(R.id.tvFacDivnext);
-            tvFacyearnext = (TextView)findViewById(R.id.tvfacyearnext);
-            tvFactimenext = (TextView)findViewById(R.id.tvfactimenext);
-            tvFaclecnext = (TextView)findViewById(R.id.tvFacLecnext);
-            tvFacLocnext = (TextView)findViewById(R.id.tvFaclocnext);
-            tvFacDayNext = (TextView)findViewById(R.id.tvFacDayNext);
+            tvFacdivnext = findViewById(R.id.tvFacDivnext);
+            tvFacyearnext = findViewById(R.id.tvfacyearnext);
+            tvFactimenext = findViewById(R.id.tvfactimenext);
+            tvFaclecnext = findViewById(R.id.tvFacLecnext);
+            tvFacLocnext = findViewById(R.id.tvFaclocnext);
+            tvFacDayNext = findViewById(R.id.tvFacDayNext);
 
             networkUtils = new NetworkUtils();
             toast = new Toast();
