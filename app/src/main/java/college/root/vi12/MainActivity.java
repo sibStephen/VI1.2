@@ -82,6 +82,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        try {
+            getSupportActionBar().hide();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         realm = Realm.getDefaultInstance();
 
         if (isLoggedIn()){
