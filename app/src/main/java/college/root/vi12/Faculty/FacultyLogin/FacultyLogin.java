@@ -93,9 +93,15 @@ public class FacultyLogin extends AppCompatActivity
             Log.d(TAG, "onCreate: shared pref gave true ");
             startActivity(new Intent(FacultyLogin.this, FacultyProfileActivity.class));
             finish();
-    }
+         }
 
         setviews(); // initialize views
+
+        try{
+            getSupportActionBar().hide();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         cbShowPass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
