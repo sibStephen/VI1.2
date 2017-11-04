@@ -58,7 +58,11 @@ public class FacultyRegistrationActivity extends AppCompatActivity
         setContentView(R.layout.activity_faculty_registration);
         setViews(); // initialize views
 
-
+        try{
+            getSupportActionBar().hide();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
 
         Signup.setOnClickListener(new View.OnClickListener() {
