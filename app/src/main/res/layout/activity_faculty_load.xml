@@ -2,6 +2,7 @@
 
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,159 +13,247 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
+        <Spinner
+            android:id="@+id/spinner_branch"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:scrollbars="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/textView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:paddingTop="3dp"
+            android:text="Branch"
+            android:textColor="#000"
+            android:textAlignment="center"
+            android:textSize="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.029"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <Spinner
+            android:id="@+id/spinner_year"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/textView2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_branch"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/textView"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:paddingTop="3dp"
+            android:text="Year"
+            android:textColor="#000"
+            android:textAlignment="center"
+            android:textSize="18dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.057"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <Spinner
+            android:id="@+id/spinner_semester"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/spinner_year"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/textView3"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_year"
+            app:layout_constraintVertical_bias="0.02" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/textView2"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:paddingTop="3dp"
+            android:textColor="#000"
+            android:text="Semester"
+            android:textAlignment="center"
+            android:textSize="18dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.029"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+        <Spinner
+            android:id="@+id/spinner_division"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/spinner_semester"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/textView4"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_semester"
+            app:layout_constraintVertical_bias="0.025" />
 
 
-
-    <Spinner
-        android:id="@+id/spinner_branch"
-        android:layout_width="240dp"
-        android:layout_height="50dp"
-        android:layout_alignParentRight="true"
-        android:scrollbars="horizontal"
-        />
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="Branch"
-        android:textStyle="bold"
-        android:textSize="18dp"
-        android:textAlignment="center"
-        android:layout_marginLeft="20dp"
-        android:paddingTop="3dp"
-        />
-
-    <Spinner
-        android:id="@+id/spinner_year"
-        android:layout_width="240dp"
-        android:layout_height="50dp"
-        android:layout_alignTop="@+id/textView2"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentRight="true"
-        />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="Year"
-        android:textStyle="bold"
-        android:textSize="18dp"
-        android:textAlignment="center"
-        android:layout_marginLeft="20dp"
-        android:layout_below="@id/textView"
-        android:paddingTop="3dp"
-        />
-
-    <Spinner
-        android:id="@+id/spinner_semester"
-        android:layout_width="240dp"
-        android:layout_height="50dp"
-        android:scrollbars="vertical"
-        android:layout_below="@+id/spinner_year"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="Semester"
-        android:textStyle="bold"
-        android:textSize="18dp"
-        android:textAlignment="center"
-        android:layout_below="@id/textView2"
-        android:layout_marginLeft="20dp"
-        android:paddingTop="3dp"
-
-        />
-
-    <Spinner
-        android:id="@+id/spinner_division"
-        android:layout_width="240dp"
-        android:layout_height="50dp"
-        android:scrollbars="vertical"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/spinner_semester"
-        />
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/textView3"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:paddingTop="3dp"
+            android:scrollbars="vertical"
+            android:textColor="#000"
+            android:text="Division"
+            android:textAlignment="center"
+            android:textSize="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.029"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView3"
+            app:layout_constraintVertical_bias="0.0" />
 
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="Division"
-        android:textStyle="bold"
-        android:textSize="18dp"
-        android:textAlignment="center"
-        android:layout_marginLeft="20dp"
-        android:layout_below="@id/textView3"
-        android:scrollbars="vertical"
-        android:paddingTop="3dp"
-        />
-
-
-
-
-    <Spinner
-        android:id="@+id/spinner_subject"
-        android:layout_width="240dp"
-        android:layout_height="50dp"
-        android:scrollbars="vertical"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/textView4"
-        />
+        <Spinner
+            android:id="@+id/spinner_subject"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/textView4"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/textView5"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_division"
+            app:layout_constraintVertical_bias="0.031" />
 
         <TextView
             android:id="@+id/textView5"
             android:layout_width="100dp"
             android:layout_height="50dp"
-            android:text="Subject"
-            android:textStyle="bold"
-            android:textSize="18dp"
-            android:textAlignment="center"
-            android:layout_marginLeft="20dp"
-            android:paddingTop="3dp"
             android:layout_below="@id/textView4"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:paddingTop="3dp"
+            android:textColor="#000"
+            android:text="Subject"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.029"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4"
+            app:layout_constraintVertical_bias="0.029" />
 
-            />
-
-    <AutoCompleteTextView
-        android:id="@+id/autocomplete_staff"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:cursorVisible="true"
-        android:inputType="textAutoComplete"
-        android:hapticFeedbackEnabled="false"
-        android:scrollbars="vertical"
-        android:isScrollContainer="true"
-        android:background="@drawable/custo_et"
-        android:imeOptions="actionDone"
-        android:padding="4dp"
-        android:layout_margin="8dp"
-        android:layout_below="@id/spinner_subject"
-        />
-
-
-
+        <AutoCompleteTextView
+            android:id="@+id/autocomplete_staff"
+            android:layout_width="0dp"
+            android:layout_height="29dp"
+            android:layout_below="@id/spinner_subject"
+            android:layout_margin="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/custo_et"
+            android:cursorVisible="true"
+            android:hapticFeedbackEnabled="false"
+            android:imeOptions="actionDone"
+            android:inputType="textAutoComplete"
+            android:isScrollContainer="true"
+            android:padding="4dp"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView5"
+            app:layout_constraintVertical_bias="0.0" />
 
 
         <android.support.v7.widget.RecyclerView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/autocomplete_staff"
             android:id="@+id/recyclerFacultyAllocation"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_below="@+id/autocomplete_staff"
             android:layout_margin="8dp"
-            android:padding="8dp">
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.505"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/autocomplete_staff"
+            app:layout_constraintVertical_bias="1.0">
 
 
         </android.support.v7.widget.RecyclerView>
 
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
     </ScrollView>
 
 </RelativeLayout>
