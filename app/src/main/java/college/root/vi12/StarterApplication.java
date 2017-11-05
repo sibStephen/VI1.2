@@ -39,7 +39,9 @@ public class StarterApplication extends Application {
         // Add your initialization code here
 
         Realm.init(this);
-        RealmConfiguration configuration = new RealmConfiguration.Builder().build();
+        RealmConfiguration configuration = new RealmConfiguration.Builder().schemaVersion(4)
+                .deleteRealmIfMigrationNeeded()
+                .build();
 
                 /*new RealmConfiguration.Builder(StarterApplication.this).deleteRealmIfMigrationNeeded().schemaVersion(4).build();*/
         Realm.setDefaultConfiguration(configuration);
