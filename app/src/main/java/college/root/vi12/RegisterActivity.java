@@ -57,6 +57,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         setViews(); // initialize views
 
+        try {
+            getSupportActionBar().hide();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         List<String> listOfYear = new ArrayList<String>();
         listOfYear.add("Enter Year");

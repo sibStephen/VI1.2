@@ -60,4 +60,10 @@
     <string name="title_activity_faculty_profile">FacultyProfile</string>
     <string name="save_changes">Save Changes</string>
 
+    <string name="message_faculty">Faculty</string>
+    <string name="message_discipline">Discipline</string>
+    <string name="message_program">Program</string>
+    <string name="message_year">Year</string>
+    <string name="message_branch">Branch</string>
+
 </resources>
