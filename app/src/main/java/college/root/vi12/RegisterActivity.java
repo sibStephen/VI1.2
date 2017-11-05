@@ -171,6 +171,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 || mdisc.equals("Enter Discipline") || mprogram.equals("Enter Program")) {
                             Toast.makeText(RegisterActivity.this, "Please enter all teh details", Toast.LENGTH_SHORT).show();
 
+                            progress.dismiss();
                         } else {
                             // save user on to server
                             Log.d(TAG, "onClick: about to start the thread");
@@ -272,18 +273,18 @@ public class RegisterActivity extends AppCompatActivity {
         realm = Realm.getDefaultInstance();
         encryptPassword = new EncryptPassword();
 
-        btnReg = (Button) findViewById(R.id.btnRegister);
-        etGRNumber = (EditText) findViewById(R.id.etEmailReg);
-        etLastName = (EditText) findViewById(R.id.etPass);
-        etFirstName = (EditText) findViewById(R.id.etUser);
-        etUser = (EditText) findViewById(R.id.etGrNumber);
-        etEmail = (EditText)findViewById(R.id.etFirstName);
-        etPass = (EditText)findViewById(R.id.etLastname);
-        spDiscipline = (Spinner) findViewById(R.id.spDiscipline);
-        spFaculty = (Spinner) findViewById(R.id.spFaculty);
-        spProgram = (Spinner) findViewById(R.id.spProgram);
-        spYear = (Spinner) findViewById(R.id.spYearReg);
-        spBranch = (Spinner) findViewById(R.id.spBranchReg);
+        btnReg = findViewById(R.id.btnRegister);
+        etGRNumber = findViewById(R.id.etEmailReg);
+        etLastName = findViewById(R.id.etPass);
+        etFirstName = findViewById(R.id.etUser);
+        etUser = findViewById(R.id.etGrNumber);
+        etEmail = findViewById(R.id.etFirstName);
+        etPass = findViewById(R.id.etLastname);
+        spDiscipline = findViewById(R.id.spDiscipline);
+        spFaculty = findViewById(R.id.spFaculty);
+        spProgram = findViewById(R.id.spProgram);
+        spYear = findViewById(R.id.spYearReg);
+        spBranch = findViewById(R.id.spBranchReg);
 
     }
 }
